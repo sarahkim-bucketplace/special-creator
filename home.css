@@ -1,0 +1,279 @@
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #fff;
+  color: #2d2828;
+}
+
+/* ---- pinned hero ---- */
+
+.hero-pin {
+  position: relative;
+  /* 100vh viewport + 150vh reveal + 60vh hold (page stays pinned once the logo is fully revealed) */
+  height: 310vh;
+}
+
+.hero-pin__stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 900px 700px at 8% -10%, rgba(246, 251, 196, 0.85), rgba(246, 251, 196, 0) 70%),
+    radial-gradient(ellipse 900px 700px at 92% -5%, rgba(205, 231, 255, 0.85), rgba(205, 231, 255, 0) 70%);
+}
+
+/* logo shown through the keyhole cutout, starts blurred and sharpens on scroll */
+.hero-pin__logo {
+  position: absolute;
+  top: 46%;
+  left: 50%;
+  width: 320px;
+  transform: translate(-50%, -50%) scale(var(--logo-scale, 0.4));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  filter: blur(var(--logo-blur, 10px));
+}
+
+/* a little jolt/snap right when the reveal finishes and the hold begins */
+.hero-pin__logo.is-settling {
+  animation: hero-logo-settle 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes hero-logo-settle {
+  from { transform: translate(-50%, -50%) scale(0.94) translateY(10px); }
+  to { transform: translate(-50%, -50%) scale(1) translateY(0); }
+}
+
+/* proportions taken straight from the Figma lockup (node 1:961, 377.386 x 59.693) */
+.hero-pin__logo-ohouse {
+  display: block;
+  width: 44.39%;
+  height: auto;
+}
+
+.hero-pin__logo-special {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-top: 2.87%;
+}
+
+/* dark keyhole overlay: scales up + blurs away as you scroll, revealing the logo/page beneath */
+.hero-pin__overlay {
+  position: absolute;
+  inset: 0;
+  transform: scale(var(--overlay-scale, 1));
+  filter: blur(var(--overlay-blur, 1.5px));
+  opacity: var(--overlay-opacity, 1);
+  will-change: transform, filter, opacity;
+}
+
+.hero-pin__overlay-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* "Scroll ... Down" hint flanking the keyhole, fades out early in the scroll.
+   Left/right offsets are set as CSS vars by home.js so they always track the
+   keyhole's actual on-screen center and size (same xMidYMid-slice math as the SVG). */
+.hero-pin__hint {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  color: #dedede;
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: -0.11px;
+  opacity: var(--hint-opacity, 1);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.hero-pin__hint-word {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+
+.hero-pin__hint-word--left {
+  transform: translate(calc(-50% - var(--hint-offset-left, 210px)), -50%);
+}
+
+.hero-pin__hint-word--right {
+  transform: translate(calc(-50% + var(--hint-offset-right, 193px)), -50%);
+}
+
+/* down-scroll nudge (Figma node 24:56): fades in once the logo settles, then
+   quietly bobs up and down to hint that there's more to scroll to */
+.hero-pin__down-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 48px;
+  opacity: var(--down-hint-opacity, 0);
+  transition: opacity 0.5s ease 0.15s;
+  pointer-events: none;
+  animation: hero-down-hint-bob 1.6s ease-in-out infinite;
+}
+
+.hero-pin__down-hint img {
+  display: block;
+  width: 42px;
+  height: 42px;
+}
+
+@keyframes hero-down-hint-bob {
+  0%, 100% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, 10px); }
+}
+
+/* ---- next section, just enough to scroll into once the reveal finishes ---- */
+
+.next-section {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 20px;
+  padding: 80px 24px;
+}
+
+.next-section h2 {
+  font-size: 36px;
+  font-weight: 600;
+  letter-spacing: -0.18px;
+}
+
+.next-section p {
+  font-size: 18px;
+  line-height: 1.45;
+  margin-bottom: 40px;
+}
+
+/* ---- key visual (Figma node 1:975), clickable, photo floats independently of its shadow ---- */
+
+.key-link {
+  display: block;
+  /* matches Figma node 0:49: key bounding box is 781.765px on a 1280px-wide page (~61vw) */
+  width: clamp(220px, 61vw, 780px);
+  cursor: none;
+  text-decoration: none;
+}
+
+.key-visual {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 781.765 / 913.361;
+}
+
+.key-shadow {
+  position: absolute;
+  inset: 81.02% 16.97% 14.38% 12.03%;
+}
+
+.key-shadow__glow {
+  position: absolute;
+}
+
+.key-shadow__glow img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.key-shadow__glow--main {
+  inset: 0;
+}
+
+.key-shadow__glow--main img {
+  position: absolute;
+  inset: -28.1% -2.13%;
+  width: auto;
+  height: auto;
+}
+
+.key-shadow__glow--accent {
+  left: 46.49%;
+  top: 23.81%;
+  width: 53.51%;
+  height: 52.38%;
+}
+
+.key-shadow__glow--accent img {
+  position: absolute;
+  inset: -53.65% -3.97%;
+  width: auto;
+  height: auto;
+}
+
+/* only this wrapper floats — the shadow above never moves */
+.key-photo-wrap {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: key-float 4s ease-in-out infinite;
+}
+
+.key-photo {
+  display: block;
+  width: 65.69%;
+  transform: rotate(-23.86deg);
+  pointer-events: none;
+}
+
+@keyframes key-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-16px); }
+}
+
+/* custom "Click me" cursor that follows the pointer while hovering the key */
+.cursor-badge {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  padding: 7px 22px;
+  border-radius: 64px;
+  background: #393939;
+  color: #f9fcfe;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: -0.08px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  transform: translate(-1000px, -1000px);
+}
+
+.cursor-badge.is-visible {
+  opacity: 1;
+}
+
+@media (max-width: 600px) {
+  .hero-pin__logo {
+    width: 220px;
+  }
+  .hero-pin__hint {
+    font-size: 16px;
+  }
+  .next-section h2 {
+    font-size: 24px;
+  }
+  .next-section p {
+    font-size: 15px;
+  }
+}
