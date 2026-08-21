@@ -8,8 +8,8 @@
 ## 파일 구조
 
 ```
-index.html / styles.css       "Find the Key" 데스크톱 히어로 페이지
-home.html / home.css / home.js "OHOUSE Special Creator" 홈 히어로 페이지 (스크롤 인터랙션)
+FindTheKey.html / FindTheKey.css     "Find the Key" 데스크톱 히어로 페이지
+hero-home.html / hero-home.css / hero-home.js "OHOUSE Special Creator" 홈 히어로 페이지 (스크롤 인터랙션)
 assets/                        Figma에서 내려받은 벡터·이미지 애셋
 .claude/launch.json            로컬 미리보기용 정적 서버 설정
 ```
@@ -23,7 +23,7 @@ Figma MCP 애셋 URL이 상대경로(`assets/...`)를 참조하므로 `file://`�
 python3 -m http.server 5173
 ```
 
-이후 `http://localhost:5173/home.html`, `http://localhost:5173/index.html`로 접속.
+이후 `http://localhost:5173/hero-home.html`, `http://localhost:5173/FindTheKey.html`로 접속.
 
 ## Figma 소스
 
@@ -35,7 +35,7 @@ python3 -m http.server 5173
 
 | 노드 | 용도 |
 |---|---|
-| `0:137` (섹션 `0:177` "/find-the-key" 안) | `index.html`의 데스크톱 히어로 |
+| `0:137` (섹션 `0:177` "/find-the-key" 안) | `FindTheKey.html`의 데스크톱 히어로 |
 | `1:252` "key hole image" | 열쇠구멍 오버레이 원본 (다크 배경 + Exclude 키홀 + Scroll/Down 텍스트) |
 | `0:660` "hero-outer-graphic" | 키홀 오버레이의 boolean shape (Exclude: 사각형 − 열쇠구멍) |
 | `0:135` "home" | 홈페이지 전체 프레임 (메타데이터 통짜로는 못 읽음) |
@@ -44,17 +44,19 @@ python3 -m http.server 5173
 | `1:975` "key image" | 3D 열쇠 사진 + 그림자 (그림자는 별도 그룹, 애니메이션 제외 대상) |
 | `1:982` "home-click me-cusor" | 열쇠 호버 시 따라다니는 "Click me" 커서 배지 |
 | `24:56` "downscroll-icon" | 하단 다운스크롤 유도 chevron 아이콘 |
+| `48:271` "header" | 공용 헤더 컴포넌트 (아래 "헤더" 절 참고) |
+| `0:147` "finethekey-image-rolling" | `FindTheKey.html`의 무한 롤링 이미지 카드 행 (아래 절 참고) |
 
-## `home.html` 스크롤 인터랙션 설계 (중요)
+## `hero-home.html` 스크롤 인터랙션 설계 (중요)
 
-`.hero-pin` 섹션(`home.css`/`home.js`)이 핵심 인터랙션입니다. 순서대로:
+`.hero-pin` 섹션(`hero-home.css`/`hero-home.js`)이 핵심 인터랙션입니다. 순서대로:
 
 1. **키홀 오버레이 → 로고 리빌** (`revealDistance = 100vh`의 1.5배 = **150vh** 스크롤 구간)
    - `hero-outer-graphic`(다크 배경 + 열쇠구멍 SVG)이 `scale 1→4.4`, `blur 1.5px→61.5px`, `opacity 1→0`으로 커지면서 사라짐
    - 뒤에 있는 `OHOUSE/SPECIAL CREATOR` 로고는 반대로 `scale 0.4→1`, `blur 10px→0`으로 커지면서 선명해짐 (처음엔 열쇠구멍 사이로 작게 peek 하는 느낌)
    - **가속 이징 적용**: `easeInCubic` (t³) 사용 — 초반엔 느리게, 후반에 급격히 빨라지는 느낌. (레퍼런스: 사용자가 공유한 Pinterest 영상의 모션감 참고)
    - 키홀 SVG는 `preserveAspectRatio="xMidYMid slice"`로 렌더링 — `none`으로 하면 화면 비율에 따라 찌그러지므로 반드시 유지할 것
-   - `Scroll`/`Down` 힌트 텍스트 위치는 고정 px가 아니라 `home.js`가 매 리사이즈마다 키홀과 동일한 cover-scale 비율로 재계산함 (`updateHintPosition`)
+   - `Scroll`/`Down` 힌트 텍스트 위치는 고정 px가 아니라 `hero-home.js`가 매 리사이즈마다 키홀과 동일한 cover-scale 비율로 재계산함 (`updateHintPosition`)
 
 2. **홀드(정지) 구간**: 리빌이 끝난 뒤 추가로 **60vh**만큼 화면이 그대로 멈춰 있음 (`.hero-pin` 전체 높이 = 100vh(뷰포트) + 150vh(리빌) + 60vh(홀드) = **310vh**)
    - 리빌이 딱 끝나는 순간, 로고에 `is-settling` 클래스로 살짝 튕기는 "덜컥" 스냅 애니메이션 트리거 (`hero-logo-settle` 키프레임, overshoot 이징)
@@ -68,11 +70,49 @@ python3 -m http.server 5173
 - Figma `1:975` 기준, 사진(`key-photo.png`)과 그림자(`key-shadow-1/2.svg`)가 분리되어 있음
 - **둥실거리는 모션은 사진에만** 적용 (`.key-photo-wrap`에 `key-float` 애니메이션) — 그림자(`.key-shadow`)는 고정
 - 크기는 Figma `0:49` 기준 페이지 폭의 약 **61%**로 스케일 (`clamp(220px, 61vw, 780px)`)
-- 호버 시 커서를 숨기고(`cursor: none`) `1:982` "Click me" 배지가 마우스를 따라다님 (`home.js` 하단 `mousemove`/`mouseenter`/`mouseleave`)
-- 클릭하면 `index.html`로 이동 (나중에 실제 도메인 사면 `href`만 바꾸면 됨)
+- 호버 시 커서를 숨기고(`cursor: none`) `1:982` "Click me" 배지가 마우스를 따라다님 (`hero-home.js` 하단 `mousemove`/`mouseenter`/`mouseleave`)
+- 클릭하면 `FindTheKey.html`로 이동 (나중에 실제 도메인 사면 `href`만 바꾸면 됨)
+
+## 헤더 (Figma node `48:271`)
+
+`FindTheKey.html`의 헤더는 Figma의 `header` 컴포넌트(`48:271`)로 교체됨. 로고 + 4개 nav 링크 구조:
+
+- 로고(`#icon-logo`)는 클릭하면 `hero-home.html`(열쇠구멍 스크롤 첫 화면)로 이동
+- nav 링크 4개: `Find the Key` / `Opportunities Unlocked` / `Creator Voices` / `Beyond the Door` — Figma 컴포넌트에 `prop1: on/off` variant가 있어서, 현재 보고 있는 페이지에 해당하는 링크만 `on`으로 표시해야 함
+  - 구현은 `.header__link--on` / `.header__link--off` 클래스로 함 (on = `font-weight: 600`, Pretendard SemiBold)
+  - **주의**: on/off의 실제 시각 차이는 Figma에서 직접 variant를 확인한 게 아니라, 이전 버전 헤더의 active 링크가 볼드였던 것에 근거해 추정한 것. 실제 Figma on 상태 디자인이 다르면(색상/밑줄 등) 수정 필요
+  - 지금은 `FindTheKey.html`만 만들어져 있어서 `Find the Key`만 `--on`, 나머지 3개는 `--off` + `href="#"`. `Opportunities Unlocked`/`Creator Voices`/`Beyond the Door` 페이지를 실제로 만들면, 그 페이지에서는 그 페이지의 링크를 `--on`으로, 나머지를 `--off`로 바꿔줄 것
+
+## `finethekey-image-rolling` (Figma node `0:147`)
+
+`FindTheKey.html`의 카드 섹션은 Figma에서 4개→5개 이미지로 늘어나면서 `finethekey-image-rolling`으로 리네임됨 — 화면 전체 너비로 꽉 차게(edge-to-edge) 배치하고 **계속 자연스럽게 롤링**되어야 한다는 요구사항이 있었음.
+
+- 구현: `.rolling__track`에 원본 5개 + 복제 5개(총 10개) 아이템을 넣고 `translateX(0) → translateX(-50%)` 무한 애니메이션(`rolling-scroll`, 32s linear infinite). 두 세트가 완전히 동일하면 `-50%` 지점에서 이음매 없이 루프됨 — 아이템 개수/gap이 바뀌어도 항상 정확히 맞음
+- `.rolling`은 `.page`의 max-width 1280px 안에 있지만 `left: 50%; margin-left: -50vw;` 트릭으로 뷰포트 전체 너비로 breakout함
+- Figma 스펙에는 `border-radius`가 없음 — 카드에 둥근 모서리 넣지 말 것 (한 번 실수로 넣었다가 제거함)
+
+## 트로피 자리 (아직 미착수)
+
+카드 롤링 섹션 아래 "한 사람이 나눈 영감은..." 문구 다음에, Figma상 803×917 크기의 트로피 3D 배치 영역이 있음 (`트로피 3D 배치 예정.` 플레이스홀더 텍스트).
+
+- 사용자가 `.obj`/`.fbx` 3D 파일(오늘의집 최종 트로피)을 한 번 전달해서 Three.js(FBXLoader, CDN 모듈 import) + `<model-viewer>` 대신 커스텀 뷰어로 자동회전 구현까지 완료했었음 (`trophy.js`, `assets/trophy.fbx`)
+- 재질 질감(석고 느낌 살리려고 procedural grain bump/roughness map + RoomEnvironment 환경광까지 추가)까지 다듬었지만, 사용자가 최종적으로 "맘에 안 든다"고 해서 **`FindTheKey.html`에서 3D 뷰어를 다시 제거**하고 원래 Figma의 정적 플레이스홀더 박스(`#454545` 배경 + 흰 텍스트)로 되돌림
+- `trophy.js`와 `assets/trophy.fbx`는 나중에 다시 시도할 수 있도록 삭제하지 않고 저장소에 남겨둔 상태 (현재 어떤 HTML에서도 로드하지 않음)
+- 이어서 작업한다면: `trophy.js`를 다시 `FindTheKey.html`에 `<script type="module">`로 연결하고, 조명/재질을 사용자가 만족할 때까지 다시 튜닝하면 됨. 이전에 시도했다가 별로였던 것: RoomEnvironment 단독 조명(너무 어둡고 드라마틱함), 강한 bumpScale(너무 sparkle함)
+
+## 파일명 변경 이력
+
+원래 `index.html`/`home.html`이었다가, 실제 배포 시 웹서버가 `index.html`을 루트(`/`)로 서빙하는 관례와 헷갈리지 않도록 사용자 요청으로 리네임함:
+
+- `home.html`/`home.css`/`home.js` → `hero-home.html`/`hero-home.css`/`hero-home.js` (열쇠구멍 스크롤 첫 화면)
+- `index.html`/`styles.css` → `FindTheKey.html`/`FindTheKey.css` (Find the Key 페이지)
+
+나중에 실제 도메인을 연결할 때는, 그 시점의 첫 화면(현재 `hero-home.html`)을 `index.html`로 다시 바꿔주는 게 자연스러움.
 
 ## 알아두면 좋은 것
 
 - Pretendard 폰트는 jsdelivr CDN에서 불러옴 (오프라인이면 폰트 깨짐)
 - 이 저장소는 private, GitHub 계정 `sarahkim-bucketplace` / repo `special-creator`
 - 다른 Mac에서 이어가려면: `git clone` → `gh auth login` (최초 1회) → 이후 `git pull`만 하면 됨
+- **push 권한**: GitHub Fine-grained PAT를 발급할 때 `Contents` 권한을 반드시 **Read and write**로 설정해야 push가 됨 (Read-only로 만들면 clone/pull은 되지만 push는 403으로 막힘 — 실제로 한 번 겪었음)
+- 로컬 정적 서버(`python3 -m http.server`)를 이 프로젝트 경로(iCloud Drive 하위)에서 Claude Code의 `preview_start` 도구로 띄우면 `PermissionError: [Errno 1] Operation not permitted` (`os.getcwd()`)가 남 — iCloud Drive 경로에 대한 도구 자체의 샌드박스 제약으로 보임. Bash로 직접 `python3 -m http.server 5173 &`로 띄우면 정상 동작하니 그 방식을 쓸 것
