@@ -1,0 +1,109 @@
+import * as THREE from 'three';
+import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const container = document.getElementById('trophyViewer');
+if (container) {
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(35, container.clientWidth / container.clientHeight, 0.1, 5000);
+  camera.position.set(0, 0.4, 4.2);
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(container.clientWidth, container.clientHeight);
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.3;
+  container.appendChild(renderer.domElement);
+
+  // soft studio-style reflections without needing an external HDRI file
+  const pmremGenerator = new THREE.PMREMGenerator(renderer);
+  scene.environment = pmremGenerator.fromScene(new RoomEnvironment(), 0.04).texture;
+
+  scene.add(new THREE.HemisphereLight(0xffffff, 0xd8d8d8, 0.9));
+  const keyLight = new THREE.DirectionalLight(0xffffff, 1.6);
+  keyLight.position.set(2, 3, 4);
+  scene.add(keyLight);
+  const rimLight = new THREE.DirectionalLight(0xdbe8ff, 0.5);
+  rimLight.position.set(-3, 1.5, -2.5);
+  scene.add(rimLight);
+
+  // procedural fine-grain noise, standing in for a real plaster surface scan since
+  // no texture map shipped with the model — used as both a bump and roughness map
+  // so the surface catches light unevenly instead of reading as flat/plastic
+  function makeGrainTexture() {
+    const size = 256;
+    const canvas = document.createElement('canvas');
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext('2d');
+    const imageData = ctx.createImageData(size, size);
+    for (let i = 0; i < imageData.data.length; i += 4) {
+      const v = 200 + Math.floor(Math.random() * 55);
+      imageData.data[i] = v;
+      imageData.data[i + 1] = v;
+      imageData.data[i + 2] = v;
+      imageData.data[i + 3] = 255;
+    }
+    ctx.putImageData(imageData, 0, 0);
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(18, 18);
+    texture.colorSpace = THREE.NoColorSpace;
+    return texture;
+  }
+  const grainTexture = makeGrainTexture();
+
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableZoom = false;
+  controls.enablePan = false;
+  controls.enableDamping = true;
+  controls.autoRotate = true;
+  controls.autoRotateSpeed = 2.4;
+
+  const loader = new FBXLoader();
+  loader.load('assets/trophy.fbx', (object) => {
+    object.traverse((child) => {
+      if (child.isMesh) {
+        child.material = new THREE.MeshPhysicalMaterial({
+          color: 0xf1ece3,
+          roughness: 0.6,
+          roughnessMap: grainTexture,
+          bumpMap: grainTexture,
+          bumpScale: 0.004,
+          metalness: 0,
+          clearcoat: 0.06,
+          clearcoatRoughness: 0.7,
+          envMapIntensity: 0.55,
+        });
+      }
+    });
+
+    // FBX export is in cm-ish arbitrary units; normalize + center so it fills the viewer consistently.
+    // scale must be applied before deriving the position offset, since .position is a
+    // parent-space translation that isn't itself affected by the object's own .scale.
+    const box = new THREE.Box3().setFromObject(object);
+    const size = box.getSize(new THREE.Vector3());
+    const center = box.getCenter(new THREE.Vector3());
+    const maxDim = Math.max(size.x, size.y, size.z) || 1;
+    const targetScale = 2.2 / maxDim;
+    object.scale.setScalar(targetScale);
+    object.position.set(-center.x * targetScale, -center.y * targetScale, -center.z * targetScale);
+
+    scene.add(object);
+  });
+
+  function animate() {
+    requestAnimationFrame(animate);
+    controls.update();
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    camera.aspect = container.clientWidth / container.clientHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(container.clientWidth, container.clientHeight);
+  });
+}
