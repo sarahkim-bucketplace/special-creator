@@ -17,19 +17,51 @@ body {
   color: #2d2828;
 }
 
-/* soft blurred gradient blobs behind the hero, matching the Figma "Ellipse 6/7" glow */
-.bg-decor {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 780px;
+/* two soft blurred color blobs (same size/color/position as the old static
+   .bg-decor, matching Figma node 54:1435), each drifting slowly and
+   independently instead of one big band sweeping across the whole page */
+.bg-gradient-anim {
+  position: fixed;
+  inset: 0;
   z-index: -2;
+  overflow: hidden;
   pointer-events: none;
-  background:
-    radial-gradient(ellipse 900px 700px at 8% -10%, rgba(246, 251, 196, 0.85), rgba(246, 251, 196, 0) 70%),
-    radial-gradient(ellipse 900px 700px at 92% -5%, rgba(205, 231, 255, 0.85), rgba(205, 231, 255, 0) 70%);
-  filter: blur(40px);
+}
+
+.bg-gradient-anim::before,
+.bg-gradient-anim::after {
+  content: "";
+  position: absolute;
+  width: 900px;
+  height: 700px;
+  border-radius: 50%;
+  filter: blur(60px);
+}
+
+.bg-gradient-anim::before {
+  top: -10%;
+  left: 8%;
+  background: rgba(246, 251, 196, 0.45);
+  transform: translate(-50%, 0);
+  animation: bg-blob-drift-1 14s ease-in-out infinite;
+}
+
+.bg-gradient-anim::after {
+  top: -5%;
+  left: 92%;
+  background: rgba(205, 231, 255, 0.45);
+  transform: translate(-50%, 0);
+  animation: bg-blob-drift-2 16s ease-in-out infinite;
+}
+
+@keyframes bg-blob-drift-1 {
+  0%, 100% { transform: translate(-50%, 0) scale(1); }
+  50% { transform: translate(calc(-50% + 180px), 160px) scale(1.15); }
+}
+
+@keyframes bg-blob-drift-2 {
+  0%, 100% { transform: translate(-50%, 0) scale(1); }
+  50% { transform: translate(calc(-50% - 180px), 180px) scale(1.15); }
 }
 
 /* subtle noise/grain overlay, matching the Figma "배경 그레인" noise effect */
@@ -39,7 +71,10 @@ body {
   z-index: -1;
   pointer-events: none;
   opacity: 0.05;
-  mix-blend-mode: overlay;
+  /* "overlay" has no visible effect on a pure white base (its math is a no-op at
+     lightness 1), which is why this was invisible once .bg-decor's color was
+     removed — "multiply" darkens regardless of base color, so it stays visible */
+  mix-blend-mode: multiply;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
 }
 
