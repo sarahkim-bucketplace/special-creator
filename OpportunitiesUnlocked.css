@@ -191,27 +191,57 @@ body {
   align-items: flex-end;
   justify-content: center;
   gap: 15px;
+  cursor: grab;
 }
 
+.ou-contents.is-dragging {
+  cursor: grabbing;
+  scroll-behavior: auto;
+}
+
+/* below the fixed 1618px width, the row no longer fits the viewport with
+   nothing cut off — switch to a full-bleed strip you can scroll (trackpad)
+   or click-drag (mouse) through instead of just clipping the overflow */
+@media (max-width: 1680px) {
+  .ou-contents {
+    width: 100vw;
+    left: 50%;
+    margin-left: -50vw;
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding: 0 36px 8px;
+    scrollbar-width: none;
+  }
+  .ou-contents::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* base state = Figma "OU-contents-box-off" (55:2049): all 5 cards identical,
+   dimmed. Hovering a card grows it to the "on" component's featured size
+   (55:2048's Frame-03-main) and brings it to full opacity — no card is
+   featured by default, any of them can become the featured one */
 .ou-card {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 20px;
   flex: 0 0 291px;
+  transition: flex-basis 0.35s ease;
 }
 
 .ou-card__photo {
   width: 100%;
   height: 430px;
   background: #d9d9d9;
+  transition: height 0.35s ease;
 }
 
-.ou-card--main {
+.ou-card:hover {
   flex: 0 0 394px;
 }
 
-.ou-card--main .ou-card__photo {
+.ou-card:hover .ou-card__photo {
   height: 520px;
 }
 
@@ -219,10 +249,12 @@ body {
   display: flex;
   flex-direction: column;
   gap: 3px;
+  opacity: 0.4;
+  transition: opacity 0.35s ease;
 }
 
-.ou-card__text--dim {
-  opacity: 0.4;
+.ou-card:hover .ou-card__text {
+  opacity: 1;
 }
 
 .ou-card__title {
@@ -277,21 +309,18 @@ body {
     display: none;
   }
   .ou-contents {
-    width: 100%;
-    left: 0;
-    margin-left: 0;
-    overflow-x: auto;
-    justify-content: flex-start;
     padding: 0 20px 8px;
   }
-  .ou-card,
-  .ou-card--main {
+  .ou-card {
     flex: 0 0 200px;
   }
   .ou-card__photo {
     height: 296px;
   }
-  .ou-card--main .ou-card__photo {
+  .ou-card:hover {
+    flex: 0 0 240px;
+  }
+  .ou-card:hover .ou-card__photo {
     height: 358px;
   }
 }
