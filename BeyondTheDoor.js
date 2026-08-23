@@ -1,28 +1,37 @@
 (function () {
-  // "직접 만나 나누는 시간" 갤러리 — 스크롤해서 뷰포트에 들어올 때마다
-  // 사진 프레임이 하나씩 나타나고, 화면 밖으로 나가면 다시 숨겨져서
-  // 위/아래로 다시 스크롤할 때마다 매번 등장 모션이 재생됨
-  const photos = document.querySelectorAll('.btd-gallery__photo');
-  if (!photos.length) return;
+  // scroll-reveal: elements start hidden (opacity 0 + offset down), and
+  // toggle .is-visible on/off as they cross into/out of the viewport, so
+  // scrolling up then back down replays the animation every time
+  function initReveal(selector, { stagger = 0 } = {}) {
+    const els = document.querySelectorAll(selector);
+    if (!els.length) return;
 
-  // 같은 행에 동시에 들어오는 프레임들도 살짝 시간차를 두고 튀어나오게
-  photos.forEach((el, i) => {
-    el.style.transitionDelay = `${Math.min(i, 5) * 80}ms`;
-  });
+    if (stagger) {
+      els.forEach((el, i) => {
+        el.style.transitionDelay = `${Math.min(i, 5) * stagger}ms`;
+      });
+    }
 
-  if (!('IntersectionObserver' in window)) {
-    photos.forEach((el) => el.classList.add('is-visible'));
-    return;
+    if (!('IntersectionObserver' in window)) {
+      els.forEach((el) => el.classList.add('is-visible'));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          entry.target.classList.toggle('is-visible', entry.isIntersecting);
+        });
+      },
+      { threshold: 0.15, rootMargin: '0px 0px -60px 0px' }
+    );
+
+    els.forEach((el) => observer.observe(el));
   }
 
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        entry.target.classList.toggle('is-visible', entry.isIntersecting);
-      });
-    },
-    { threshold: 0.15, rootMargin: '0px 0px -60px 0px' }
-  );
+  // "직접 만나 나누는 시간" 갤러리 — 사진 9장이 하나씩(80ms 시차) 나타남
+  initReveal('.btd-gallery__photo', { stagger: 80 });
 
-  photos.forEach((el) => observer.observe(el));
+  // 여정 리스트 — 각 단계는 텍스트+사진이 한 덩어리로 같이 나타남
+  initReveal('.btd-journey__row');
 })();

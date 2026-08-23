@@ -159,11 +159,15 @@ python3 -m http.server 5173
 `BeyondTheDoor.html`/`.css` — 헤더/히어로/배경은 다른 페이지와 동일. 이 페이지는 섹션이 많아서 구조를 정리해두면:
 
 1. **여정 리스트** (`.btd-journey`, Figma `28:1004`): 번호 붙은 단계 5개(오프닝 밋업 → 브랜드 콜라보 → 스페셜 크리에이터 활동 → 오프라인 밋업 → 페어웰), 각 단계마다 위에 구분선 + 왼쪽 텍스트(번호+제목, 설명) + 오른쪽 사진 2장(390×252). 단계 사이에 아래방향 화살표(`assets/icon-go.svg`를 회전 없이 그대로 씀 — 원래 오른쪽 화살표로 쓸 때만 `-90deg` 돌렸던 거라 아래쪽 화살표엔 회전이 필요 없음)
+   - `.btd-journey__item`은 `padding-bottom: 30px`(마지막 단계만 `:last-child`로 0), 화살표(`.btd-arrow`)는 `margin: 30px auto 7px` — 전부 Figma 값 그대로. 여정 리스트 섹션이 끝나고 바로 다음에 오는 첫 번째 `.btd-middle`("직접 만나 나누는 시간")은 사용자가 Figma에서 간격을 넓혀서 `margin-top: 300px`로 따로 오버라이드해둠(`.btd-journey + .btd-middle` 선택자). 갤러리 뒤에 오는 두 번째 `.btd-middle`은 기본값 `130px` 그대로이니, 나중에 `.btd-middle` 기본값을 바꿀 땐 이 오버라이드 규칙이 있다는 걸 기억할 것
+   - **스크롤 리빌 애니메이션**: 각 단계의 `.btd-journey__row`(텍스트+사진 한 덩어리)가 처음엔 `opacity:0` + 아래로 28px 밀려있다가 뷰포트에 들어오면 나타남 — 아래 갤러리와 같은 `initReveal()` 헬퍼(`BeyondTheDoor.js`) 재사용, stagger 없이 단계별로 한 번에
 2. **middle-text**를 두 번 재사용(Figma에 컴포넌트로 정의됨, `.btd-middle` 클래스로 구현): "직접 만나 나누는 시간"과 "함께한 시간에 마음을 담아" — 텍스트만 다르고 스타일은 동일
 3. **사진 모자이크 갤러리** (`.btd-gallery`, Figma photo-01~08 + 무명 노드 하나): Figma 절대좌표를 분석해보면 사실 꽤 깔끔한 구조였음 — 1행은 박스 2개(41% + 나머지), 2행은 동일 너비 3열이고 각 열이 내부적으로 박스 2개를 세로로 쌓은 것(가운데 열만 아래쪽이 작은 박스 2개가 가로로 나란한 형태). 세 열의 내부 합산 높이가 전부 580px로 딱 맞아떨어져서, 이 3열 구조로 확신하고 구현함. 실제 렌더링은 `aspect-ratio`로 Figma 비율만 맞추고, 폭은 flex로 반응형 처리(절대 px 좌표 그대로 베끼지 않음)
    - **스크롤 리빌 애니메이션**: `.btd-gallery__photo` 9개가 처음엔 `opacity:0` + 아래로 28px 밀려있다가, `IntersectionObserver`(`BeyondTheDoor.js`)로 각자 뷰포트에 들어오는 순간 `.is-visible` 클래스가 붙으면서 하나씩 나타남. 같은 행에서 동시에 들어오는 것들은 `transition-delay`로 80ms씩 차이를 둬서 순서대로 튀어나오는 느낌을 줌. `entry.isIntersecting` 값으로 `.is-visible`을 매번 토글하기 때문에(처음엔 `unobserve`로 한 번만 재생되게 했다가, 위/아래로 다시 스크롤할 때마다 재생되게 바꿔달라는 요청으로 수정함) 화면 밖으로 나가면 다시 숨겨졌다가 재진입할 때마다 애니메이션이 반복 재생됨
+   - `BeyondTheDoor.js`는 `initReveal(selector, { stagger })` 헬퍼 하나로 갤러리(`stagger: 80`)와 여정 리스트(stagger 없음) 둘 다 처리함 — 새 섹션에도 같은 리빌 효과를 넣고 싶으면 이 헬퍼를 그대로 재사용하면 됨
 4. **Special Gift 인덱스** (`.btd-gift`, Figma `56:2830`): 3열 — 1열은 "Special Gift" 라벨만, 2열은 항목 1~3(각각 위에 구분선), 3열은 항목 4~5. Figma에서 `<ol><li>`로 표현된 번호 매기기는 실제 `ol/li` 대신 그냥 "1. " 텍스트를 직접 써넣는 방식으로 구현함 (프로젝트 전반에 걸쳐 일관된 패턴 — 카드/리스트류에서 실제 시맨틱 리스트 마크업 대신 텍스트로 번호를 씀)
 5. 900px 이하에서 여정 리스트는 세로 스택, 갤러리는 1열로 바뀜 (가운데 열의 "작은 박스 2개" 서브로우는 계속 가로 유지)
+6. **폰트 굵기**: `.btd-journey__desc`, `.btd-gift__label`, `.btd-gift__item`이 원래 Figma엔 Pretendard Medium(`font-weight: 500`)으로 돼 있었는데, 실제로 보니 너무 진하게 보인다는 피드백으로 전부 Regular(`400`)로 낮춤. 이 페이지에서 Medium 굵기로 남아있는 텍스트는 이제 없음 (제목류는 SemiBold 600 그대로 유지)
 
 ## 트로피 자리 (아직 미착수)
 

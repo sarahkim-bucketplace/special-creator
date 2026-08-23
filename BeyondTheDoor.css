@@ -198,12 +198,25 @@ body {
 .btd-journey__item {
   border-top: 1px solid #000000;
   padding-top: 10px;
+  padding-bottom: 30px;
+}
+
+.btd-journey__item:last-child {
+  padding-bottom: 0;
 }
 
 .btd-journey__row {
   display: flex;
   align-items: flex-start;
   gap: 24px;
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.btd-journey__row.is-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .btd-journey__text {
@@ -223,7 +236,7 @@ body {
 
 .btd-journey__desc {
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 400;
   letter-spacing: -0.08px;
   line-height: 1.45;
   color: #000000;
@@ -255,6 +268,12 @@ body {
   flex-direction: column;
   gap: 20px;
   margin-top: 130px;
+}
+
+/* journey section's bottom gap was widened in Figma (+170px) — only the
+   middle-text block right after journey needs it, not the one after gallery */
+.btd-journey + .btd-middle {
+  margin-top: 300px;
 }
 
 .btd-middle__title {
@@ -331,14 +350,14 @@ body {
 
 .btd-gift__label {
   font-size: 22px;
-  font-weight: 500;
+  font-weight: 400;
   letter-spacing: -0.11px;
   color: #000000;
 }
 
 .btd-gift__item {
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 400;
   letter-spacing: -0.08px;
   color: #000000;
   padding-top: 8px;
