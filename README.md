@@ -136,6 +136,7 @@ python3 -m http.server 5173
   - **마우스를 올리면(hover) 그 카드만** Figma의 강조 크기(394×520, `opacity: 1`)로 부드럽게 커짐 — 어떤 카드든 hover하면 그 카드가 커지는 방식 (`.ou-card:hover`, `transition`)
   - `align-items: flex-start`(상단 정렬) — 실제 콘텐츠가 들어가면서 카드마다 제목이 1줄/2줄로 길이가 달라지자(예: "93 CUPS, 93 STORIES" 2줄 vs "스토리마켓" 1줄) 원래 쓰던 `flex-end`(하단 정렬) 때문에 썸네일 상단이 카드마다 들쭉날쭉해 보이는 문제가 생겨서 `flex-start`로 바꿈 (placeholder 시절엔 제목이 전부 "Creator Network"로 통일돼 있어서 문제가 안 보였을 뿐)
   - 다만 hover로 커질 때는 원래처럼 **위로** 자라야 한다는 요청이 있어서, `.ou-card:hover .ou-card__photo`에 `height` 증가분만큼 `margin-top`을 음수로 줌(데스크톱 430→520px 차이 90px → `margin-top: -90px`, 900px 이하 296→358px 차이 62px → `margin-top: -62px`). 아래쪽 끝은 그대로 고정된 채 위쪽만 위로 자라나서, 쉬는 상태의 상단 정렬은 유지하면서 hover 확대 방향은 예전 그대로 재현함. 만약 hover 크기 값(430/520, 296/358)이 나중에 또 바뀌면 이 margin-top 값도 그 차이만큼 다시 계산해서 맞춰야 함
+  - 실제 사진으로 확인해보니 위로 자란 카드가 히어로 텍스트 쪽 여백을 너무 파고들어 붕 떠 보인다는 피드백이 있어서, `.ou-contents`의 `margin-top`을 `130px → 220px`(기존값 + 데스크톱 hover 성장폭 90px)로 늘림 — 그 결과 hover로 자란 카드의 새 top 위치가 정확히 "옛날 130px 여백 기준선"에 오게 되어, 커진 상태에서도 히어로와의 간격이 원래(쉬는 상태) 느낌 그대로 유지됨
   - 각 카드 제목 옆에 `icon-go` 화살표(18×18, `rotate(-90deg)`로 오른쪽을 가리키게 함)
   - 전체 폭이 1618px로 `.page`의 1280px보다 넓음. **1680px 이상** 뷰포트에서는 `.rolling`과 같은 방식(`left: 50%` + 음수 `margin-left`)으로 breakout하고 스크롤 없이 중앙 정렬됨. **1680px 미만**에서는 100vw 폭의 스크롤 가능한 스트립으로 전환됨(`overflow-x: auto`, 스크롤바는 숨김) — 트랙패드는 그대로 스와이프되고, `OpportunitiesUnlocked.js`가 마우스 클릭+드래그 스크롤도 지원함 (드래그 중엔 커서가 grab→grabbing)
   - 카드 5개 전부 `<a>` 태그로 바뀌어서 클릭하면 아래 상세 페이지로 이동함
