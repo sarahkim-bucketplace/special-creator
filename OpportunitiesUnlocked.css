@@ -279,7 +279,9 @@ body {
   left: 50%;
   width: 1618px;
   margin-left: -809px;
-  margin-top: 130px;
+  /* 130px base + 90px (the hover-grow amount below) so a hovered card's
+     upward growth has room to breathe instead of crowding the hero above */
+  margin-top: 220px;
   display: flex;
   align-items: flex-start;
   justify-content: center;
