@@ -228,7 +228,7 @@ body {
     gap: 0;
     max-height: 0;
     overflow: hidden;
-    background: #ffffff;
+    background: #e9f4ff;
     padding: 0 36px;
     opacity: 0;
     transition: max-height 0.3s ease, opacity 0.25s ease;
