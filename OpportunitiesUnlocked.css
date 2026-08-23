@@ -281,7 +281,7 @@ body {
   margin-left: -809px;
   margin-top: 130px;
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
   justify-content: center;
   gap: 15px;
   cursor: grab;
