@@ -159,6 +159,99 @@ body {
   white-space: nowrap;
 }
 
+/* ---- mobile hamburger menu (<=900px) — .header__links becomes a
+   fixed dropdown panel below the header, toggled by .header--menu-open
+   on .header (see header-menu.js, shared by all pages using this header) ---- */
+.header__menu-btn {
+  display: none;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  position: relative;
+}
+
+.header__menu-icon,
+.header__menu-icon::before,
+.header__menu-icon::after {
+  position: absolute;
+  left: 50%;
+  width: 22px;
+  height: 2px;
+  background: #2d2828;
+  transform: translateX(-50%);
+  transition: transform 0.25s ease, opacity 0.2s ease, top 0.25s ease;
+}
+
+.header__menu-icon {
+  top: 15px;
+}
+
+.header__menu-icon::before {
+  content: "";
+  top: 8px;
+}
+
+.header__menu-icon::after {
+  content: "";
+  top: 22px;
+}
+
+.header--menu-open .header__menu-icon {
+  background: transparent;
+}
+
+.header--menu-open .header__menu-icon::before {
+  top: 15px;
+  transform: translateX(-50%) rotate(45deg);
+}
+
+.header--menu-open .header__menu-icon::after {
+  top: 15px;
+  transform: translateX(-50%) rotate(-45deg);
+}
+
+@media (max-width: 900px) {
+  .header__menu-btn {
+    display: block;
+  }
+  .header__links {
+    position: fixed;
+    top: 105px;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    max-height: 0;
+    overflow: hidden;
+    background: #ffffff;
+    padding: 0 36px;
+    opacity: 0;
+    transition: max-height 0.3s ease, opacity 0.25s ease;
+  }
+  .header--menu-open .header__links {
+    max-height: 400px;
+    opacity: 1;
+    padding: 8px 36px 24px;
+  }
+  .header__link {
+    width: 100%;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(45, 40, 40, 0.1);
+    font-size: 16px;
+  }
+  .header__cta {
+    width: 100%;
+    margin-top: 16px;
+    padding: 12px 0;
+    font-size: 15px;
+  }
+}
+
 /* ---- hero ---- */
 .hero {
   display: flex;
@@ -255,15 +348,6 @@ body {
 }
 
 @media (max-width: 600px) {
-  .header {
-    padding: 15px 20px;
-  }
-  .header__links {
-    gap: 18px;
-  }
-  .header__link {
-    font-size: 12px;
-  }
   .hero {
     margin-top: 80px;
   }
