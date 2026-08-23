@@ -13,12 +13,13 @@ hero-home.html / hero-home.css / hero-home.js  "OHOUSE Special Creator" 홈 히�
 OpportunitiesUnlocked.html / .css              "Opportunities Unlocked" 목록 페이지 (Figma 0:236)
 OpportunitiesUnlocked-01~05.html / .css        카드 클릭 시 이동하는 상세 페이지 (Figma 0:771) — 아래 절 참고
 detail-photo-carousel.js                       위 5개 상세 페이지가 공용으로 쓰는 사진 슬라이드 화살표 스크립트
+CreatorVoices.html / .css                      "Creator Voices" 페이지 (Figma 0:519) — 아래 절 참고
 trophy.js                                      3D 트로피 뷰어 (현재 어떤 HTML에도 연결 안 됨, 보류 중)
 assets/                                        Figma에서 내려받은 벡터·이미지 애셋 (+ trophy.fbx)
 .claude/launch.json                            로컬 미리보기용 정적 서버 설정 (아래 "알아두면 좋은 것" 참고 — 이 프로젝트 경로에선 안 먹음)
 ```
 
-**아직 안 만든 페이지**: `Creator Voices`, `Beyond the Door` — 헤더 nav에 링크는 있지만 `href="#"`로 비워둔 상태.
+**아직 안 만든 페이지**: `Beyond the Door` — 헤더 nav에 링크는 있지만 `href="#"`로 비워둔 상태.
 
 ## 로컬에서 실행하기
 
@@ -141,6 +142,16 @@ python3 -m http.server 5173
   - 링크는 Figma 원래 문구 대신 **01~05를 순환하는 실제 페이지 이동**으로 연결해둠: `01 ← 02 ← 03 ← 04 ← 05`, `01 → 02 → 03 → 04 → 05 → (다시) 01`. **예외는 딱 하나** — `01`의 "이전"만 목록 페이지(`OpportunitiesUnlocked.html`)로 감 (그 앞에 다른 상세 페이지가 없어서). `05`의 "다음"은 `01`로 순환(wrap)됨
   - 카드별 실제 콘텐츠가 정해지면, 이 상세 페이지들 자체도 서로 다른 내용으로 채워질 것이므로 그때 Navigator 링크 텍스트("이전 사례"/"다음 사례")도 그 사례 제목으로 바꿔주면 자연스러움
 - 900px 이하에서는 사진이 위, 텍스트가 아래로 세로 스택됨
+
+## Creator Voices 페이지 (Figma `0:519`)
+
+`CreatorVoices.html`/`.css` — 헤더/히어로/배경 시스템은 다른 페이지와 동일하게 재사용. `FindTheKey.css`의 공용 블록(리셋~`.hero__subtitle`까지)을 그대로 복사해서 시작함.
+
+- **`CV-Contents-01`/`02`** (Figma `48:1057`/`48:1112`): 사진(495×340) + 텍스트가 좌우로 나란히 배치되는 행 4개, 홀수 행은 사진이 왼쪽, 짝수 행은 사진이 오른쪽 — `.cv-row` / `.cv-row--reverse`(DOM 순서는 항상 "사진, 텍스트"로 동일, `flex-direction: row-reverse`로만 시각적으로 뒤집음)
+  - Figma의 4개 행 콘텐츠(타이틀 "기록이 열어준 새로운 기회", 작성자 "MOPO 님", 본문)가 전부 동일한 placeholder 텍스트라, 그대로 4번 복사해둠 — 실제 인터뷰 콘텐츠가 정해지면 각 `.cv-row`의 텍스트만 바꾸면 됨
+  - 900px 이하에서는 사진이 위, 텍스트가 아래로 세로 스택
+- 하단 **outro**(Figma `55:2735` "sub-text") + **CTA 버튼** "스페셜 크리에이터 지원하기"(`#464646` 배경, 56px 높이, `rounded-52`) — 아직 실제 지원 폼/링크가 없어서 `href="#"`
+- 헤더 nav에서 `Creator Voices` 링크가 이제 다른 모든 페이지(`FindTheKey.html`, `OpportunitiesUnlocked.html`, `OpportunitiesUnlocked-01~05.html`)에서 실제로 이 페이지로 연결됨
 
 ## 트로피 자리 (아직 미착수)
 

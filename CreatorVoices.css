@@ -1,0 +1,329 @@
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  overflow-x: hidden;
+}
+
+body {
+  position: relative;
+  background: #ffffff;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #2d2828;
+}
+
+/* two soft blurred color blobs (same size/color/position as the old static
+   .bg-decor, matching Figma node 54:1435), each drifting slowly and
+   independently instead of one big band sweeping across the whole page */
+.bg-gradient-anim {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.bg-gradient-anim::before,
+.bg-gradient-anim::after {
+  content: "";
+  position: absolute;
+  width: 900px;
+  height: 700px;
+  border-radius: 50%;
+  filter: blur(60px);
+}
+
+.bg-gradient-anim::before {
+  top: -10%;
+  left: 8%;
+  background: rgba(246, 251, 196, 0.45);
+  transform: translate(-50%, 0);
+  animation: bg-blob-drift-1 14s ease-in-out infinite;
+}
+
+.bg-gradient-anim::after {
+  top: -5%;
+  left: 92%;
+  background: rgba(205, 231, 255, 0.45);
+  transform: translate(-50%, 0);
+  animation: bg-blob-drift-2 16s ease-in-out infinite;
+}
+
+@keyframes bg-blob-drift-1 {
+  0%, 100% { transform: translate(-50%, 0) scale(1); }
+  50% { transform: translate(calc(-50% + 180px), 160px) scale(1.15); }
+}
+
+@keyframes bg-blob-drift-2 {
+  0%, 100% { transform: translate(-50%, 0) scale(1); }
+  50% { transform: translate(calc(-50% - 180px), 180px) scale(1.15); }
+}
+
+/* subtle noise/grain overlay, matching the Figma "배경 그레인" noise effect */
+.bg-grain {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.05;
+  /* "overlay" has no visible effect on a pure white base (its math is a no-op at
+     lightness 1), which is why this was invisible once .bg-decor's color was
+     removed — "multiply" darkens regardless of base color, so it stays visible */
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+/* header is fixed (not sticky) — body has overflow-x:hidden for the full-bleed
+   .rolling section, and sticky descendants break under that (a well-known
+   browser quirk); fixed isn't affected, so this space compensates for the
+   header no longer taking up room in normal flow */
+body {
+  padding-top: 105px;
+}
+
+.page {
+  position: relative;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 35px 35px 160px;
+}
+
+/* ---- header (Figma node 48:271) ---- */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 105px;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 15px 36px;
+}
+
+.header__logo {
+  display: block;
+  width: 27.795px;
+  height: 27.795px;
+}
+
+.header__logo-icon {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.header__links {
+  display: flex;
+  align-items: center;
+  gap: 38px;
+}
+
+.header__link {
+  font-size: 14px;
+  line-height: 1.45;
+  letter-spacing: -0.07px;
+  color: #2d2828;
+  text-decoration: none;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+/* on/off variant from the Figma component: "on" marks the current page's nav item */
+.header__link--on {
+  font-weight: 600;
+}
+
+/* CTA pill button (Figma node 48:952 "Open Your Door") */
+.header__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 10px;
+  border-radius: 40px;
+  background: #282828;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: -0.07px;
+  line-height: 1.45;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* ---- hero ---- */
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-top: 113px;
+}
+
+.hero__icon {
+  width: 39.2px;
+  height: 39.2px;
+  margin-bottom: 32px;
+}
+
+.hero__title {
+  font-size: 36px;
+  font-weight: 600;
+  letter-spacing: -0.18px;
+  line-height: normal;
+  margin-bottom: 20px;
+}
+
+.hero__subtitle {
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: -0.09px;
+  line-height: 1.45;
+  color: #2d2828;
+}
+
+/* ---- CV-Contents rows (Figma 48:1057 "01" / 48:1112 "02"), alternating
+   photo/text sides — .cv-row--reverse flips via row-reverse so the DOM
+   order (photo, then text) stays the same for both variants ---- */
+.cv-row {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  padding: 90px 17px;
+}
+
+.cv-row--reverse {
+  flex-direction: row-reverse;
+}
+
+.cv-row__photo {
+  flex: 0 0 495px;
+  height: 340px;
+  background: #d9d9d9;
+}
+
+.cv-row__text {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 698px;
+  padding-top: 14px;
+  border-top: 1px solid #000000;
+}
+
+.cv-row__title {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.cv-row__title-main {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.11px;
+  color: #000000;
+}
+
+.cv-row__title-author {
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.07px;
+  color: #838383;
+}
+
+.cv-row__body {
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: -0.08px;
+  line-height: 1.45;
+  color: #000000;
+  max-width: 576px;
+}
+
+/* ---- outro (Figma 55:2735 "sub-text") + apply CTA ---- */
+.cv-outro {
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: -0.09px;
+  line-height: 1.45;
+  text-align: center;
+  margin-top: 40px;
+}
+
+.cv-apply {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 275px;
+  height: 56px;
+  margin: 56px auto 0;
+  border-radius: 52px;
+  background: #464646;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.09px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  .cv-row,
+  .cv-row--reverse {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 24px;
+    padding: 48px 0;
+  }
+  .cv-row__photo {
+    flex-basis: auto;
+    width: 100%;
+    height: 240px;
+  }
+  .cv-row__title-main {
+    font-size: 19px;
+  }
+}
+
+@media (max-width: 600px) {
+  .header {
+    padding: 15px 20px;
+  }
+  .header__links {
+    gap: 18px;
+  }
+  .header__link {
+    font-size: 12px;
+  }
+  .hero {
+    margin-top: 80px;
+  }
+  .hero__title {
+    font-size: 26px;
+  }
+  .hero__subtitle {
+    font-size: 15px;
+  }
+  .hero__subtitle br {
+    display: none;
+  }
+  .cv-outro {
+    font-size: 15px;
+  }
+  .cv-outro br {
+    display: none;
+  }
+  .cv-apply {
+    width: 100%;
+    max-width: 275px;
+  }
+}
