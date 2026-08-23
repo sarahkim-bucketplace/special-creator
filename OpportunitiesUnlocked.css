@@ -279,9 +279,12 @@ body {
   left: 50%;
   width: 1618px;
   margin-left: -809px;
-  /* 130px base + 90px (the hover-grow amount below) so a hovered card's
-     upward growth has room to breathe instead of crowding the hero above */
-  margin-top: 220px;
+  margin-top: 130px;
+  /* reserves room (>= the 90px hover-grow amount below) INSIDE the box —
+     under 1680px this row gets overflow-x:auto, which forces overflow-y
+     to clip too, so a hovered card's upward growth (negative margin-top)
+     must stay within the box via padding rather than margin to stay visible */
+  padding-top: 90px;
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -304,7 +307,7 @@ body {
     margin-left: -50vw;
     justify-content: flex-start;
     overflow-x: auto;
-    padding: 0 36px 8px;
+    padding: 90px 36px 8px;
     scrollbar-width: none;
   }
   .ou-contents::-webkit-scrollbar {
