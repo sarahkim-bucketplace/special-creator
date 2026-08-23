@@ -303,6 +303,14 @@ body {
 .btd-gallery__photo {
   width: 100%;
   background: #d9d9d9;
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.btd-gallery__photo.is-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* ---- Special Gift index (Figma 56:2830) ---- */
