@@ -166,6 +166,7 @@ body {
   align-items: center;
   text-align: center;
   margin-top: 113px;
+  margin-bottom: 220px;
 }
 
 .hero__icon {
@@ -197,11 +198,12 @@ body {
   display: flex;
   align-items: flex-start;
   gap: 24px;
-  padding: 90px 0;
+  margin-bottom: 220px;
 }
 
 .cv-row--reverse {
   flex-direction: row-reverse;
+  margin-bottom: 267px;
 }
 
 .cv-row__photo {
@@ -257,7 +259,6 @@ body {
   letter-spacing: -0.09px;
   line-height: 1.45;
   text-align: center;
-  margin-top: 40px;
 }
 
 .cv-apply {
@@ -278,12 +279,15 @@ body {
 }
 
 @media (max-width: 900px) {
+  .hero {
+    margin-bottom: 48px;
+  }
   .cv-row,
   .cv-row--reverse {
     flex-direction: column;
     align-items: stretch;
     gap: 24px;
-    padding: 48px 0;
+    margin-bottom: 48px;
   }
   .cv-row__photo {
     flex-basis: auto;
