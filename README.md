@@ -85,6 +85,10 @@ python3 -m http.server 5173
 - 호버 시 커서를 숨기고(`cursor: none`) `1:982` "Click me" 배지가 마우스를 따라다님 (`hero-home.js` 하단 `mousemove`/`mouseenter`/`mouseleave`)
 - 클릭하면 `FindTheKey.html`로 이동 (나중에 실제 도메인 사면 `href`만 바꾸면 됨)
 
+## 히어로 상단 여백
+
+4개 페이지(`FindTheKey`/`OpportunitiesUnlocked`/`CreatorVoices`/`BeyondTheDoor`)가 전부 공유하는 `.hero { margin-top: 85px; }` — 원래 113px이었는데, 콘텐츠가 헤더에서 너무 멀리 떨어져 보인다는 피드백으로 Figma `0:137`(FindTheKey) 기준 헤더 하단(105px)~히어로 상단(190px) 실측 간격에 맞춰 낮춤. 4개 파일 모두 같은 값을 씀 — 하나를 바꾸면 나머지도 같이 바꿔야 함(공용 stylesheet로 뽑혀있지 않고 각 CSS에 중복 존재).
+
 ## 헤더 (Figma `header` 컴포넌트)
 
 모든 페이지가 같은 헤더 마크업/CSS를 (페이지별 CSS 파일에 중복해서) 갖고 있음. 로고 + nav 링크 4개 + CTA 버튼 구조:
