@@ -341,19 +341,30 @@ body {
   max-width: 803px;
   aspect-ratio: 803 / 917;
   margin: 56px auto 0;
-  background: #454545;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
 }
 
-.trophy-placeholder p {
-  font-size: 18px;
-  font-weight: 500;
-  letter-spacing: -0.09px;
-  line-height: 1.45;
-  color: #ffffff;
+/* temporary real trophy photo, floating the same way the key does on
+   hero-home.html — swap for the real 3D placement whenever that's ready */
+.trophy-photo-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: trophy-float 4s ease-in-out infinite;
+}
+
+.trophy-photo {
+  display: block;
+  width: 90%;
+  pointer-events: none;
+}
+
+@keyframes trophy-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-16px); }
 }
 
 @media (max-width: 600px) {
