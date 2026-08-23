@@ -144,14 +144,27 @@ python3 -m http.server 5173
 
 ## Opportunities Unlocked 상세 페이지 (Figma `0:771`)
 
-목록 페이지의 카드를 클릭하면 이동하는 페이지. **Figma 프레임 번호와 파일 번호를 맞춤**: `Frame-01` → `OpportunitiesUnlocked-01.html`, `Frame-02` → `-02.html`, ... `Frame-05` → `-05.html`. 5개 파일 모두 지금은 완전히 동일한 내용(오늘의집 × 이도 "93 CUPS, 93 STORIES" 텍스트/레이아웃)의 복사본임 — 카드별로 실제 콘텐츠가 아직 안 정해져서 우선 구조만 5개로 나눠둔 상태. 나중에 카드마다 실제 사례가 정해지면 각 `-0N.html`/`.css`에 그 내용만 채워 넣으면 됨.
+목록 페이지의 카드를 클릭하면 이동하는 페이지. **Figma 프레임 번호와 파일 번호를 맞춤**: `Frame-01` → `OpportunitiesUnlocked-01.html`, `Frame-02` → `-02.html`, ... `Frame-05` → `-05.html`. 5개 전부 실제 콘텐츠(텍스트+사진)로 채워진 상태 — 더 이상 placeholder 없음.
 
 레이아웃 (좌우 2분할, 다른 페이지들과 달리 `.page` max-width 없이 풀블리드):
-- 왼쪽 **`Photo-box`**: 실제 사진은 아직 없어서(Figma에서도 임시로 뺀 상태) `#8a8a8a`~`#5a5a5a` 톤의 번호 붙은 placeholder 슬라이드 4장(`.detail__photo-slide`)이 들어가 있음. 좌우 화살표(`before-icon`/`after-icon`, 42px)를 누르면 이 슬라이드가 순환(맨 끝에서 반대쪽으로 넘어감)하며 전환됨 — `detail-photo-carousel.js`(5개 상세 페이지가 공용으로 씀, 유일하게 페이지 간 공유하는 JS 파일). 실제 사진이 정해지면 `.detail__photo-slide` 안에 `<img>`만 넣으면 되고(`object-fit: cover`), 마크업/JS는 안 바꿔도 됨. 이 화살표는 사진만 넘기고, **페이지 이동(이전/다음 사례)은 하단 Navigator가 따로 담당**
+- 왼쪽 **`Photo-box`**: `.detail__photo-slide` 안에 `<img class="detail__photo-img">`(`object-fit: cover`)를 넣는 구조. 좌우 화살표(`before-icon`/`after-icon`, 42px)를 누르면 슬라이드가 순환(맨 끝에서 반대쪽으로 넘어감)하며 전환됨 — `detail-photo-carousel.js`(5개 상세 페이지가 공용으로 씀, 유일하게 페이지 간 공유하는 JS 파일)가 슬라이드 개수를 `track.children`으로 동적으로 읽어서 케이스마다 장수가 달라도(1~6장) 코드 수정 없이 그대로 동작함. 이 화살표는 사진만 넘기고, **페이지 이동(이전/다음 사례)은 하단 Navigator가 따로 담당**
+  - **텍스트 라벨이 있는 사진**(예: 케이스 02의 안내도 이미지)은 `object-fit: cover`로 자르면 가장자리 텍스트가 잘림 — 그럴 땐 `.detail__photo-img--contain` 클래스를 추가로 붙여서 `object-fit: contain` + 배경색(이미지 실제 배경톤에 맞춘 값)으로 전체가 보이게 처리 (`OpportunitiesUnlocked-02.css` 참고)
 - 오른쪽 텍스트 컬럼: 카테고리(`#5d5d5d`, 14px) + 타이틀(8px 간격) → 35px 간격 → 본문. 위쪽에 구분선(`border-top`)
 - 하단 **`Navigator`**: 구분선이 텍스트 **아래**에 있음 (위가 아님 — 처음에 위로 잘못 넣었다가 고침). 전체 wrapper는 `opacity` 없음, 대신 "이전/다음" 링크 각각에 `opacity: 0.6`. 두 링크는 `gap: 300px`로 중앙에 모여있음 (900px 이하에서는 `space-between` + 24px로 전환)
   - 링크는 Figma 원래 문구 대신 **01~05를 순환하는 실제 페이지 이동**으로 연결해둠: `01 ← 02 ← 03 ← 04 ← 05`, `01 → 02 → 03 → 04 → 05 → (다시) 01`. **예외는 딱 하나** — `01`의 "이전"만 목록 페이지(`OpportunitiesUnlocked.html`)로 감 (그 앞에 다른 상세 페이지가 없어서). `05`의 "다음"은 `01`로 순환(wrap)됨
-  - 카드별 실제 콘텐츠가 정해지면, 이 상세 페이지들 자체도 서로 다른 내용으로 채워질 것이므로 그때 Navigator 링크 텍스트("이전 사례"/"다음 사례")도 그 사례 제목으로 바꿔주면 자연스러움
+  - Navigator 링크 텍스트는 아직 "이전 사례"/"다음 사례" 그대로임 — 각 사례 제목으로 바꾸면 더 자연스러워지지만 아직 요청받지 않아서 보류
+
+### 5개 케이스와 애셋 폴더
+
+| Frame | 페이지 | 폴더 | 비고 |
+|---|---|---|---|
+| 01 | 오늘의집 × 이도 〈93 CUPS, 93 STORIES〉 전시 | `assets/Opportunities-Unlocked/01-93 CUPS, 93 STORIES/`(폴더명에 공백·쉼표 있어 경로에 `%20`/`%2C` 인코딩 필요) | 사진 6장 |
+| 02 | 오늘의집 × 에어비앤비 공간 멘토링 프로그램 | `assets/Opportunities-Unlocked/02-space-airbnb/` | 사진 4장, 3번 슬라이드만 `--contain`(라벨 있는 평면도 이미지) |
+| 03 | 오늘의집 북촌 플리마켓 〈스토리마켓〉 | `assets/Opportunities-Unlocked/03-space-storymarket/` | 사진 5장 |
+| 04 | 오늘의집 북촌 〈크리에이터 아뜰리에〉 | `assets/Opportunities-Unlocked/04-space-atelier/` | 사진 2장 |
+| 05 | 오늘의집 유튜브 오리지널 시리즈 〈취향수집가〉 | `assets/Opportunities-Unlocked/05-Branded-Taste/` | 사진 1장 — 사용자가 나중에 실제 이미지로 교체 예정이라고 밝힘(임시) |
+
+각 폴더는 `thumb.*`(목록 페이지 카드용) + `image*.*`(상세 페이지 캐러셀용, 장수는 케이스마다 다름) 구성. 목록 페이지 카드 5개도 전부 실제 타이틀/서브텍스트로 채워짐.
 - 900px 이하에서는 사진이 위, 텍스트가 아래로 세로 스택됨
 
 ## Creator Voices 페이지 (Figma `0:519`)
