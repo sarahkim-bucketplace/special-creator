@@ -17,9 +17,7 @@ body {
   color: #2d2828;
 }
 
-/* two soft blurred color blobs (same size/color/position as the old static
-   .bg-decor, matching Figma node 54:1435), each drifting slowly and
-   independently instead of one big band sweeping across the whole page */
+/* two soft blurred color blobs, same treatment as FindTheKey.html */
 .bg-gradient-anim {
   position: fixed;
   inset: 0;
@@ -64,24 +62,18 @@ body {
   50% { transform: translate(calc(-50% - 180px), 180px) scale(1.15); }
 }
 
-/* subtle noise/grain overlay, matching the Figma "배경 그레인" noise effect */
+/* subtle noise/grain overlay, same treatment as FindTheKey.html */
 .bg-grain {
   position: fixed;
   inset: 0;
   z-index: -1;
   pointer-events: none;
   opacity: 0.05;
-  /* "overlay" has no visible effect on a pure white base (its math is a no-op at
-     lightness 1), which is why this was invisible once .bg-decor's color was
-     removed — "multiply" darkens regardless of base color, so it stays visible */
   mix-blend-mode: multiply;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
 }
 
-/* header is fixed (not sticky) — body has overflow-x:hidden for the full-bleed
-   .rolling section, and sticky descendants break under that (a well-known
-   browser quirk); fixed isn't affected, so this space compensates for the
-   header no longer taking up room in normal flow */
+/* header is fixed, same treatment as FindTheKey.html — see the comment there */
 body {
   padding-top: 105px;
 }
@@ -93,7 +85,7 @@ body {
   padding: 35px 35px 160px;
 }
 
-/* ---- header (Figma node 48:271) ---- */
+/* ---- header (Figma node 48:297) ---- */
 .header {
   position: fixed;
   top: 0;
@@ -137,12 +129,10 @@ body {
   white-space: nowrap;
 }
 
-/* on/off variant from the Figma component: "on" marks the current page's nav item */
 .header__link--on {
   font-weight: 600;
 }
 
-/* CTA pill button (Figma node 48:952 "Open Your Door") */
 .header__cta {
   display: inline-flex;
   align-items: center;
@@ -159,7 +149,7 @@ body {
   white-space: nowrap;
 }
 
-/* ---- hero ---- */
+/* ---- hero (Figma node 55:2041 "main_text_frame") ---- */
 .hero {
   display: flex;
   flex-direction: column;
@@ -190,68 +180,78 @@ body {
   color: #2d2828;
 }
 
-/* ---- finethekey-image-rolling: full-bleed, continuously auto-scrolling row ---- */
-.rolling {
-  /* breaks out of .page's centered max-width to bleed edge to edge */
-  width: 100vw;
+/* ---- OU-contents-box-on (Figma node 55:2048) ---- */
+.ou-contents {
   position: relative;
   left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
-  margin-top: 99px;
-  overflow: hidden;
-}
-
-.rolling__track {
+  width: 1618px;
+  margin-left: -809px;
+  margin-top: 130px;
   display: flex;
-  width: max-content;
-  gap: 16px;
-  animation: rolling-scroll 32s linear infinite;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 15px;
 }
 
-/* the track renders two identical copies of the items back to back;
-   translating by exactly -50% loops seamlessly regardless of item/gap count */
-@keyframes rolling-scroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+.ou-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  flex: 0 0 291px;
 }
 
-.rolling__item {
-  flex: 0 0 393px;
-  height: 495px;
+.ou-card__photo {
+  width: 100%;
+  height: 430px;
   background: #d9d9d9;
 }
 
-/* ---- insight quote below the rolling row ---- */
-.insight {
-  font-size: 18px;
-  font-weight: 400;
-  letter-spacing: -0.09px;
-  line-height: 1.45;
-  text-align: center;
-  margin-top: 99px;
+.ou-card--main {
+  flex: 0 0 394px;
 }
 
-/* ---- trophy placeholder (3D piece to be placed here later) ---- */
-.trophy-placeholder {
-  width: 100%;
-  max-width: 803px;
-  aspect-ratio: 803 / 917;
-  margin: 56px auto 0;
-  background: #454545;
+.ou-card--main .ou-card__photo {
+  height: 520px;
+}
+
+.ou-card__text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.ou-card__text--dim {
+  opacity: 0.4;
+}
+
+.ou-card__title {
   display: flex;
   align-items: center;
-  justify-content: center;
-  text-align: center;
+  gap: 3px;
 }
 
-.trophy-placeholder p {
-  font-size: 18px;
+.ou-card__title span {
+  font-size: 16px;
   font-weight: 500;
-  letter-spacing: -0.09px;
+  letter-spacing: -0.08px;
   line-height: 1.45;
-  color: #ffffff;
+  color: #2d2828;
+  text-decoration: underline;
+}
+
+.ou-card__go {
+  width: 18px;
+  height: 18px;
+  transform: rotate(-90deg);
+}
+
+.ou-card__sub {
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.07px;
+  line-height: 1.45;
+  color: #7b7b7b;
 }
 
 @media (max-width: 600px) {
@@ -268,7 +268,7 @@ body {
     margin-top: 80px;
   }
   .hero__title {
-    font-size: 26px;
+    font-size: 22px;
   }
   .hero__subtitle {
     font-size: 15px;
@@ -276,11 +276,22 @@ body {
   .hero__subtitle br {
     display: none;
   }
-  .rolling__item {
-    flex: 0 0 260px;
-    height: 328px;
+  .ou-contents {
+    width: 100%;
+    left: 0;
+    margin-left: 0;
+    overflow-x: auto;
+    justify-content: flex-start;
+    padding: 0 20px 8px;
   }
-  .insight {
-    font-size: 15px;
+  .ou-card,
+  .ou-card--main {
+    flex: 0 0 200px;
+  }
+  .ou-card__photo {
+    height: 296px;
+  }
+  .ou-card--main .ou-card__photo {
+    height: 358px;
   }
 }
