@@ -109,7 +109,8 @@ python3 -m http.server 5173
 
 `FindTheKey.html`의 카드 섹션은 Figma에서 4개→5개 이미지로 늘어나면서 `finethekey-image-rolling`으로 리네임됨 — 화면 전체 너비로 꽉 차게(edge-to-edge) 배치하고 **계속 자연스럽게 롤링**되어야 한다는 요구사항이 있었음.
 
-- 구현: `.rolling__track`에 원본 5개 + 복제 5개(총 10개) 아이템을 넣고 `translateX(0) → translateX(-50%)` 무한 애니메이션(`rolling-scroll`, 32s linear infinite). 두 세트가 완전히 동일하면 `-50%` 지점에서 이음매 없이 루프됨 — 아이템 개수/gap이 바뀌어도 항상 정확히 맞음
+- 구현: `.rolling__track`에 원본 N개 + 복제 N개(총 2N개) 아이템을 넣고 `translateX(0) → translateX(-50%)` 무한 애니메이션(`rolling-scroll`). 두 세트가 완전히 동일하면 `-50%` 지점에서 이음매 없이 루프됨 — 아이템 개수/gap이 바뀌어도 항상 정확히 맞음
+  - 현재 실사진 7장(`assets/find-the-key/rolling/rolling-01~07.*`, 전부 세로형이라 393×495 박스에 `object-fit: cover`로 크롭됨) — 원래 5장 회색 placeholder였다가 실사진으로 교체하면서 7장으로 늘림. 아이템 수를 바꿀 때마다 `rolling-scroll` 애니메이션 duration도 비례해서 같이 바꿔야 체감 속도가 유지됨 (5개→32s였던 걸 7개→45s로, `32 * (7/5)` 비례 계산). 아이템 수를 또 바꾸면 `이전 개수 : 이전 duration = 새 개수 : 새 duration` 비율로 다시 계산할 것
 - `.rolling`은 `.page`의 max-width 1280px 안에 있지만 `left: 50%; margin-left: -50vw;` 트릭으로 뷰포트 전체 너비로 breakout함
 - Figma 스펙에는 `border-radius`가 없음 — 카드에 둥근 모서리 넣지 말 것 (한 번 실수로 넣었다가 제거함)
 
