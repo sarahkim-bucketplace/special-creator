@@ -343,9 +343,40 @@ body {
 }
 
 .btd-journey__photo {
+  position: relative;
   flex: 1;
   aspect-ratio: 390 / 252;
-  background: #7e7e7e;
+  background-color: #7e7e7e;
+  background-size: cover;
+  background-position: center;
+}
+
+/* photos are portrait but the box is landscape, so the background-image
+   thumbnail above crops them hard — hovering floats this separate,
+   normally-invisible <img> with the full uncropped photo instead. It's a
+   distinct element (not the thumbnail itself) so the thumbnail never
+   disappears when this one moves/enlarges on hover */
+.btd-journey__photo-float {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  width: min(360px, 80vw);
+  height: auto;
+  max-height: 480px;
+  object-fit: contain;
+  background: #fff;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 30;
+  cursor: zoom-in;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.btd-journey__photo:hover .btd-journey__photo-float {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
 }
 
 .btd-arrow {
