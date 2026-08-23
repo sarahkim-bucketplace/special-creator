@@ -101,6 +101,7 @@ python3 -m http.server 5173
 - **CTA 버튼 "Open Your Door"** (Figma node `48:952`): 다크 필(pill) 버튼, `.header__cta` 클래스. 아직 실제 목적지가 정해지지 않아서 `href="#"` 상태 — 나중에 실제 랜딩 페이지 생기면 연결할 것
 - **헤더는 `position: fixed`로 스크롤해도 항상 상단에 고정됨**, 배경은 투명 (사용자가 반투명+블러 배경을 시도했다가 "이상하다"고 해서 완전 투명으로 되돌림). `body`에 `padding-top: 105px`을 줘서 헤더가 in-flow였을 때와 동일한 여백을 유지함
   - **중요한 함정**: 처음엔 `position: sticky`로 구현했는데, `body`에 `.rolling` 섹션의 100vw breakout 때문에 걸려있는 `overflow-x: hidden`과 충돌해서 헤더가 스크롤하면 그냥 사라져버리는 버그가 있었음 (sticky 위치 계산이 깨짐 — 알려진 브라우저 동작). `overflow-x: hidden`을 `body`에서 빼면 sticky는 고쳐지지만 이번엔 실제로 가로 스크롤이 가능해지는 부작용이 생김. 최종 해결책은 `position: fixed`로 바꾸는 것 — fixed는 조상의 overflow 설정에 영향을 안 받음. **다른 페이지에 헤더를 붙일 때도 sticky 대신 fixed를 쓸 것.**
+- **모바일 햄버거 메뉴 (900px 이하)**: 원래 nav 링크 4개+CTA가 `white-space: nowrap`이라 좁은 화면에서 줄바꿈 없이 그대로 넘쳐서, 로고가 flex-shrink로 너비 0까지 눌리고 "Beyond the Door"/CTA 버튼은 뷰포트 밖으로 밀려나 아예 탭할 수 없는 상태였음(사용자가 실측 스크린샷으로 발견). 900px 이하에서 로고 옆에 햄버거 버튼(`.header__menu-btn`)이 나타나고, 누르면 `.header`에 `header--menu-open` 클래스가 붙으면서 `.header__links`가 헤더 바로 아래(`top:105px`) 흰 배경의 전체너비 드롭다운 패널로 바뀜(`max-height` 트랜지션으로 열림/닫힘). 로직은 `header-menu.js` 하나로 이 헤더를 쓰는 9개 페이지(`FindTheKey`/`OpportunitiesUnlocked`/`CreatorVoices`/`BeyondTheDoor`/`OpportunitiesUnlocked-01~05`) 전부가 공유함 — 새 페이지에 헤더를 붙일 때 `<script src="header-menu.js"></script>`도 같이 추가할 것. 드롭다운 안의 링크를 클릭하면 자동으로 닫힘, 900px보다 넓어지면(리사이즈) 자동으로 닫힘. 예전에 있던 600px 전용 `.header`/`.header__links`/`.header__link` 폰트·간격 축소 규칙은 이제 이 드롭다운으로 대체되어 제거함
 
 ## `finethekey-image-rolling` (Figma node `0:147`)
 
