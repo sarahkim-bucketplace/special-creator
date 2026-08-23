@@ -228,6 +228,8 @@ body {
   gap: 20px;
   flex: 0 0 291px;
   transition: flex-basis 0.35s ease;
+  text-decoration: none;
+  color: inherit;
 }
 
 .ou-card__photo {

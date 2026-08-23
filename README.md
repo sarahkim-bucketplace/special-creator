@@ -10,7 +10,8 @@
 ```
 FindTheKey.html / FindTheKey.css               "Find the Key" 데스크톱 히어로 페이지
 hero-home.html / hero-home.css / hero-home.js  "OHOUSE Special Creator" 홈 히어로 페이지 (스크롤 인터랙션)
-OpportunitiesUnlocked.html / .css              "Opportunities Unlocked" 페이지 (Figma 0:236)
+OpportunitiesUnlocked.html / .css              "Opportunities Unlocked" 목록 페이지 (Figma 0:236)
+OpportunitiesUnlocked-01~05.html / .css        카드 클릭 시 이동하는 상세 페이지 (Figma 0:771) — 아래 절 참고
 trophy.js                                      3D 트로피 뷰어 (현재 어떤 HTML에도 연결 안 됨, 보류 중)
 assets/                                        Figma에서 내려받은 벡터·이미지 애셋 (+ trophy.fbx)
 .claude/launch.json                            로컬 미리보기용 정적 서버 설정 (아래 "알아두면 좋은 것" 참고 — 이 프로젝트 경로에선 안 먹음)
@@ -116,16 +117,29 @@ python3 -m http.server 5173
   - 튜닝 히스토리: opacity `0.85` → 너무 진하다는 피드백 → `0.45`로. 이동 거리 `70~100px` → 너무 안 움직여 보인다는 피드백 → `180px` + `scale(1.15)` 펄스 추가로 체감 늘림
 - 원래 `hero-home.html`의 `.hero-pin__stage`엔 자체 정적 그라데이션 배경이 따로 있었는데, 이것도 지우고 위 공용 배경으로 통일함 (사용자가 "이 배경들 다 동일하게 적용해줘, 기존 배경은 없애고" 요청)
 
-## Opportunities Unlocked 페이지 (Figma `0:236`)
+## Opportunities Unlocked 목록 페이지 (Figma `0:236`)
 
 `OpportunitiesUnlocked.html`/`.css` — 헤더의 "Opportunities Unlocked" 링크를 누르면 나오는 페이지. `FindTheKey.html`과 헤더/히어로 구조/배경 시스템을 그대로 재사용하고, 그 아래에 새 섹션만 추가:
 
-- **`OU-contents-box-on`** (Figma `55:2048`): 카드 5개가 `align-items: flex-end`(하단 정렬)로 한 줄에 나열됨
-  - 가운데(3번째) 카드만 "Brand Collaboration" — 더 큼(394×520 사진), `opacity: 1` (강조)
-  - 나머지 4개는 전부 "Creator Network" — 더 작음(291×430 사진), `opacity: 0.4` (dim, 아직 안 열린 카테고리처럼 보이게)
+- **카드 행은 Figma의 `OU-contents-box-off`(`55:2049`) 기준** — 카드 5개가 기본 상태에선 전부 동일한 크기(291×430)와 `opacity: 0.4`, 텍스트도 전부 "Creator Network"로 통일되어 있음 (특정 카드가 고정으로 강조된 `-box-on`(`55:2048`) 버전은 폐기함)
+  - **마우스를 올리면(hover) 그 카드만** Figma의 강조 크기(394×520, `opacity: 1`)로 부드럽게 커짐 — 어떤 카드든 hover하면 그 카드가 커지는 방식 (`.ou-card:hover`, `transition`)
+  - `align-items: flex-end`(하단 정렬)라서 커진 카드는 위로만 자라남
   - 각 카드 제목 옆에 `icon-go` 화살표(18×18, `rotate(-90deg)`로 오른쪽을 가리키게 함)
-  - 전체 폭이 1618px로 `.page`의 1280px보다 넓어서, `.rolling`과 같은 방식(`left: 50%` + 음수 `margin-left`)으로 breakout함 — 다만 100vw가 아니라 딱 1618px만큼만
+  - 전체 폭이 1618px로 `.page`의 1280px보다 넓음. **1680px 이상** 뷰포트에서는 `.rolling`과 같은 방식(`left: 50%` + 음수 `margin-left`)으로 breakout하고 스크롤 없이 중앙 정렬됨. **1680px 미만**에서는 100vw 폭의 스크롤 가능한 스트립으로 전환됨(`overflow-x: auto`, 스크롤바는 숨김) — 트랙패드는 그대로 스와이프되고, `OpportunitiesUnlocked.js`가 마우스 클릭+드래그 스크롤도 지원함 (드래그 중엔 커서가 grab→grabbing)
+  - 카드 5개 전부 `<a>` 태그로 바뀌어서 클릭하면 아래 상세 페이지로 이동함
 - 헤더 nav는 `FindTheKey.html` ↔ `OpportunitiesUnlocked.html` 양방향으로 실제 `href` 연결되어 있음
+
+## Opportunities Unlocked 상세 페이지 (Figma `0:771`)
+
+목록 페이지의 카드를 클릭하면 이동하는 페이지. **Figma 프레임 번호와 파일 번호를 맞춤**: `Frame-01` → `OpportunitiesUnlocked-01.html`, `Frame-02` → `-02.html`, ... `Frame-05` → `-05.html`. 5개 파일 모두 지금은 완전히 동일한 내용(오늘의집 × 이도 "93 CUPS, 93 STORIES" 텍스트/레이아웃)의 복사본임 — 카드별로 실제 콘텐츠가 아직 안 정해져서 우선 구조만 5개로 나눠둔 상태. 나중에 카드마다 실제 사례가 정해지면 각 `-0N.html`/`.css`에 그 내용만 채워 넣으면 됨.
+
+레이아웃 (좌우 2분할, 다른 페이지들과 달리 `.page` max-width 없이 풀블리드):
+- 왼쪽 **`Photo-box`**: 사진 자리(현재 이미지는 Figma에서도 임시로 빼둔 상태라 `#838383` 회색 배경만 있음 — 나중에 이미지 정해지면 `.detail__photo`에 `<img>` 다시 추가하면 됨). 좌우 화살표(`before-icon`/`after-icon`, 42px)가 오버레이되어 있는데 **장식용**(`pointer-events: none`) — 실제 이전/다음 이동은 하단 Navigator가 담당
+- 오른쪽 텍스트 컬럼: 카테고리(`#5d5d5d`, 14px) + 타이틀(8px 간격) → 35px 간격 → 본문. 위쪽에 구분선(`border-top`)
+- 하단 **`Navigator`**: 구분선이 텍스트 **아래**에 있음 (위가 아님 — 처음에 위로 잘못 넣었다가 고침). 전체 wrapper는 `opacity` 없음, 대신 "이전/다음" 링크 각각에 `opacity: 0.6`. 두 링크는 `gap: 300px`로 중앙에 모여있음 (900px 이하에서는 `space-between` + 24px로 전환)
+  - 링크는 Figma 원래 문구 대신 **01~05를 순환하는 실제 페이지 이동**으로 연결해둠: `01 ← 02 ← 03 ← 04 ← 05`, `01 → 02 → 03 → 04 → 05 → (다시) 01`. **예외는 딱 하나** — `01`의 "이전"만 목록 페이지(`OpportunitiesUnlocked.html`)로 감 (그 앞에 다른 상세 페이지가 없어서). `05`의 "다음"은 `01`로 순환(wrap)됨
+  - 카드별 실제 콘텐츠가 정해지면, 이 상세 페이지들 자체도 서로 다른 내용으로 채워질 것이므로 그때 Navigator 링크 텍스트("이전 사례"/"다음 사례")도 그 사례 제목으로 바꿔주면 자연스러움
+- 900px 이하에서는 사진이 위, 텍스트가 아래로 세로 스택됨
 
 ## 트로피 자리 (아직 미착수)
 
