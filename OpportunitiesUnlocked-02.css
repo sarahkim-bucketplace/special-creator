@@ -199,6 +199,13 @@ body {
   object-fit: cover;
 }
 
+/* labeled infographic-style photo — cropping it would cut off the callout
+   text around the edges, so show the whole image letterboxed instead */
+.detail__photo-img--contain {
+  object-fit: contain;
+  background: #efe8de;
+}
+
 /* placeholder slide deck — drop a real <img> (object-fit: cover, same as
    .detail__photo-img above) into each .detail__photo-slide once photos
    for this case exist, no other markup needs to change */
