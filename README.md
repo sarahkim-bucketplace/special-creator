@@ -150,7 +150,8 @@ python3 -m http.server 5173
 
 - **`CV-Contents-01`/`02`** (Figma `48:1057`/`48:1112`): 사진(495×340) + 텍스트가 좌우로 나란히 배치되는 행 4개, 홀수 행은 사진이 왼쪽, 짝수 행은 사진이 오른쪽 — `.cv-row` / `.cv-row--reverse`(DOM 순서는 항상 "사진, 텍스트"로 동일, `flex-direction: row-reverse`로만 시각적으로 뒤집음)
   - Figma의 4개 행 콘텐츠(타이틀 "기록이 열어준 새로운 기회", 작성자 "MOPO 님", 본문)가 전부 동일한 placeholder 텍스트라, 그대로 4번 복사해둠 — 실제 인터뷰 콘텐츠가 정해지면 각 `.cv-row`의 텍스트만 바꾸면 됨
-  - 900px 이하에서는 사진이 위, 텍스트가 아래로 세로 스택
+  - **행 사이 간격은 비대칭**: 사용자가 Figma에서 조정한 뒤로, 일반 행(사진 왼쪽) 다음엔 `margin-bottom: 220px`, 반전 행(사진 오른쪽) 다음엔 `margin-bottom: 267px`(+47px 더 넓음) — 절대좌표로 역산해서 확인한 값. `.hero`도 첫 행 앞에 동일하게 `margin-bottom: 220px`을 가짐. 예전엔 모든 행이 `padding: 90px 0`으로 균일했는데, 지금은 padding 대신 타입별 margin-bottom 방식으로 바뀜 — `.cv-outro`엔 더 이상 자체 margin-top이 없음(마지막 행의 margin-bottom이 그 간격까지 이미 포함)
+  - 900px 이하에서는 사진이 위, 텍스트가 아래로 세로 스택, 간격도 균일하게 `margin-bottom: 48px`로 축소
 - 하단 **outro**(Figma `55:2735` "sub-text") + **CTA 버튼** "스페셜 크리에이터 지원하기"(`#464646` 배경, 56px 높이, `rounded-52`) — 아직 실제 지원 폼/링크가 없어서 `href="#"`
 - 헤더 nav에서 `Creator Voices` 링크가 이제 다른 모든 페이지(`FindTheKey.html`, `OpportunitiesUnlocked.html`, `OpportunitiesUnlocked-01~05.html`)에서 실제로 이 페이지로 연결됨
 
