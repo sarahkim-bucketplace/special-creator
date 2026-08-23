@@ -14,12 +14,13 @@ OpportunitiesUnlocked.html / .css              "Opportunities Unlocked" 목록 �
 OpportunitiesUnlocked-01~05.html / .css        카드 클릭 시 이동하는 상세 페이지 (Figma 0:771) — 아래 절 참고
 detail-photo-carousel.js                       위 5개 상세 페이지가 공용으로 쓰는 사진 슬라이드 화살표 스크립트
 CreatorVoices.html / .css                      "Creator Voices" 페이지 (Figma 0:519) — 아래 절 참고
+BeyondTheDoor.html / .css                      "Beyond the Door" 페이지 (Figma 28:476) — 아래 절 참고
 trophy.js                                      3D 트로피 뷰어 (현재 어떤 HTML에도 연결 안 됨, 보류 중)
 assets/                                        Figma에서 내려받은 벡터·이미지 애셋 (+ trophy.fbx)
 .claude/launch.json                            로컬 미리보기용 정적 서버 설정 (아래 "알아두면 좋은 것" 참고 — 이 프로젝트 경로에선 안 먹음)
 ```
 
-**아직 안 만든 페이지**: `Beyond the Door` — 헤더 nav에 링크는 있지만 `href="#"`로 비워둔 상태.
+헤더 nav 4개 페이지(`Find the Key` / `Opportunities Unlocked` / `Creator Voices` / `Beyond the Door`)가 전부 만들어져서 서로 실제 `href`로 연결되어 있음. `Open Your Door` CTA만 아직 목적지가 없어서 `href="#"`.
 
 ## 로컬에서 실행하기
 
@@ -152,6 +153,16 @@ python3 -m http.server 5173
   - 900px 이하에서는 사진이 위, 텍스트가 아래로 세로 스택
 - 하단 **outro**(Figma `55:2735` "sub-text") + **CTA 버튼** "스페셜 크리에이터 지원하기"(`#464646` 배경, 56px 높이, `rounded-52`) — 아직 실제 지원 폼/링크가 없어서 `href="#"`
 - 헤더 nav에서 `Creator Voices` 링크가 이제 다른 모든 페이지(`FindTheKey.html`, `OpportunitiesUnlocked.html`, `OpportunitiesUnlocked-01~05.html`)에서 실제로 이 페이지로 연결됨
+
+## Beyond the Door 페이지 (Figma `28:476`)
+
+`BeyondTheDoor.html`/`.css` — 헤더/히어로/배경은 다른 페이지와 동일. 이 페이지는 섹션이 많아서 구조를 정리해두면:
+
+1. **여정 리스트** (`.btd-journey`, Figma `28:1004`): 번호 붙은 단계 5개(오프닝 밋업 → 브랜드 콜라보 → 스페셜 크리에이터 활동 → 오프라인 밋업 → 페어웰), 각 단계마다 위에 구분선 + 왼쪽 텍스트(번호+제목, 설명) + 오른쪽 사진 2장(390×252). 단계 사이에 아래방향 화살표(`assets/icon-go.svg`를 회전 없이 그대로 씀 — 원래 오른쪽 화살표로 쓸 때만 `-90deg` 돌렸던 거라 아래쪽 화살표엔 회전이 필요 없음)
+2. **middle-text**를 두 번 재사용(Figma에 컴포넌트로 정의됨, `.btd-middle` 클래스로 구현): "직접 만나 나누는 시간"과 "함께한 시간에 마음을 담아" — 텍스트만 다르고 스타일은 동일
+3. **사진 모자이크 갤러리** (`.btd-gallery`, Figma photo-01~08 + 무명 노드 하나): Figma 절대좌표를 분석해보면 사실 꽤 깔끔한 구조였음 — 1행은 박스 2개(41% + 나머지), 2행은 동일 너비 3열이고 각 열이 내부적으로 박스 2개를 세로로 쌓은 것(가운데 열만 아래쪽이 작은 박스 2개가 가로로 나란한 형태). 세 열의 내부 합산 높이가 전부 580px로 딱 맞아떨어져서, 이 3열 구조로 확신하고 구현함. 실제 렌더링은 `aspect-ratio`로 Figma 비율만 맞추고, 폭은 flex로 반응형 처리(절대 px 좌표 그대로 베끼지 않음)
+4. **Special Gift 인덱스** (`.btd-gift`, Figma `56:2830`): 3열 — 1열은 "Special Gift" 라벨만, 2열은 항목 1~3(각각 위에 구분선), 3열은 항목 4~5. Figma에서 `<ol><li>`로 표현된 번호 매기기는 실제 `ol/li` 대신 그냥 "1. " 텍스트를 직접 써넣는 방식으로 구현함 (프로젝트 전반에 걸쳐 일관된 패턴 — 카드/리스트류에서 실제 시맨틱 리스트 마크업 대신 텍스트로 번호를 씀)
+5. 900px 이하에서 여정 리스트는 세로 스택, 갤러리는 1열로 바뀜 (가운데 열의 "작은 박스 2개" 서브로우는 계속 가로 유지)
 
 ## 트로피 자리 (아직 미착수)
 
