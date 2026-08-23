@@ -8,11 +8,15 @@
 ## 파일 구조
 
 ```
-FindTheKey.html / FindTheKey.css     "Find the Key" 데스크톱 히어로 페이지
-hero-home.html / hero-home.css / hero-home.js "OHOUSE Special Creator" 홈 히어로 페이지 (스크롤 인터랙션)
-assets/                        Figma에서 내려받은 벡터·이미지 애셋
-.claude/launch.json            로컬 미리보기용 정적 서버 설정
+FindTheKey.html / FindTheKey.css               "Find the Key" 데스크톱 히어로 페이지
+hero-home.html / hero-home.css / hero-home.js  "OHOUSE Special Creator" 홈 히어로 페이지 (스크롤 인터랙션)
+OpportunitiesUnlocked.html / .css              "Opportunities Unlocked" 페이지 (Figma 0:236)
+trophy.js                                      3D 트로피 뷰어 (현재 어떤 HTML에도 연결 안 됨, 보류 중)
+assets/                                        Figma에서 내려받은 벡터·이미지 애셋 (+ trophy.fbx)
+.claude/launch.json                            로컬 미리보기용 정적 서버 설정 (아래 "알아두면 좋은 것" 참고 — 이 프로젝트 경로에선 안 먹음)
 ```
+
+**아직 안 만든 페이지**: `Creator Voices`, `Beyond the Door` — 헤더 nav에 링크는 있지만 `href="#"`로 비워둔 상태.
 
 ## 로컬에서 실행하기
 
@@ -44,8 +48,12 @@ python3 -m http.server 5173
 | `1:975` "key image" | 3D 열쇠 사진 + 그림자 (그림자는 별도 그룹, 애니메이션 제외 대상) |
 | `1:982` "home-click me-cusor" | 열쇠 호버 시 따라다니는 "Click me" 커서 배지 |
 | `24:56` "downscroll-icon" | 하단 다운스크롤 유도 chevron 아이콘 |
-| `48:271` "header" | 공용 헤더 컴포넌트 (아래 "헤더" 절 참고) |
+| `48:271`/`48:284`/`48:297` "header" | 공용 헤더 컴포넌트 (페이지마다 인스턴스 노드 id는 다르지만 구조는 동일 — 아래 "헤더" 절 참고) |
 | `0:147` "finethekey-image-rolling" | `FindTheKey.html`의 무한 롤링 이미지 카드 행 (아래 절 참고) |
+| `0:137` "find-the-key-main" | `FindTheKey.html` 전체 프레임 (예전엔 "Desktop"이라는 이름이었음, 리네임됨) |
+| `54:1435` | 배경 그라데이션 블롭 레퍼런스 (아래 "배경 시스템" 절 참고) |
+| `0:236` "Opportunities-Unlocked-main" | `OpportunitiesUnlocked.html` 전체 프레임 |
+| `55:2048` "OU-contents-box-on" | Opportunities Unlocked의 5개 카드 행 (가운데 강조 카드 + 좌우 dim 카드) |
 
 ## `hero-home.html` 스크롤 인터랙션 설계 (중요)
 
@@ -73,15 +81,18 @@ python3 -m http.server 5173
 - 호버 시 커서를 숨기고(`cursor: none`) `1:982` "Click me" 배지가 마우스를 따라다님 (`hero-home.js` 하단 `mousemove`/`mouseenter`/`mouseleave`)
 - 클릭하면 `FindTheKey.html`로 이동 (나중에 실제 도메인 사면 `href`만 바꾸면 됨)
 
-## 헤더 (Figma node `48:271`)
+## 헤더 (Figma `header` 컴포넌트)
 
-`FindTheKey.html`의 헤더는 Figma의 `header` 컴포넌트(`48:271`)로 교체됨. 로고 + 4개 nav 링크 구조:
+모든 페이지가 같은 헤더 마크업/CSS를 (페이지별 CSS 파일에 중복해서) 갖고 있음. 로고 + nav 링크 4개 + CTA 버튼 구조:
 
 - 로고(`#icon-logo`)는 클릭하면 `hero-home.html`(열쇠구멍 스크롤 첫 화면)로 이동
 - nav 링크 4개: `Find the Key` / `Opportunities Unlocked` / `Creator Voices` / `Beyond the Door` — Figma 컴포넌트에 `prop1: on/off` variant가 있어서, 현재 보고 있는 페이지에 해당하는 링크만 `on`으로 표시해야 함
   - 구현은 `.header__link--on` / `.header__link--off` 클래스로 함 (on = `font-weight: 600`, Pretendard SemiBold)
   - **주의**: on/off의 실제 시각 차이는 Figma에서 직접 variant를 확인한 게 아니라, 이전 버전 헤더의 active 링크가 볼드였던 것에 근거해 추정한 것. 실제 Figma on 상태 디자인이 다르면(색상/밑줄 등) 수정 필요
-  - 지금은 `FindTheKey.html`만 만들어져 있어서 `Find the Key`만 `--on`, 나머지 3개는 `--off` + `href="#"`. `Opportunities Unlocked`/`Creator Voices`/`Beyond the Door` 페이지를 실제로 만들면, 그 페이지에서는 그 페이지의 링크를 `--on`으로, 나머지를 `--off`로 바꿔줄 것
+  - 새 페이지를 만들 때마다: 그 페이지의 링크만 `--on`, 나머지는 `--off`로. `Find the Key` ↔ `Opportunities Unlocked`는 이제 서로 실제 `href`로 연결되어 있음 (나머지 미완성 페이지들은 아직 `href="#"`)
+- **CTA 버튼 "Open Your Door"** (Figma node `48:952`): 다크 필(pill) 버튼, `.header__cta` 클래스. 아직 실제 목적지가 정해지지 않아서 `href="#"` 상태 — 나중에 실제 랜딩 페이지 생기면 연결할 것
+- **헤더는 `position: fixed`로 스크롤해도 항상 상단에 고정됨**, 배경은 투명 (사용자가 반투명+블러 배경을 시도했다가 "이상하다"고 해서 완전 투명으로 되돌림). `body`에 `padding-top: 105px`을 줘서 헤더가 in-flow였을 때와 동일한 여백을 유지함
+  - **중요한 함정**: 처음엔 `position: sticky`로 구현했는데, `body`에 `.rolling` 섹션의 100vw breakout 때문에 걸려있는 `overflow-x: hidden`과 충돌해서 헤더가 스크롤하면 그냥 사라져버리는 버그가 있었음 (sticky 위치 계산이 깨짐 — 알려진 브라우저 동작). `overflow-x: hidden`을 `body`에서 빼면 sticky는 고쳐지지만 이번엔 실제로 가로 스크롤이 가능해지는 부작용이 생김. 최종 해결책은 `position: fixed`로 바꾸는 것 — fixed는 조상의 overflow 설정에 영향을 안 받음. **다른 페이지에 헤더를 붙일 때도 sticky 대신 fixed를 쓸 것.**
 
 ## `finethekey-image-rolling` (Figma node `0:147`)
 
@@ -90,6 +101,31 @@ python3 -m http.server 5173
 - 구현: `.rolling__track`에 원본 5개 + 복제 5개(총 10개) 아이템을 넣고 `translateX(0) → translateX(-50%)` 무한 애니메이션(`rolling-scroll`, 32s linear infinite). 두 세트가 완전히 동일하면 `-50%` 지점에서 이음매 없이 루프됨 — 아이템 개수/gap이 바뀌어도 항상 정확히 맞음
 - `.rolling`은 `.page`의 max-width 1280px 안에 있지만 `left: 50%; margin-left: -50vw;` 트릭으로 뷰포트 전체 너비로 breakout함
 - Figma 스펙에는 `border-radius`가 없음 — 카드에 둥근 모서리 넣지 말 것 (한 번 실수로 넣었다가 제거함)
+
+`find-the-key-main`(`0:137`)이 이후 Figma에서 한 번 더 업데이트되어 다시 반영함:
+- 히어로 타이틀에서 "(WIP)" 제거 → 그냥 "Special Creator"
+- 카드 아래 문구 재작성: "오늘의집은 그 가능성의 문을 여는 스페셜 크리에이터를 '영감의 키(Key)'라고 믿습니다" (`.insight`, `font-weight: 400` — 한 번 500으로 잘못 들어가 있던 걸 고침. Pretendard Regular = 400)
+- Figma 노드명을 `data-name` 속성으로 각 요소에 매핑해둠 (`find-the-key-main`, `main_text_frame`, `icon-SC`, `text`, `sub-text` 등) — 나중에 Figma랑 대조할 때 참고
+
+## 배경 시스템 — `.bg-gradient-anim` + `.bg-grain` (모든 페이지 공용)
+
+`FindTheKey.html`, `hero-home.html`, `OpportunitiesUnlocked.html` 전부 동일한 배경을 씀 (페이지별 CSS 파일에 그대로 복붙되어 있음 — 공용 stylesheet로 뽑아내지 않았음, 필요하면 리팩터링 가능).
+
+- **`.bg-grain`**: 흰 배경 위에 미세한 노이즈 텍스처. `mix-blend-mode: overlay`가 아니라 반드시 **`multiply`**를 써야 함 — overlay는 베이스가 순수 흰색(#fff)일 때 수학적으로 완전히 no-op이라 아무 효과가 안 보임 (실제로 겪은 버그).
+- **`.bg-gradient-anim`**: 노랑(`rgba(246,251,196)`)·하늘색(`rgba(205,231,255)`) 블롭 2개가 각각 다른 주기(14s/16s)로 부드럽게 떠다님 (`::before`/`::after` 가상 요소, `filter: blur(60px)`). Figma node `54:1435`(정적 레퍼런스: 작은 블롭 2개가 각자 영역에서 보이는 느낌)를 보고 다시 만든 버전 — 처음엔 큰 대각선 `linear-gradient` 하나를 `background-position`으로 움직이는 방식으로 만들었다가, "한 번에 색 하나만 보인다"는 피드백을 받고 지금의 2-블롭 방식으로 교체함
+  - 튜닝 히스토리: opacity `0.85` → 너무 진하다는 피드백 → `0.45`로. 이동 거리 `70~100px` → 너무 안 움직여 보인다는 피드백 → `180px` + `scale(1.15)` 펄스 추가로 체감 늘림
+- 원래 `hero-home.html`의 `.hero-pin__stage`엔 자체 정적 그라데이션 배경이 따로 있었는데, 이것도 지우고 위 공용 배경으로 통일함 (사용자가 "이 배경들 다 동일하게 적용해줘, 기존 배경은 없애고" 요청)
+
+## Opportunities Unlocked 페이지 (Figma `0:236`)
+
+`OpportunitiesUnlocked.html`/`.css` — 헤더의 "Opportunities Unlocked" 링크를 누르면 나오는 페이지. `FindTheKey.html`과 헤더/히어로 구조/배경 시스템을 그대로 재사용하고, 그 아래에 새 섹션만 추가:
+
+- **`OU-contents-box-on`** (Figma `55:2048`): 카드 5개가 `align-items: flex-end`(하단 정렬)로 한 줄에 나열됨
+  - 가운데(3번째) 카드만 "Brand Collaboration" — 더 큼(394×520 사진), `opacity: 1` (강조)
+  - 나머지 4개는 전부 "Creator Network" — 더 작음(291×430 사진), `opacity: 0.4` (dim, 아직 안 열린 카테고리처럼 보이게)
+  - 각 카드 제목 옆에 `icon-go` 화살표(18×18, `rotate(-90deg)`로 오른쪽을 가리키게 함)
+  - 전체 폭이 1618px로 `.page`의 1280px보다 넓어서, `.rolling`과 같은 방식(`left: 50%` + 음수 `margin-left`)으로 breakout함 — 다만 100vw가 아니라 딱 1618px만큼만
+- 헤더 nav는 `FindTheKey.html` ↔ `OpportunitiesUnlocked.html` 양방향으로 실제 `href` 연결되어 있음
 
 ## 트로피 자리 (아직 미착수)
 
@@ -114,5 +150,6 @@ python3 -m http.server 5173
 - Pretendard 폰트는 jsdelivr CDN에서 불러옴 (오프라인이면 폰트 깨짐)
 - 이 저장소는 private, GitHub 계정 `sarahkim-bucketplace` / repo `special-creator`
 - 다른 Mac에서 이어가려면: `git clone` → `gh auth login` (최초 1회) → 이후 `git pull`만 하면 됨
-- **push 권한**: GitHub Fine-grained PAT를 발급할 때 `Contents` 권한을 반드시 **Read and write**로 설정해야 push가 됨 (Read-only로 만들면 clone/pull은 되지만 push는 403으로 막힘 — 실제로 한 번 겪었음)
+- **push 권한**: GitHub Fine-grained PAT를 발급할 때 `Contents` 권한을 반드시 **Read and write**로 설정해야 push가 됨 (Read-only로 만들면 clone/pull은 되지만 push는 403으로 막힘 — 실제로 한 번 겪었음). 이미 만들어둔 토큰이 있으면 새로 발급받을 필요 없이 `github.com/settings/tokens?type=beta` → 해당 토큰 클릭 → Repository permissions → Contents를 Read-only에서 Read and write로 **수정**하면 됨 (재발급 아님)
 - 로컬 정적 서버(`python3 -m http.server`)를 이 프로젝트 경로(iCloud Drive 하위)에서 Claude Code의 `preview_start` 도구로 띄우면 `PermissionError: [Errno 1] Operation not permitted` (`os.getcwd()`)가 남 — iCloud Drive 경로에 대한 도구 자체의 샌드박스 제약으로 보임. Bash로 직접 `python3 -m http.server 5173 &`로 띄우면 정상 동작하니 그 방식을 쓸 것
+- **Claude Code 내장 브라우저 미리보기 패널이 캐시를 심하게 먹음**: 파일을 수정한 뒤 미리보기에서 옛날 버전(심지어 완전히 예전 텍스트/스타일)이 보이는 일이 여러 번 있었음. 이건 실제 회귀(regression)가 아니라 100% 캐시 문제였음 — `curl`로 서버 응답을 직접 찍어보면 항상 최신 파일이 맞았음. 사용자의 실제 Chrome은 항상 정상적으로 보였음. 그러니 미리보기에서 이상해 보이면: 먼저 서버 응답을 직접 확인(`curl localhost:5173/파일명`)하거나, `?v=타임스탬프` 쿼리로 캐시 무효화하거나, `link.href`/`script.src`에 캐시버스터를 붙여서 재확인할 것. 파일이 실제로 잘못됐다고 결론 내리기 전에 캐시부터 의심할 것
