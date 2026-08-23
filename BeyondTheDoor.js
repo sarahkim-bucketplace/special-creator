@@ -1,6 +1,7 @@
 (function () {
   // "직접 만나 나누는 시간" 갤러리 — 스크롤해서 뷰포트에 들어올 때마다
-  // 사진 프레임이 하나씩 나타남 (한 번 나타나면 다시 숨기지 않음)
+  // 사진 프레임이 하나씩 나타나고, 화면 밖으로 나가면 다시 숨겨져서
+  // 위/아래로 다시 스크롤할 때마다 매번 등장 모션이 재생됨
   const photos = document.querySelectorAll('.btd-gallery__photo');
   if (!photos.length) return;
 
@@ -17,9 +18,7 @@
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add('is-visible');
-        observer.unobserve(entry.target);
+        entry.target.classList.toggle('is-visible', entry.isIntersecting);
       });
     },
     { threshold: 0.15, rootMargin: '0px 0px -60px 0px' }
