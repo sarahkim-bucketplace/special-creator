@@ -6,7 +6,7 @@
 <title>Find the Key</title>
 <link rel="stylesheet" href="FindTheKey.css">
 </head>
-<body>
+<body data-name="find-the-key-main">
   <div class="bg-gradient-anim" aria-hidden="true"></div>
   <div class="bg-grain" aria-hidden="true"></div>
 
@@ -15,21 +15,24 @@
       <img class="header__logo-icon" src="assets/nav-icon.svg" alt="">
     </a>
     <nav class="header__links">
-      <a href="#" class="header__link header__link--on">Find the Key</a>
-      <a href="#" class="header__link header__link--off">Opportunities Unlocked</a>
-      <a href="#" class="header__link header__link--off">Creator Voices</a>
-      <a href="#" class="header__link header__link--off">Beyond the Door</a>
+      <a href="#" class="header__link header__link--on" data-name="Find the Key">Find the Key</a>
+      <a href="#" class="header__link header__link--off" data-name="Opportunities Unlocked">Opportunities Unlocked</a>
+      <a href="#" class="header__link header__link--off" data-name="Creator Voices">Creator Voices</a>
+      <a href="#" class="header__link header__link--off" data-name="Beyond the Door">Beyond the Door</a>
+      <a href="#" class="header__cta" data-name="Open Your Door">Open Your Door</a>
     </nav>
   </header>
 
   <div class="page">
-    <section class="hero">
-      <img class="hero__icon" src="assets/hero-icon.svg" alt="">
-      <h1 class="hero__title">Special Creator(WIP)</h1>
-      <p class="hero__subtitle">
-        스페셜 크리에이터는 집과 일상을 자신만의 시선으로 바라보고,<br>
-        그 안에서 발견한 취향과 이야기를 더 많은 사람과 나누는 오늘의집 대표 홈·리빙 크리에이터입니다.
-      </p>
+    <section class="hero" data-name="main_text_frame">
+      <img class="hero__icon" src="assets/hero-icon.svg" alt="" data-name="icon-SC">
+      <div class="hero__text" data-name="text">
+        <h1 class="hero__title">Special Creator</h1>
+        <p class="hero__subtitle">
+          스페셜 크리에이터는 집과 일상을 자신만의 시선으로 바라보고,<br>
+          그 안에서 발견한 취향과 이야기를 더 많은 사람과 나누는 오늘의집 대표 홈·리빙 크리에이터입니다.
+        </p>
+      </div>
     </section>
 
     <section class="rolling" id="finethekey-image-rolling" aria-hidden="true">
@@ -47,9 +50,9 @@
       </div>
     </section>
 
-    <p class="insight">
+    <p class="insight" data-name="sub-text">
       한 사람이 나눈 영감은 또 다른 사람의 일상에 새로운 가능성을 엽니다.<br>
-      오늘의집은 스페셜 크리에이터가 그 가능성을 여는 '영감의 키(Key)'라고 믿습니다.
+      오늘의집은 그 가능성의 문을 여는 스페셜 크리에이터를 '영감의 키(Key)'라고 믿습니다.
     </p>
 
     <div class="trophy-placeholder">
