@@ -134,7 +134,7 @@ python3 -m http.server 5173
 
 - **카드 행은 Figma의 `OU-contents-box-off`(`55:2049`) 기준** — 카드 5개가 기본 상태에선 전부 동일한 크기(291×430)와 `opacity: 0.4`, 텍스트도 전부 "Creator Network"로 통일되어 있음 (특정 카드가 고정으로 강조된 `-box-on`(`55:2048`) 버전은 폐기함)
   - **마우스를 올리면(hover) 그 카드만** Figma의 강조 크기(394×520, `opacity: 1`)로 부드럽게 커짐 — 어떤 카드든 hover하면 그 카드가 커지는 방식 (`.ou-card:hover`, `transition`)
-  - `align-items: flex-end`(하단 정렬)라서 커진 카드는 위로만 자라남
+  - `align-items: flex-start`(상단 정렬) — 실제 콘텐츠가 들어가면서 카드마다 제목이 1줄/2줄로 길이가 달라지자(예: "93 CUPS, 93 STORIES" 2줄 vs "스토리마켓" 1줄) 원래 쓰던 `flex-end`(하단 정렬) 때문에 썸네일 상단이 카드마다 들쭉날쭉해 보이는 문제가 생겨서 `flex-start`로 바꿈. 이 때문에 hover로 커지는 카드는 이제 아래로만 자라남 (예전엔 위로 자랐음 — 그때는 제목이 전부 "Creator Network" placeholder로 통일돼서 문제가 안 보였을 뿐, 실제 카드별 텍스트 길이가 다양해지면 이 정렬 방식이 맞음)
   - 각 카드 제목 옆에 `icon-go` 화살표(18×18, `rotate(-90deg)`로 오른쪽을 가리키게 함)
   - 전체 폭이 1618px로 `.page`의 1280px보다 넓음. **1680px 이상** 뷰포트에서는 `.rolling`과 같은 방식(`left: 50%` + 음수 `margin-left`)으로 breakout하고 스크롤 없이 중앙 정렬됨. **1680px 미만**에서는 100vw 폭의 스크롤 가능한 스트립으로 전환됨(`overflow-x: auto`, 스크롤바는 숨김) — 트랙패드는 그대로 스와이프되고, `OpportunitiesUnlocked.js`가 마우스 클릭+드래그 스크롤도 지원함 (드래그 중엔 커서가 grab→grabbing)
   - 카드 5개 전부 `<a>` 태그로 바뀌어서 클릭하면 아래 상세 페이지로 이동함
