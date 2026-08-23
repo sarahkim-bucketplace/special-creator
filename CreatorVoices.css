@@ -195,7 +195,7 @@ body {
    order (photo, then text) stays the same for both variants ---- */
 .cv-row {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 24px;
   padding: 90px 0;
 }
