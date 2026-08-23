@@ -196,8 +196,8 @@ body {
 .cv-row {
   display: flex;
   align-items: center;
-  gap: 48px;
-  padding: 90px 17px;
+  gap: 24px;
+  padding: 90px 0;
 }
 
 .cv-row--reverse {
@@ -213,6 +213,7 @@ body {
 .cv-row__text {
   display: flex;
   flex-direction: column;
+  flex: 1 1 auto;
   gap: 14px;
   max-width: 698px;
   padding-top: 14px;
