@@ -22,10 +22,20 @@
 
   <div class="detail">
     <div class="detail__photo" data-name="Photo-box">
-      <!-- Photo-01 image intentionally left out for now (removed in Figma too) -->
-      <div class="detail__arrows" data-name="arrow-icon" aria-hidden="true">
-        <img class="detail__arrow detail__arrow--prev" src="assets/icon-arrow-before.svg" alt="">
-        <img class="detail__arrow detail__arrow--next" src="assets/icon-arrow-after.svg" alt="">
+      <!-- placeholder slides until real photos are ready — just drop <img>s in here later -->
+      <div class="detail__photo-track" id="photoTrack">
+        <div class="detail__photo-slide is-active" style="background: #8a8a8a;"><span>01</span></div>
+        <div class="detail__photo-slide" style="background: #7a7a7a;"><span>02</span></div>
+        <div class="detail__photo-slide" style="background: #6a6a6a;"><span>03</span></div>
+        <div class="detail__photo-slide" style="background: #5a5a5a;"><span>04</span></div>
+      </div>
+      <div class="detail__arrows" data-name="arrow-icon">
+        <button class="detail__arrow-btn detail__arrow-btn--prev" type="button" aria-label="이전 이미지">
+          <img class="detail__arrow detail__arrow--prev" src="assets/icon-arrow-before.svg" alt="">
+        </button>
+        <button class="detail__arrow-btn detail__arrow-btn--next" type="button" aria-label="다음 이미지">
+          <img class="detail__arrow detail__arrow--next" src="assets/icon-arrow-after.svg" alt="">
+        </button>
       </div>
     </div>
 
@@ -55,5 +65,7 @@
       </nav>
     </div>
   </div>
+
+  <script src="detail-photo-carousel.js"></script>
 </body>
 </html>

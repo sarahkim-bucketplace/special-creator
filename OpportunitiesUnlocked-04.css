@@ -86,12 +86,14 @@ body {
 .detail {
   display: flex;
   min-height: 100vh;
+  min-height: 100dvh;
 }
 
 .detail__photo {
   position: relative;
   flex: 0 0 49.45%;
   min-height: 100vh;
+  min-height: 100dvh;
   overflow: hidden;
   background: #838383;
 }
@@ -104,16 +106,52 @@ body {
   object-fit: cover;
 }
 
-/* decorative only (matches Figma's pointer-events-none) — the real
-   prev/next links live in .detail__nav at the bottom of the text column */
-.detail__arrows {
+/* placeholder slide deck — drop a real <img> (object-fit: cover, same as
+   .detail__photo-img above) into each .detail__photo-slide once photos
+   for this case exist, no other markup needs to change */
+.detail__photo-track {
+  position: absolute;
+  inset: 0;
+}
+
+.detail__photo-slide {
   position: absolute;
   inset: 0;
   display: flex;
   align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.05em;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.detail__photo-slide.is-active {
+  opacity: 1;
+}
+
+/* arrows now do something — the real prev/next PAGE links still live in
+   .detail__nav below; these cycle the photo slides above */
+.detail__arrows {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
   justify-content: space-between;
   padding: 0 11px;
-  pointer-events: none;
+}
+
+.detail__arrow-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
 }
 
 .detail__arrow {
@@ -135,6 +173,7 @@ body {
   flex-direction: column;
   justify-content: space-between;
   min-height: 100vh;
+  min-height: 100dvh;
   padding: 120px 17px 0;
 }
 
@@ -181,7 +220,7 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  max-width: 647px;
+  max-width: 597px;
   padding-bottom: 40px;
   margin-top: 35px;
 }
@@ -189,8 +228,7 @@ body {
 .detail__nav-row {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 300px;
+  justify-content: space-between;
   width: 100%;
 }
 

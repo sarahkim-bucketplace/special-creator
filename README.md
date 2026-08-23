@@ -12,6 +12,7 @@ FindTheKey.html / FindTheKey.css               "Find the Key" 데스크톱 히�
 hero-home.html / hero-home.css / hero-home.js  "OHOUSE Special Creator" 홈 히어로 페이지 (스크롤 인터랙션)
 OpportunitiesUnlocked.html / .css              "Opportunities Unlocked" 목록 페이지 (Figma 0:236)
 OpportunitiesUnlocked-01~05.html / .css        카드 클릭 시 이동하는 상세 페이지 (Figma 0:771) — 아래 절 참고
+detail-photo-carousel.js                       위 5개 상세 페이지가 공용으로 쓰는 사진 슬라이드 화살표 스크립트
 trophy.js                                      3D 트로피 뷰어 (현재 어떤 HTML에도 연결 안 됨, 보류 중)
 assets/                                        Figma에서 내려받은 벡터·이미지 애셋 (+ trophy.fbx)
 .claude/launch.json                            로컬 미리보기용 정적 서버 설정 (아래 "알아두면 좋은 것" 참고 — 이 프로젝트 경로에선 안 먹음)
@@ -134,7 +135,7 @@ python3 -m http.server 5173
 목록 페이지의 카드를 클릭하면 이동하는 페이지. **Figma 프레임 번호와 파일 번호를 맞춤**: `Frame-01` → `OpportunitiesUnlocked-01.html`, `Frame-02` → `-02.html`, ... `Frame-05` → `-05.html`. 5개 파일 모두 지금은 완전히 동일한 내용(오늘의집 × 이도 "93 CUPS, 93 STORIES" 텍스트/레이아웃)의 복사본임 — 카드별로 실제 콘텐츠가 아직 안 정해져서 우선 구조만 5개로 나눠둔 상태. 나중에 카드마다 실제 사례가 정해지면 각 `-0N.html`/`.css`에 그 내용만 채워 넣으면 됨.
 
 레이아웃 (좌우 2분할, 다른 페이지들과 달리 `.page` max-width 없이 풀블리드):
-- 왼쪽 **`Photo-box`**: 사진 자리(현재 이미지는 Figma에서도 임시로 빼둔 상태라 `#838383` 회색 배경만 있음 — 나중에 이미지 정해지면 `.detail__photo`에 `<img>` 다시 추가하면 됨). 좌우 화살표(`before-icon`/`after-icon`, 42px)가 오버레이되어 있는데 **장식용**(`pointer-events: none`) — 실제 이전/다음 이동은 하단 Navigator가 담당
+- 왼쪽 **`Photo-box`**: 실제 사진은 아직 없어서(Figma에서도 임시로 뺀 상태) `#8a8a8a`~`#5a5a5a` 톤의 번호 붙은 placeholder 슬라이드 4장(`.detail__photo-slide`)이 들어가 있음. 좌우 화살표(`before-icon`/`after-icon`, 42px)를 누르면 이 슬라이드가 순환(맨 끝에서 반대쪽으로 넘어감)하며 전환됨 — `detail-photo-carousel.js`(5개 상세 페이지가 공용으로 씀, 유일하게 페이지 간 공유하는 JS 파일). 실제 사진이 정해지면 `.detail__photo-slide` 안에 `<img>`만 넣으면 되고(`object-fit: cover`), 마크업/JS는 안 바꿔도 됨. 이 화살표는 사진만 넘기고, **페이지 이동(이전/다음 사례)은 하단 Navigator가 따로 담당**
 - 오른쪽 텍스트 컬럼: 카테고리(`#5d5d5d`, 14px) + 타이틀(8px 간격) → 35px 간격 → 본문. 위쪽에 구분선(`border-top`)
 - 하단 **`Navigator`**: 구분선이 텍스트 **아래**에 있음 (위가 아님 — 처음에 위로 잘못 넣었다가 고침). 전체 wrapper는 `opacity` 없음, 대신 "이전/다음" 링크 각각에 `opacity: 0.6`. 두 링크는 `gap: 300px`로 중앙에 모여있음 (900px 이하에서는 `space-between` + 24px로 전환)
   - 링크는 Figma 원래 문구 대신 **01~05를 순환하는 실제 페이지 이동**으로 연결해둠: `01 ← 02 ← 03 ← 04 ← 05`, `01 → 02 → 03 → 04 → 05 → (다시) 01`. **예외는 딱 하나** — `01`의 "이전"만 목록 페이지(`OpportunitiesUnlocked.html`)로 감 (그 앞에 다른 상세 페이지가 없어서). `05`의 "다음"은 `01`로 순환(wrap)됨
