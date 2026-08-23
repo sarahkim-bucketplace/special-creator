@@ -328,8 +328,16 @@ body {
 .ou-card__photo {
   width: 100%;
   height: 430px;
+  overflow: hidden;
   background: #d9d9d9;
   transition: height 0.35s ease;
+}
+
+.ou-card__photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .ou-card:hover {
