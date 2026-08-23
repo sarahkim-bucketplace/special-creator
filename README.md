@@ -20,7 +20,7 @@ assets/                                        Figma에서 내려받은 벡터·
 .claude/launch.json                            로컬 미리보기용 정적 서버 설정 (아래 "알아두면 좋은 것" 참고 — 이 프로젝트 경로에선 안 먹음)
 ```
 
-헤더 nav 4개 페이지(`Find the Key` / `Opportunities Unlocked` / `Creator Voices` / `Beyond the Door`)가 전부 만들어져서 서로 실제 `href`로 연결되어 있음. `Open Your Door` CTA만 아직 목적지가 없어서 `href="#"`.
+헤더 nav 4개 페이지(`Find the Key` / `Opportunities Unlocked` / `Creator Voices` / `Beyond the Door`)가 전부 만들어져서 서로 실제 `href`로 연결되어 있음. `Open Your Door` CTA도 이제 실제 지원 페이지(`https://ohou.se/competitions/1155`, 새 탭)로 연결됨 — Creator Voices 하단의 "스페셜 크리에이터 지원하기" 버튼과 동일한 링크.
 
 ## 로컬에서 실행하기
 
@@ -98,7 +98,7 @@ python3 -m http.server 5173
   - 구현은 `.header__link--on` / `.header__link--off` 클래스로 함 (on = `font-weight: 600`, Pretendard SemiBold)
   - **주의**: on/off의 실제 시각 차이는 Figma에서 직접 variant를 확인한 게 아니라, 이전 버전 헤더의 active 링크가 볼드였던 것에 근거해 추정한 것. 실제 Figma on 상태 디자인이 다르면(색상/밑줄 등) 수정 필요
   - 새 페이지를 만들 때마다: 그 페이지의 링크만 `--on`, 나머지는 `--off`로. `Find the Key` ↔ `Opportunities Unlocked`는 이제 서로 실제 `href`로 연결되어 있음 (나머지 미완성 페이지들은 아직 `href="#"`)
-- **CTA 버튼 "Open Your Door"** (Figma node `48:952`): 다크 필(pill) 버튼, `.header__cta` 클래스. 아직 실제 목적지가 정해지지 않아서 `href="#"` 상태 — 나중에 실제 랜딩 페이지 생기면 연결할 것
+- **CTA 버튼 "Open Your Door"** (Figma node `48:952`): 다크 필(pill) 버튼, `.header__cta` 클래스. `https://ohou.se/competitions/1155`로 연결됨(`target="_blank" rel="noopener"`) — 이 헤더를 쓰는 9개 페이지 전부 동일
 - **헤더는 `position: fixed`로 스크롤해도 항상 상단에 고정됨**, 배경은 투명 (사용자가 반투명+블러 배경을 시도했다가 "이상하다"고 해서 완전 투명으로 되돌림). `body`에 `padding-top: 105px`을 줘서 헤더가 in-flow였을 때와 동일한 여백을 유지함
   - **중요한 함정**: 처음엔 `position: sticky`로 구현했는데, `body`에 `.rolling` 섹션의 100vw breakout 때문에 걸려있는 `overflow-x: hidden`과 충돌해서 헤더가 스크롤하면 그냥 사라져버리는 버그가 있었음 (sticky 위치 계산이 깨짐 — 알려진 브라우저 동작). `overflow-x: hidden`을 `body`에서 빼면 sticky는 고쳐지지만 이번엔 실제로 가로 스크롤이 가능해지는 부작용이 생김. 최종 해결책은 `position: fixed`로 바꾸는 것 — fixed는 조상의 overflow 설정에 영향을 안 받음. **다른 페이지에 헤더를 붙일 때도 sticky 대신 fixed를 쓸 것.**
 - **모바일 햄버거 메뉴 (900px 이하)**: 원래 nav 링크 4개+CTA가 `white-space: nowrap`이라 좁은 화면에서 줄바꿈 없이 그대로 넘쳐서, 로고가 flex-shrink로 너비 0까지 눌리고 "Beyond the Door"/CTA 버튼은 뷰포트 밖으로 밀려나 아예 탭할 수 없는 상태였음(사용자가 실측 스크린샷으로 발견). 900px 이하에서 로고 옆에 햄버거 버튼(`.header__menu-btn`)이 나타나고, 누르면 `.header`에 `header--menu-open` 클래스가 붙으면서 `.header__links`가 헤더 바로 아래(`top:105px`) 전체너비 드롭다운 패널로 바뀜(`max-height` 트랜지션으로 열림/닫힘). 로직은 `header-menu.js` 하나로 이 헤더를 쓰는 9개 페이지(`FindTheKey`/`OpportunitiesUnlocked`/`CreatorVoices`/`BeyondTheDoor`/`OpportunitiesUnlocked-01~05`) 전부가 공유함 — 새 페이지에 헤더를 붙일 때 `<script src="header-menu.js"></script>`도 같이 추가할 것. 드롭다운 안의 링크를 클릭하면 자동으로 닫힘, 900px보다 넓어지면(리사이즈) 자동으로 닫힘. 예전에 있던 600px 전용 `.header`/`.header__links`/`.header__link` 폰트·간격 축소 규칙은 이제 이 드롭다운으로 대체되어 제거함
@@ -175,7 +175,7 @@ python3 -m http.server 5173
   - 4개 행 전부 실제 인터뷰 콘텐츠로 채워짐: 1행 MOPO 님("기록이 열어준 새로운 기회"), 2행 랴료하우스 님("좋아하는 일을 잘하고 있다는 기쁨"), 3행 cooohome 님("내 취향을 믿게 된 시간"), 4행 dear_myhome 님("일상이 된 기록, 기록이 된 집") — 더 이상 4행이 동일한 placeholder가 아님. 각 행의 사진(`.cv-row__photo`)은 아직 회색 박스 그대로임
   - **행 사이 간격은 비대칭**: 사용자가 Figma에서 조정한 뒤로, 일반 행(사진 왼쪽) 다음엔 `margin-bottom: 220px`, 반전 행(사진 오른쪽) 다음엔 `margin-bottom: 267px`(+47px 더 넓음) — 절대좌표로 역산해서 확인한 값. `.hero`도 첫 행 앞에 동일하게 `margin-bottom: 220px`을 가짐. 예전엔 모든 행이 `padding: 90px 0`으로 균일했는데, 지금은 padding 대신 타입별 margin-bottom 방식으로 바뀜 — `.cv-outro`엔 더 이상 자체 margin-top이 없음(마지막 행의 margin-bottom이 그 간격까지 이미 포함)
   - 900px 이하에서는 사진이 위, 텍스트가 아래로 세로 스택, 간격도 균일하게 `margin-bottom: 48px`로 축소
-- 하단 **outro**(Figma `55:2735` "sub-text") + **CTA 버튼** "스페셜 크리에이터 지원하기"(`#464646` 배경, 56px 높이, `rounded-52`) — 아직 실제 지원 폼/링크가 없어서 `href="#"`
+- 하단 **outro**(Figma `55:2735` "sub-text") + **CTA 버튼** "스페셜 크리에이터 지원하기"(`#464646` 배경, 56px 높이, `rounded-52`) — `https://ohou.se/competitions/1155`(새 탭)로 연결됨
 - 헤더 nav에서 `Creator Voices` 링크가 이제 다른 모든 페이지(`FindTheKey.html`, `OpportunitiesUnlocked.html`, `OpportunitiesUnlocked-01~05.html`)에서 실제로 이 페이지로 연결됨
 
 ## Beyond the Door 페이지 (Figma `28:476`)
