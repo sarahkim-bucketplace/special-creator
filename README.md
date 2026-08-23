@@ -196,14 +196,17 @@ python3 -m http.server 5173
 5. 900px 이하에서 여정 리스트는 세로 스택, 갤러리는 1열로 바뀜 (가운데 열의 "작은 박스 2개" 서브로우는 계속 가로 유지)
 6. **폰트 굵기**: `.btd-journey__desc`, `.btd-gift__label`, `.btd-gift__item`이 원래 Figma엔 Pretendard Medium(`font-weight: 500`)으로 돼 있었는데, 실제로 보니 너무 진하게 보인다는 피드백으로 전부 Regular(`400`)로 낮춤. 이 페이지에서 Medium 굵기로 남아있는 텍스트는 이제 없음 (제목류는 SemiBold 600 그대로 유지)
 
-## 트로피 자리 (아직 미착수)
+## 트로피 자리 (임시 사진으로 채움, 최종 3D는 아직 미착수)
 
-카드 롤링 섹션 아래 "한 사람이 나눈 영감은..." 문구 다음에, Figma상 803×917 크기의 트로피 3D 배치 영역이 있음 (`트로피 3D 배치 예정.` 플레이스홀더 텍스트).
+카드 롤링 섹션 아래 "한 사람이 나눈 영감은..." 문구 다음에, Figma상 803×917 크기의 트로피 배치 영역(`.trophy-placeholder`)이 있음.
 
-- 사용자가 `.obj`/`.fbx` 3D 파일(오늘의집 최종 트로피)을 한 번 전달해서 Three.js(FBXLoader, CDN 모듈 import) + `<model-viewer>` 대신 커스텀 뷰어로 자동회전 구현까지 완료했었음 (`trophy.js`, `assets/trophy.fbx`)
-- 재질 질감(석고 느낌 살리려고 procedural grain bump/roughness map + RoomEnvironment 환경광까지 추가)까지 다듬었지만, 사용자가 최종적으로 "맘에 안 든다"고 해서 **`FindTheKey.html`에서 3D 뷰어를 다시 제거**하고 원래 Figma의 정적 플레이스홀더 박스(`#454545` 배경 + 흰 텍스트)로 되돌림
-- `trophy.js`와 `assets/trophy.fbx`는 나중에 다시 시도할 수 있도록 삭제하지 않고 저장소에 남겨둔 상태 (현재 어떤 HTML에서도 로드하지 않음)
-- 이어서 작업한다면: `trophy.js`를 다시 `FindTheKey.html`에 `<script type="module">`로 연결하고, 조명/재질을 사용자가 만족할 때까지 다시 튜닝하면 됨. 이전에 시도했다가 별로였던 것: RoomEnvironment 단독 조명(너무 어둡고 드라마틱함), 강한 bumpScale(너무 sparkle함)
+- **현재 상태**: `assets/trophy.png`(트로피 실물 사진, 투명 배경 PNG, 2000×2000 정사각형 캔버스)를 `.trophy-photo-wrap` 안에 넣고, hero-home.html의 열쇠와 똑같은 방식으로 둥실거리는 모션을 줌(`translateY(0) → -16px → 0`, 4s ease-in-out infinite, `@keyframes trophy-float`). **사용자가 명시적으로 "임시"라고 밝힌 상태** — 최종 3D 배치 전까지의 임시 사진임
+  - 원래 있던 `#454545` 회색 배경 박스와 "트로피 3D 배치 예정." 텍스트는 제거함(사용자 피드백: 이미지가 작고 회색 박스가 어색해 보임) — 지금은 배경 없이 사진만 떠 있음
+  - `.trophy-photo`는 `width: 90%`로 박스를 거의 채움. 이미지 자체가 정사각 캔버스라 트로피 주위에 투명 여백이 있어서 실제 트로피 형상은 이보다 작게 보임 — 나중에 사진이 바뀌거나 여백이 거슬리면 이 값과 사진을 다시 조정할 것
+- **3D 버전 이력**: 사용자가 `.obj`/`.fbx` 3D 파일(오늘의집 최종 트로피)을 한 번 전달해서 Three.js(FBXLoader, CDN 모듈 import) + `<model-viewer>` 대신 커스텀 뷰어로 자동회전 구현까지 완료했었음 (`trophy.js`, `assets/trophy.fbx`)
+  - 재질 질감(석고 느낌 살리려고 procedural grain bump/roughness map + RoomEnvironment 환경광까지 추가)까지 다듬었지만, 사용자가 최종적으로 "맘에 안 든다"고 해서 3D 뷰어를 제거하고 정적 플레이스홀더로 되돌렸었음(그 뒤 지금의 사진으로 다시 교체)
+  - `trophy.js`와 `assets/trophy.fbx`는 나중에 다시 시도할 수 있도록 삭제하지 않고 저장소에 남겨둔 상태 (현재 어떤 HTML에서도 로드하지 않음)
+  - 이어서 작업한다면: `trophy.js`를 다시 `FindTheKey.html`에 `<script type="module">`로 연결하고, 조명/재질을 사용자가 만족할 때까지 다시 튜닝하면 됨. 이전에 시도했다가 별로였던 것: RoomEnvironment 단독 조명(너무 어둡고 드라마틱함), 강한 bumpScale(너무 sparkle함)
 
 ## 파일명 변경 이력
 
