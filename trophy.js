@@ -52,6 +52,17 @@ if (container) {
   surfaceReliefMap.needsUpdate = true;
   surfaceReliefMap.colorSpace = THREE.NoColorSpace;
 
+  // proper tangent-space normal map, generated from the seamless texture's
+  // own grayscale height (Sobel gradient -> encoded normal), rather than the
+  // cheap single-channel bump approximation — gives more accurate per-pixel
+  // lighting on the grain. Kept alongside bumpMap per request; wrap/repeat
+  // mirrored from the color map so the two line up on the surface.
+  const surfaceNormalMap = textureLoader.load('assets/trophy-3d-texture/trophy-texture-normal.png');
+  surfaceNormalMap.wrapS = THREE.RepeatWrapping;
+  surfaceNormalMap.wrapT = THREE.RepeatWrapping;
+  surfaceNormalMap.repeat.copy(surfaceColorMap.repeat);
+  surfaceNormalMap.colorSpace = THREE.NoColorSpace;
+
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.enableZoom = false;
   controls.enablePan = false;
@@ -72,6 +83,8 @@ if (container) {
           roughnessMap: surfaceReliefMap,
           bumpMap: surfaceReliefMap,
           bumpScale: 0.01,
+          normalMap: surfaceNormalMap,
+          normalScale: new THREE.Vector2(0.6, 0.6),
           metalness: 0,
           clearcoat: 0,
           envMapIntensity: 0.3,
