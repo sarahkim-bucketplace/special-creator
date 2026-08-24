@@ -28,53 +28,21 @@ if (container) {
   rimLight.position.set(-3, 1.5, -2.5);
   scene.add(rimLight);
 
-  // procedural plaster-grain noise, standing in for a real surface scan since no
-  // texture map shipped with the model — used as both a bump and roughness map.
-  // Two octaves: soft low-frequency blotches (mottling, survives mip-mapping at
-  // small on-screen sizes) plus fine per-pixel speckle on top, both with a wide
-  // enough value range to actually show up — the original single-octave version
-  // was too high-frequency (blurred away by mipmapping) and too narrow-range
-  // (200-255 only), which together read as flat, textureless white.
-  function makeGrainTexture() {
-    const size = 256;
-    const canvas = document.createElement('canvas');
-    canvas.width = size;
-    canvas.height = size;
-    const ctx = canvas.getContext('2d');
+  // real photographed plaster/fiber-paper surface (assets/trophy_texture.png),
+  // tiled across the model. Loaded once as the color map; a linear-colorspace
+  // clone of the same image drives bump + roughness so its fiber/speckle detail
+  // reads as physical relief instead of just a flat printed pattern.
+  const textureLoader = new THREE.TextureLoader();
+  const surfaceColorMap = textureLoader.load('assets/trophy_texture.png');
+  surfaceColorMap.wrapS = THREE.RepeatWrapping;
+  surfaceColorMap.wrapT = THREE.RepeatWrapping;
+  surfaceColorMap.repeat.set(3, 3);
+  surfaceColorMap.colorSpace = THREE.SRGBColorSpace;
+  surfaceColorMap.anisotropy = renderer.capabilities.getMaxAnisotropy();
 
-    ctx.fillStyle = '#b8b0a0';
-    ctx.fillRect(0, 0, size, size);
-    for (let i = 0; i < 90; i++) {
-      const x = Math.random() * size;
-      const y = Math.random() * size;
-      const r = 14 + Math.random() * 34;
-      const v = 90 + Math.floor(Math.random() * 140);
-      const grad = ctx.createRadialGradient(x, y, 0, x, y, r);
-      grad.addColorStop(0, `rgba(${v}, ${v}, ${v}, 0.55)`);
-      grad.addColorStop(1, `rgba(${v}, ${v}, ${v}, 0)`);
-      ctx.fillStyle = grad;
-      ctx.beginPath();
-      ctx.arc(x, y, r, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    const imageData = ctx.getImageData(0, 0, size, size);
-    for (let i = 0; i < imageData.data.length; i += 4) {
-      const jitter = Math.floor((Math.random() - 0.5) * 70);
-      imageData.data[i] = Math.max(0, Math.min(255, imageData.data[i] + jitter));
-      imageData.data[i + 1] = imageData.data[i];
-      imageData.data[i + 2] = imageData.data[i];
-    }
-    ctx.putImageData(imageData, 0, 0);
-
-    const texture = new THREE.CanvasTexture(canvas);
-    texture.wrapS = THREE.RepeatWrapping;
-    texture.wrapT = THREE.RepeatWrapping;
-    texture.repeat.set(6, 6);
-    texture.colorSpace = THREE.NoColorSpace;
-    return texture;
-  }
-  const grainTexture = makeGrainTexture();
+  const surfaceReliefMap = surfaceColorMap.clone();
+  surfaceReliefMap.needsUpdate = true;
+  surfaceReliefMap.colorSpace = THREE.NoColorSpace;
 
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.enableZoom = false;
@@ -88,13 +56,12 @@ if (container) {
     object.traverse((child) => {
       if (child.isMesh) {
         child.material = new THREE.MeshPhysicalMaterial({
-          // sampled from a flat patch of assets/trophy.png (the reference render):
-          // avg rgb(189, 184, 172), a warmer/darker taupe than the old off-white
-          color: 0xbdb8ac,
-          roughness: 0.62,
-          roughnessMap: grainTexture,
-          bumpMap: grainTexture,
-          bumpScale: 0.015,
+          map: surfaceColorMap,
+          color: 0xffffff,
+          roughness: 0.68,
+          roughnessMap: surfaceReliefMap,
+          bumpMap: surfaceReliefMap,
+          bumpScale: 0.01,
           metalness: 0,
           clearcoat: 0,
           envMapIntensity: 0.3,
