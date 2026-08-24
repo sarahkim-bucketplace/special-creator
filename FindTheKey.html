@@ -63,12 +63,20 @@
     </p>
 
     <div class="trophy-placeholder">
-      <div class="trophy-photo-wrap">
-        <img class="trophy-photo" src="assets/trophy.png" alt="">
-      </div>
+      <div id="trophyViewer" class="trophy-viewer"></div>
     </div>
   </div>
 <script src="header-menu.js"></script>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module" src="trophy.js"></script>
 
 </body>
 </html>

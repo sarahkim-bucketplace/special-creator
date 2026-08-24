@@ -312,7 +312,7 @@ body {
   margin-top: 99px;
 }
 
-/* ---- trophy placeholder (3D piece to be placed here later) ---- */
+/* ---- trophy: interactive 3D viewer (trophy.js, drag to rotate) ---- */
 .trophy-placeholder {
   width: 100%;
   max-width: 803px;
@@ -324,24 +324,18 @@ body {
   text-align: center;
 }
 
-/* temporary real trophy photo, floating the same way the key does on
-   hero-home.html — swap for the real 3D placement whenever that's ready */
-.trophy-photo-wrap {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: trophy-float 4s ease-in-out infinite;
+.trophy-viewer {
+  width: 100%;
+  height: 100%;
+  cursor: grab;
 }
 
-.trophy-photo {
+.trophy-viewer:active {
+  cursor: grabbing;
+}
+
+.trophy-viewer canvas {
   display: block;
-  width: 90%;
-  pointer-events: none;
-}
-
-@keyframes trophy-float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-16px); }
 }
 
 @media (max-width: 600px) {

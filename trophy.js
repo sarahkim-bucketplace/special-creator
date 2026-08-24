@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
+import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
@@ -62,8 +62,8 @@ if (container) {
   controls.autoRotate = true;
   controls.autoRotateSpeed = 2.4;
 
-  const loader = new FBXLoader();
-  loader.load('assets/trophy.fbx', (object) => {
+  const loader = new OBJLoader();
+  loader.load('assets/trophy.obj', (object) => {
     object.traverse((child) => {
       if (child.isMesh) {
         child.material = new THREE.MeshPhysicalMaterial({
@@ -80,7 +80,7 @@ if (container) {
       }
     });
 
-    // FBX export is in cm-ish arbitrary units; normalize + center so it fills the viewer consistently.
+    // export is in arbitrary units; normalize + center so it fills the viewer consistently.
     // scale must be applied before deriving the position offset, since .position is a
     // parent-space translation that isn't itself affected by the object's own .scale.
     const box = new THREE.Box3().setFromObject(object);
@@ -92,6 +92,8 @@ if (container) {
     object.position.set(-center.x * targetScale, -center.y * targetScale, -center.z * targetScale);
 
     scene.add(object);
+  }, undefined, (err) => {
+    console.error('[trophy] failed to load assets/trophy.obj', err);
   });
 
   function animate() {
