@@ -20,10 +20,25 @@ if (container) {
   const pmremGenerator = new THREE.PMREMGenerator(renderer);
   scene.environment = pmremGenerator.fromScene(new RoomEnvironment(), 0.04).texture;
 
-  scene.add(new THREE.HemisphereLight(0xffffff, 0xd8d8d8, 0.5));
-  const keyLight = new THREE.DirectionalLight(0xffffff, 0.9);
-  keyLight.position.set(2, 3, 4);
+  // less ambient fill so the raking key light below actually reads as
+  // shadow in the recessed engraving, instead of getting washed back out
+  scene.add(new THREE.HemisphereLight(0xffffff, 0xd8d8d8, 0.35));
+
+  // the engraved face doesn't rotate (autoRotate spins the camera, not the
+  // object), so a light angled to graze *that* face stays raking no matter
+  // where the camera orbits to. Low Z (near the face plane) + off to the
+  // side is what actually carves out shadow in shallow relief — a light
+  // near the camera/view direction (the old (2,3,4)) barely shows any.
+  const keyLight = new THREE.DirectionalLight(0xffffff, 1.1);
+  keyLight.position.set(4, 1.4, 1.0);
   scene.add(keyLight);
+
+  // second raking light from the other side, dimmer, so the engraving
+  // still reads even from angles where the key light alone underlights it
+  const embossLight = new THREE.DirectionalLight(0xffffff, 0.4);
+  embossLight.position.set(-3, 0.8, 1.2);
+  scene.add(embossLight);
+
   const rimLight = new THREE.DirectionalLight(0xdbe8ff, 0.25);
   rimLight.position.set(-3, 1.5, -2.5);
   scene.add(rimLight);
