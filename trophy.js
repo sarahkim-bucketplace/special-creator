@@ -13,18 +13,18 @@ if (container) {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setSize(container.clientWidth, container.clientHeight);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.3;
+  renderer.toneMappingExposure = 0.85;
   container.appendChild(renderer.domElement);
 
   // soft studio-style reflections without needing an external HDRI file
   const pmremGenerator = new THREE.PMREMGenerator(renderer);
   scene.environment = pmremGenerator.fromScene(new RoomEnvironment(), 0.04).texture;
 
-  scene.add(new THREE.HemisphereLight(0xffffff, 0xd8d8d8, 0.9));
-  const keyLight = new THREE.DirectionalLight(0xffffff, 1.6);
+  scene.add(new THREE.HemisphereLight(0xffffff, 0xd8d8d8, 0.5));
+  const keyLight = new THREE.DirectionalLight(0xffffff, 0.9);
   keyLight.position.set(2, 3, 4);
   scene.add(keyLight);
-  const rimLight = new THREE.DirectionalLight(0xdbe8ff, 0.5);
+  const rimLight = new THREE.DirectionalLight(0xdbe8ff, 0.25);
   rimLight.position.set(-3, 1.5, -2.5);
   scene.add(rimLight);
 
@@ -67,15 +67,14 @@ if (container) {
     object.traverse((child) => {
       if (child.isMesh) {
         child.material = new THREE.MeshPhysicalMaterial({
-          color: 0xf1ece3,
-          roughness: 0.6,
+          color: 0xd9d2c4,
+          roughness: 0.85,
           roughnessMap: grainTexture,
           bumpMap: grainTexture,
-          bumpScale: 0.004,
+          bumpScale: 0.015,
           metalness: 0,
-          clearcoat: 0.06,
-          clearcoatRoughness: 0.7,
-          envMapIntensity: 0.55,
+          clearcoat: 0,
+          envMapIntensity: 0.3,
         });
       }
     });
