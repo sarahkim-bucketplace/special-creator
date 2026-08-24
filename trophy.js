@@ -13,7 +13,7 @@ if (container) {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setSize(container.clientWidth, container.clientHeight);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 0.85;
+  renderer.toneMappingExposure = 0.65;
   container.appendChild(renderer.domElement);
 
   // soft studio-style reflections without needing an external HDRI file
@@ -28,28 +28,49 @@ if (container) {
   rimLight.position.set(-3, 1.5, -2.5);
   scene.add(rimLight);
 
-  // procedural fine-grain noise, standing in for a real plaster surface scan since
-  // no texture map shipped with the model — used as both a bump and roughness map
-  // so the surface catches light unevenly instead of reading as flat/plastic
+  // procedural plaster-grain noise, standing in for a real surface scan since no
+  // texture map shipped with the model — used as both a bump and roughness map.
+  // Two octaves: soft low-frequency blotches (mottling, survives mip-mapping at
+  // small on-screen sizes) plus fine per-pixel speckle on top, both with a wide
+  // enough value range to actually show up — the original single-octave version
+  // was too high-frequency (blurred away by mipmapping) and too narrow-range
+  // (200-255 only), which together read as flat, textureless white.
   function makeGrainTexture() {
     const size = 256;
     const canvas = document.createElement('canvas');
     canvas.width = size;
     canvas.height = size;
     const ctx = canvas.getContext('2d');
-    const imageData = ctx.createImageData(size, size);
+
+    ctx.fillStyle = '#b8b0a0';
+    ctx.fillRect(0, 0, size, size);
+    for (let i = 0; i < 90; i++) {
+      const x = Math.random() * size;
+      const y = Math.random() * size;
+      const r = 14 + Math.random() * 34;
+      const v = 90 + Math.floor(Math.random() * 140);
+      const grad = ctx.createRadialGradient(x, y, 0, x, y, r);
+      grad.addColorStop(0, `rgba(${v}, ${v}, ${v}, 0.55)`);
+      grad.addColorStop(1, `rgba(${v}, ${v}, ${v}, 0)`);
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    const imageData = ctx.getImageData(0, 0, size, size);
     for (let i = 0; i < imageData.data.length; i += 4) {
-      const v = 200 + Math.floor(Math.random() * 55);
-      imageData.data[i] = v;
-      imageData.data[i + 1] = v;
-      imageData.data[i + 2] = v;
-      imageData.data[i + 3] = 255;
+      const jitter = Math.floor((Math.random() - 0.5) * 70);
+      imageData.data[i] = Math.max(0, Math.min(255, imageData.data[i] + jitter));
+      imageData.data[i + 1] = imageData.data[i];
+      imageData.data[i + 2] = imageData.data[i];
     }
     ctx.putImageData(imageData, 0, 0);
+
     const texture = new THREE.CanvasTexture(canvas);
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
-    texture.repeat.set(18, 18);
+    texture.repeat.set(6, 6);
     texture.colorSpace = THREE.NoColorSpace;
     return texture;
   }
