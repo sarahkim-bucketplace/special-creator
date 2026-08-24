@@ -28,12 +28,13 @@ if (container) {
   rimLight.position.set(-3, 1.5, -2.5);
   scene.add(rimLight);
 
-  // real photographed plaster/fiber-paper surface (assets/trophy_texture.png).
-  // The .glb's own material has no image baked in (just a flat white plaster
-  // color), so this is applied manually — a color map plus a linear-colorspace
-  // clone driving bump + roughness so the fiber/speckle detail reads as relief.
+  // real photographed stone/plaster surface, processed into a seamless tile
+  // (assets/trophy-3d-texture/trophy-texture-seamless.png). The .glb's own
+  // material has no image baked in (just a flat white plaster color), so this
+  // is applied manually — a color map plus a linear-colorspace clone driving
+  // bump + roughness so the grain reads as physical relief.
   const textureLoader = new THREE.TextureLoader();
-  const surfaceColorMap = textureLoader.load('assets/trophy_texture.png');
+  const surfaceColorMap = textureLoader.load('assets/trophy-3d-texture/trophy-texture-seamless.png');
   surfaceColorMap.wrapS = THREE.RepeatWrapping;
   surfaceColorMap.wrapT = THREE.RepeatWrapping;
   // same real-world-scale UV unwrap as the old .obj (UVs span roughly -60 to 85,
