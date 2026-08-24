@@ -24,44 +24,21 @@ body {
   position: fixed;
   inset: 0;
   z-index: -2;
-  overflow: hidden;
   pointer-events: none;
+  opacity: var(--bg-gradient-opacity, 1);
+  background: linear-gradient(
+    45deg,
+    rgba(246, 251, 196, 0.6) 0%,
+    rgba(255, 255, 255, 0) 50%,
+    rgba(205, 231, 255, 0.6) 100%
+  );
+  background-size: 300% 300%;
+  animation: bg-gradient-shift 10s ease-in-out infinite alternate;
 }
 
-.bg-gradient-anim::before,
-.bg-gradient-anim::after {
-  content: "";
-  position: absolute;
-  width: 900px;
-  height: 700px;
-  border-radius: 50%;
-  filter: blur(60px);
-}
-
-.bg-gradient-anim::before {
-  top: -10%;
-  left: 8%;
-  background: rgba(246, 251, 196, 0.45);
-  transform: translate(-50%, 0);
-  animation: bg-blob-drift-1 14s ease-in-out infinite;
-}
-
-.bg-gradient-anim::after {
-  top: -5%;
-  left: 92%;
-  background: rgba(205, 231, 255, 0.45);
-  transform: translate(-50%, 0);
-  animation: bg-blob-drift-2 16s ease-in-out infinite;
-}
-
-@keyframes bg-blob-drift-1 {
-  0%, 100% { transform: translate(-50%, 0) scale(1); }
-  50% { transform: translate(calc(-50% + 180px), 160px) scale(1.15); }
-}
-
-@keyframes bg-blob-drift-2 {
-  0%, 100% { transform: translate(-50%, 0) scale(1); }
-  50% { transform: translate(calc(-50% - 180px), 180px) scale(1.15); }
+@keyframes bg-gradient-shift {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 100% 100%; }
 }
 
 /* subtle noise/grain overlay, matching the Figma "배경 그레인" noise effect */
