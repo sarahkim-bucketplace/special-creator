@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
@@ -28,15 +28,18 @@ if (container) {
   rimLight.position.set(-3, 1.5, -2.5);
   scene.add(rimLight);
 
-  // real photographed plaster/fiber-paper surface (assets/trophy_texture.png),
-  // tiled across the model. Loaded once as the color map; a linear-colorspace
-  // clone of the same image drives bump + roughness so its fiber/speckle detail
-  // reads as physical relief instead of just a flat printed pattern.
+  // real photographed plaster/fiber-paper surface (assets/trophy_texture.png).
+  // The .glb's own material has no image baked in (just a flat white plaster
+  // color), so this is applied manually — a color map plus a linear-colorspace
+  // clone driving bump + roughness so the fiber/speckle detail reads as relief.
   const textureLoader = new THREE.TextureLoader();
   const surfaceColorMap = textureLoader.load('assets/trophy_texture.png');
   surfaceColorMap.wrapS = THREE.RepeatWrapping;
   surfaceColorMap.wrapT = THREE.RepeatWrapping;
-  surfaceColorMap.repeat.set(3, 3);
+  // same real-world-scale UV unwrap as the old .obj (UVs span roughly -60 to 85,
+  // not normalized 0-1), so repeat has to be a small fraction, not a whole-number
+  // tile count, or the texture retiles hundreds of times into a moiré mess.
+  surfaceColorMap.repeat.set(0.025, 0.025);
   surfaceColorMap.colorSpace = THREE.SRGBColorSpace;
   surfaceColorMap.anisotropy = renderer.capabilities.getMaxAnisotropy();
 
@@ -51,8 +54,10 @@ if (container) {
   controls.autoRotate = true;
   controls.autoRotateSpeed = 2.4;
 
-  const loader = new OBJLoader();
-  loader.load('assets/trophy.obj', (object) => {
+  const loader = new GLTFLoader();
+  loader.load('assets/trophy.glb', (gltf) => {
+    const object = gltf.scene;
+
     object.traverse((child) => {
       if (child.isMesh) {
         child.material = new THREE.MeshPhysicalMaterial({
@@ -69,9 +74,6 @@ if (container) {
       }
     });
 
-    // export is in arbitrary units; normalize + center so it fills the viewer consistently.
-    // scale must be applied before deriving the position offset, since .position is a
-    // parent-space translation that isn't itself affected by the object's own .scale.
     const box = new THREE.Box3().setFromObject(object);
     const size = box.getSize(new THREE.Vector3());
     const center = box.getCenter(new THREE.Vector3());
@@ -82,7 +84,7 @@ if (container) {
 
     scene.add(object);
   }, undefined, (err) => {
-    console.error('[trophy] failed to load assets/trophy.obj', err);
+    console.error('[trophy] failed to load assets/trophy.glb', err);
   });
 
   function animate() {
