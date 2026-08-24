@@ -37,10 +37,14 @@ if (container) {
   const surfaceColorMap = textureLoader.load('assets/trophy-3d-texture/trophy-texture-seamless.png');
   surfaceColorMap.wrapS = THREE.RepeatWrapping;
   surfaceColorMap.wrapT = THREE.RepeatWrapping;
-  // same real-world-scale UV unwrap as the old .obj (UVs span roughly -60 to 85,
-  // not normalized 0-1), so repeat has to be a small fraction, not a whole-number
-  // tile count, or the texture retiles hundreds of times into a moiré mess.
-  surfaceColorMap.repeat.set(0.025, 0.025);
+  // this .glb's UVs are normalized (u: 0-1, v: 0.14-1) — unlike the old .obj's
+  // real-world-scale unwrap, so repeat is a plain tile count here. The v span
+  // (0.858) is slightly narrower than u's (0.999), so an equal x/y repeat would
+  // tile v ~14% denser and read as a stretch; scale y down to compensate.
+  const uvSpanU = 0.99853515625;
+  const uvSpanV = 0.8574801683425903;
+  const tileCount = 2.5;
+  surfaceColorMap.repeat.set(tileCount, tileCount * (uvSpanV / uvSpanU));
   surfaceColorMap.colorSpace = THREE.SRGBColorSpace;
   surfaceColorMap.anisotropy = renderer.capabilities.getMaxAnisotropy();
 
