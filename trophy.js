@@ -87,7 +87,7 @@ if (container) {
     const size = box.getSize(new THREE.Vector3());
     const center = box.getCenter(new THREE.Vector3());
     const maxDim = Math.max(size.x, size.y, size.z) || 1;
-    const targetScale = 2.2 / maxDim;
+    const targetScale = (2.2 / maxDim) * 0.8;
     object.scale.setScalar(targetScale);
     object.position.set(-center.x * targetScale, -center.y * targetScale, -center.z * targetScale);
 
