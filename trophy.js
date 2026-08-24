@@ -88,8 +88,10 @@ if (container) {
     object.traverse((child) => {
       if (child.isMesh) {
         child.material = new THREE.MeshPhysicalMaterial({
-          color: 0xd9d2c4,
-          roughness: 0.85,
+          // sampled from a flat patch of assets/trophy.png (the reference render):
+          // avg rgb(189, 184, 172), a warmer/darker taupe than the old off-white
+          color: 0xbdb8ac,
+          roughness: 0.62,
           roughnessMap: grainTexture,
           bumpMap: grainTexture,
           bumpScale: 0.015,
