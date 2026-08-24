@@ -43,7 +43,7 @@ if (container) {
   // tile v ~14% denser and read as a stretch; scale y down to compensate.
   const uvSpanU = 0.99853515625;
   const uvSpanV = 0.8574801683425903;
-  const tileCount = 2.5 / 0.9 / 0.8;
+  const tileCount = 2.5 / 0.9 / 0.8 / 0.6;
   surfaceColorMap.repeat.set(tileCount, tileCount * (uvSpanV / uvSpanU));
   surfaceColorMap.colorSpace = THREE.SRGBColorSpace;
   surfaceColorMap.anisotropy = renderer.capabilities.getMaxAnisotropy();
