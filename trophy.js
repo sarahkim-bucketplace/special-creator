@@ -85,7 +85,7 @@ if (container) {
   // object is re-centered on load below) preserving the original framing's
   // distance and elevation
   const radius = Math.hypot(0, 0.4, 4.2);
-  const baseTheta = Math.PI / 4;
+  const baseTheta = -Math.PI / 4;
   const basePhi = Math.acos(0.4 / radius);
   const maxThetaSwing = THREE.MathUtils.degToRad(20);
   const maxPhiSwing = THREE.MathUtils.degToRad(10);
