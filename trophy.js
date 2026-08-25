@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
 const container = document.getElementById('trophyViewer');
@@ -20,22 +19,24 @@ if (container) {
   const pmremGenerator = new THREE.PMREMGenerator(renderer);
   scene.environment = pmremGenerator.fromScene(new RoomEnvironment(), 0.04).texture;
 
-  // less ambient fill so the raking key light below actually reads as
-  // shadow in the recessed engraving, instead of getting washed back out
-  scene.add(new THREE.HemisphereLight(0xffffff, 0xd8d8d8, 0.35));
+  // even less ambient fill than before — the softer grain texture no longer
+  // needs as much fill light to read, so the room to push contrast on the
+  // carved engraving (which is real geometry, not the texture) is bigger
+  scene.add(new THREE.HemisphereLight(0xffffff, 0xd8d8d8, 0.25));
 
   // the engraved face doesn't rotate (autoRotate spins the camera, not the
   // object), so a light angled to graze *that* face stays raking no matter
   // where the camera orbits to. Low Z (near the face plane) + off to the
   // side is what actually carves out shadow in shallow relief — a light
   // near the camera/view direction (the old (2,3,4)) barely shows any.
-  const keyLight = new THREE.DirectionalLight(0xffffff, 1.1);
+  // pushed brighter (was 1.1) so the lettering's shadow reads more strongly
+  const keyLight = new THREE.DirectionalLight(0xffffff, 1.6);
   keyLight.position.set(4, 1.4, 1.0);
   scene.add(keyLight);
 
   // second raking light from the other side, dimmer, so the engraving
   // still reads even from angles where the key light alone underlights it
-  const embossLight = new THREE.DirectionalLight(0xffffff, 0.4);
+  const embossLight = new THREE.DirectionalLight(0xffffff, 0.55);
   embossLight.position.set(-3, 0.8, 1.2);
   scene.add(embossLight);
 
@@ -78,12 +79,28 @@ if (container) {
   surfaceNormalMap.repeat.copy(surfaceColorMap.repeat);
   surfaceNormalMap.colorSpace = THREE.NoColorSpace;
 
-  const controls = new OrbitControls(camera, renderer.domElement);
-  controls.enableZoom = false;
-  controls.enablePan = false;
-  controls.enableDamping = true;
-  controls.autoRotate = true;
-  controls.autoRotateSpeed = 2.4;
+  // resting 3/4 view (was a nonstop auto-spin, which read as distracting) —
+  // holds a 45° azimuth by default and drifts gently toward the cursor's
+  // position on the page instead, spherical coords around the origin (the
+  // object is re-centered on load below) preserving the original framing's
+  // distance and elevation
+  const radius = Math.hypot(0, 0.4, 4.2);
+  const baseTheta = Math.PI / 4;
+  const basePhi = Math.acos(0.4 / radius);
+  const maxThetaSwing = THREE.MathUtils.degToRad(20);
+  const maxPhiSwing = THREE.MathUtils.degToRad(10);
+
+  let targetTheta = baseTheta;
+  let targetPhi = basePhi;
+  let theta = baseTheta;
+  let phi = basePhi;
+
+  window.addEventListener('pointermove', (e) => {
+    const nx = (e.clientX / window.innerWidth) * 2 - 1;
+    const ny = (e.clientY / window.innerHeight) * 2 - 1;
+    targetTheta = baseTheta + THREE.MathUtils.clamp(nx, -1, 1) * maxThetaSwing;
+    targetPhi = basePhi - THREE.MathUtils.clamp(ny, -1, 1) * maxPhiSwing;
+  });
 
   const loader = new GLTFLoader();
   loader.load('assets/trophy.glb', (gltf) => {
@@ -97,9 +114,9 @@ if (container) {
           roughness: 0.68,
           roughnessMap: surfaceReliefMap,
           bumpMap: surfaceReliefMap,
-          bumpScale: 0.01,
+          bumpScale: 0.005,
           normalMap: surfaceNormalMap,
-          normalScale: new THREE.Vector2(0.6, 0.6),
+          normalScale: new THREE.Vector2(0.3, 0.3),
           metalness: 0,
           clearcoat: 0,
           envMapIntensity: 0.3,
@@ -122,7 +139,20 @@ if (container) {
 
   function animate() {
     requestAnimationFrame(animate);
-    controls.update();
+
+    // ease toward the cursor-driven target each frame instead of snapping,
+    // so the motion reads as a gentle drift rather than a jump
+    theta += (targetTheta - theta) * 0.06;
+    phi += (targetPhi - phi) * 0.06;
+
+    const sinPhiRadius = radius * Math.sin(phi);
+    camera.position.set(
+      sinPhiRadius * Math.sin(theta),
+      radius * Math.cos(phi),
+      sinPhiRadius * Math.cos(theta)
+    );
+    camera.lookAt(0, 0, 0);
+
     renderer.render(scene, camera);
   }
   animate();
