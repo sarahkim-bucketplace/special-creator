@@ -79,27 +79,37 @@ if (container) {
   surfaceNormalMap.repeat.copy(surfaceColorMap.repeat);
   surfaceNormalMap.colorSpace = THREE.NoColorSpace;
 
-  // resting 3/4 view (was a nonstop auto-spin, which read as distracting) —
-  // holds a 45° azimuth by default and drifts gently toward the cursor's
-  // position on the page instead, spherical coords around the origin (the
-  // object is re-centered on load below) preserving the original framing's
-  // distance and elevation
+  // resting mostly-frontal view (was a nonstop auto-spin, which read as
+  // distracting) — holds a gentle 18° azimuth by default, just enough to
+  // read as dimensional without turning into a hard 3/4 profile, and drifts
+  // toward the cursor only while it's actually over the viewer, spherical
+  // coords around the origin (the object is re-centered on load below)
+  // preserving the original framing's distance and elevation
   const radius = Math.hypot(0, 0.4, 4.2);
-  const baseTheta = -Math.PI / 4;
+  const baseTheta = THREE.MathUtils.degToRad(-18);
   const basePhi = Math.acos(0.4 / radius);
-  const maxThetaSwing = THREE.MathUtils.degToRad(20);
-  const maxPhiSwing = THREE.MathUtils.degToRad(10);
+  const maxThetaSwing = THREE.MathUtils.degToRad(10);
+  const maxPhiSwing = THREE.MathUtils.degToRad(5);
 
   let targetTheta = baseTheta;
   let targetPhi = basePhi;
   let theta = baseTheta;
   let phi = basePhi;
 
-  window.addEventListener('pointermove', (e) => {
-    const nx = (e.clientX / window.innerWidth) * 2 - 1;
-    const ny = (e.clientY / window.innerHeight) * 2 - 1;
+  // scoped to the viewer itself (not the whole window) — otherwise the
+  // object visibly turns in response to cursor movement happening nowhere
+  // near it, which reads as random rather than responsive
+  container.addEventListener('pointermove', (e) => {
+    const rect = container.getBoundingClientRect();
+    const nx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    const ny = ((e.clientY - rect.top) / rect.height) * 2 - 1;
     targetTheta = baseTheta + THREE.MathUtils.clamp(nx, -1, 1) * maxThetaSwing;
     targetPhi = basePhi - THREE.MathUtils.clamp(ny, -1, 1) * maxPhiSwing;
+  });
+
+  container.addEventListener('pointerleave', () => {
+    targetTheta = baseTheta;
+    targetPhi = basePhi;
   });
 
   const loader = new GLTFLoader();
@@ -142,8 +152,8 @@ if (container) {
 
     // ease toward the cursor-driven target each frame instead of snapping,
     // so the motion reads as a gentle drift rather than a jump
-    theta += (targetTheta - theta) * 0.06;
-    phi += (targetPhi - phi) * 0.06;
+    theta += (targetTheta - theta) * 0.045;
+    phi += (targetPhi - phi) * 0.045;
 
     const sinPhiRadius = radius * Math.sin(phi);
     camera.position.set(
