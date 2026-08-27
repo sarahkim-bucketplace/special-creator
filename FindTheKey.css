@@ -131,7 +131,22 @@ html {
   justify-content: space-between;
   height: 72px;
   padding: 0 36px;
-  background: #ffffff;
+  /* opaque (so scrolled content still can't show through), but the gradient
+     layer uses background-attachment:fixed with the exact same size/animation
+     as .bg-gradient-anim below — both then sample the same viewport-relative
+     slice, so the header's backdrop lines up seamlessly with the page's
+     instead of cutting off at a flat white edge */
+  background:
+    linear-gradient(
+      45deg,
+      rgba(246, 251, 196, 0.6) 0%,
+      rgba(255, 255, 255, 0) 50%,
+      rgba(205, 231, 255, 0.6) 100%
+    ),
+    #ffffff;
+  background-size: 300% 300%, 100% 100%;
+  background-attachment: fixed, scroll;
+  animation: bg-gradient-shift 10s ease-in-out infinite alternate;
 }
 
 .header__logo {
