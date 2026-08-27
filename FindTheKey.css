@@ -131,6 +131,8 @@ html {
   justify-content: space-between;
   height: 105px;
   padding: 15px 36px;
+  background: #ffffff;
+  border-bottom: 1px solid rgba(45, 40, 40, 0.08);
 }
 
 .header__logo {
