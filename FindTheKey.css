@@ -383,7 +383,7 @@ html {
 .rolling__item {
   display: flex;
   flex-direction: column;
-  gap: 19px;
+  gap: 10px;
   flex: 0 0 393px;
 }
 
@@ -401,7 +401,7 @@ html {
 
 /* ---- credit line under each rolling photo (Figma "sub" node) ---- */
 .rolling__credit {
-  font-weight: 500;
+  font-weight: 400;
   font-size: 14px;
   line-height: 1.45;
   letter-spacing: -0.07px;
