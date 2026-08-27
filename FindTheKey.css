@@ -119,6 +119,50 @@ html {
   padding: 35px 35px 160px;
 }
 
+/* opaque backdrop band behind the header (blocks scrolled content), built
+   from the exact same gradient + grain as .bg-gradient-anim/.bg-grain via
+   background-attachment:fixed — each layer samples the same viewport-relative
+   slice those do, so the header reads as a continuation of the page
+   background rather than a flat cut-off edge. Kept as a separate element
+   (not painted directly on .header) so the grain's mix-blend-mode only
+   touches this backdrop, not the header's own text/logo drawn on top of it. */
+.header-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 72px;
+  z-index: 15;
+  pointer-events: none;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.header-backdrop::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    45deg,
+    rgba(246, 251, 196, 0.6) 0%,
+    rgba(255, 255, 255, 0) 50%,
+    rgba(205, 231, 255, 0.6) 100%
+  );
+  background-size: 300% 300%;
+  background-attachment: fixed;
+  animation: bg-gradient-shift 10s ease-in-out infinite alternate;
+}
+
+.header-backdrop::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.05;
+  mix-blend-mode: multiply;
+  background-attachment: fixed;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
 /* ---- header (Figma node 48:271) ---- */
 .header {
   position: fixed;
@@ -131,22 +175,6 @@ html {
   justify-content: space-between;
   height: 72px;
   padding: 0 36px;
-  /* opaque (so scrolled content still can't show through), but the gradient
-     layer uses background-attachment:fixed with the exact same size/animation
-     as .bg-gradient-anim below — both then sample the same viewport-relative
-     slice, so the header's backdrop lines up seamlessly with the page's
-     instead of cutting off at a flat white edge */
-  background:
-    linear-gradient(
-      45deg,
-      rgba(246, 251, 196, 0.6) 0%,
-      rgba(255, 255, 255, 0) 50%,
-      rgba(205, 231, 255, 0.6) 100%
-    ),
-    #ffffff;
-  background-size: 300% 300%, 100% 100%;
-  background-attachment: fixed, scroll;
-  animation: bg-gradient-shift 10s ease-in-out infinite alternate;
 }
 
 .header__logo {
