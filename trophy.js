@@ -150,10 +150,10 @@ if (container) {
   function animate() {
     requestAnimationFrame(animate);
 
-    // ease toward the cursor-driven target each frame instead of snapping,
-    // so the motion reads as a gentle drift rather than a jump
-    theta += (targetTheta - theta) * 0.08;
-    phi += (targetPhi - phi) * 0.08;
+    // ease toward the cursor-driven target each frame instead of snapping
+    // outright, but quickly enough to read as a brisk, decisive turn
+    theta += (targetTheta - theta) * 0.22;
+    phi += (targetPhi - phi) * 0.22;
 
     const sinPhiRadius = radius * Math.sin(phi);
     camera.position.set(
