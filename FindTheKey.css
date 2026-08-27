@@ -381,16 +381,32 @@ html {
 }
 
 .rolling__item {
+  display: flex;
+  flex-direction: column;
+  gap: 19px;
   flex: 0 0 393px;
+}
+
+.rolling__item-photo {
   height: 495px;
   overflow: hidden;
 }
 
-.rolling__item img {
+.rolling__item-photo img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+/* ---- credit line under each rolling photo (Figma "sub" node) ---- */
+.rolling__credit {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.45;
+  letter-spacing: -0.07px;
+  color: #7b7b7b;
+  white-space: nowrap;
 }
 
 /* ---- insight quote below the rolling row ---- */
@@ -439,6 +455,8 @@ html {
   }
   .rolling__item {
     flex: 0 0 260px;
+  }
+  .rolling__item-photo {
     height: 328px;
   }
   .insight {
