@@ -88,8 +88,8 @@ if (container) {
   const radius = Math.hypot(0, 0.4, 4.2);
   const baseTheta = THREE.MathUtils.degToRad(-18);
   const basePhi = Math.acos(0.4 / radius);
-  const maxThetaSwing = THREE.MathUtils.degToRad(10);
-  const maxPhiSwing = THREE.MathUtils.degToRad(5);
+  const maxThetaSwing = THREE.MathUtils.degToRad(35);
+  const maxPhiSwing = THREE.MathUtils.degToRad(12);
 
   let targetTheta = baseTheta;
   let targetPhi = basePhi;
@@ -152,8 +152,8 @@ if (container) {
 
     // ease toward the cursor-driven target each frame instead of snapping,
     // so the motion reads as a gentle drift rather than a jump
-    theta += (targetTheta - theta) * 0.045;
-    phi += (targetPhi - phi) * 0.045;
+    theta += (targetTheta - theta) * 0.08;
+    phi += (targetPhi - phi) * 0.08;
 
     const sinPhiRadius = radius * Math.sin(phi);
     camera.position.set(
