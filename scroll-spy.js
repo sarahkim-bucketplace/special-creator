@@ -33,7 +33,7 @@
     },
     {
       root: null,
-      rootMargin: '-105px 0px -70% 0px',
+      rootMargin: '-72px 0px -70% 0px',
       threshold: 0,
     }
   );

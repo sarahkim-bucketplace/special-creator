@@ -60,7 +60,7 @@ body {
    browser quirk); fixed isn't affected, so this space compensates for the
    header no longer taking up room in normal flow */
 body {
-  padding-top: 105px;
+  padding-top: 72px;
 }
 
 /* combined scroll page: anchor-nav lands below the fixed header, and the
@@ -75,7 +75,7 @@ html {
 }
 
 .page > section[id] {
-  scroll-margin-top: 105px;
+  scroll-margin-top: 72px;
   scroll-snap-align: start;
 }
 
@@ -129,10 +129,9 @@ html {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 105px;
-  padding: 15px 36px;
+  height: 72px;
+  padding: 0 36px;
   background: #ffffff;
-  border-bottom: 1px solid rgba(45, 40, 40, 0.08);
 }
 
 .header__logo {
@@ -246,7 +245,7 @@ html {
   }
   .header__links {
     position: fixed;
-    top: 105px;
+    top: 72px;
     left: 0;
     right: 0;
     flex-direction: column;
