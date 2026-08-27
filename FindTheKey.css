@@ -402,7 +402,7 @@ html {
 /* ---- credit line under each rolling photo (Figma "sub" node) ---- */
 .rolling__credit {
   font-weight: 400;
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.45;
   letter-spacing: -0.07px;
   color: #7b7b7b;
