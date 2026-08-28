@@ -15,8 +15,8 @@ OpportunitiesUnlocked-01~05.html / .css        카드 클릭 시 이동하는 �
 detail-photo-carousel.js                       위 5개 상세 페이지가 공용으로 쓰는 사진 슬라이드 화살표 스크립트
 CreatorVoices.html / .css                      "Creator Voices" 페이지 (Figma 0:519) — 아래 절 참고
 BeyondTheDoor.html / .css                      "Beyond the Door" 페이지 (Figma 28:476) — 아래 절 참고
-trophy.js                                      3D 트로피 뷰어 (현재 어떤 HTML에도 연결 안 됨, 보류 중)
-assets/                                        Figma에서 내려받은 벡터·이미지 애셋 (+ trophy.fbx)
+trophy.js                                      3D 트로피 뷰어 — FindTheKey.html에 연결되어 실제로 동작 중 (아래 "트로피 3D 뷰어" 절 참고)
+assets/                                        Figma에서 내려받은 벡터·이미지 애셋 (+ trophy.glb, trophy-3d-texture/)
 .claude/launch.json                            로컬 미리보기용 정적 서버 설정 (아래 "알아두면 좋은 것" 참고 — 이 프로젝트 경로에선 안 먹음)
 ```
 
@@ -196,17 +196,22 @@ python3 -m http.server 5173
 5. 900px 이하에서 여정 리스트는 세로 스택, 갤러리는 1열로 바뀜 (가운데 열의 "작은 박스 2개" 서브로우는 계속 가로 유지)
 6. **폰트 굵기**: `.btd-journey__desc`, `.btd-gift__label`, `.btd-gift__item`이 원래 Figma엔 Pretendard Medium(`font-weight: 500`)으로 돼 있었는데, 실제로 보니 너무 진하게 보인다는 피드백으로 전부 Regular(`400`)로 낮춤. 이 페이지에서 Medium 굵기로 남아있는 텍스트는 이제 없음 (제목류는 SemiBold 600 그대로 유지)
 
-## 트로피 자리 (임시 사진으로 채움, 최종 3D는 아직 미착수)
+## 트로피 3D 뷰어 (`trophy.js`, `FindTheKey.html`에 연결되어 실제로 동작 중)
 
-카드 롤링 섹션 아래 "한 사람이 나눈 영감은..." 문구 다음에, Figma상 803×917 크기의 트로피 배치 영역(`.trophy-placeholder`)이 있음.
+카드 롤링 섹션 아래 "한 사람이 나눈 영감은..." 문구 다음, `.trophy-placeholder` 안에 Three.js 커스텀 뷰어가 떠 있음. (예전 README에는 "임시 사진 placeholder" 상태로 적혀 있었는데 그건 오래된 내용 — 지금은 사진이 아니라 아래 3D 뷰어가 최종.)
 
-- **현재 상태**: `assets/trophy.png`(트로피 실물 사진, 투명 배경 PNG, 2000×2000 정사각형 캔버스)를 `.trophy-photo-wrap` 안에 넣고, hero-home.html의 열쇠와 똑같은 방식으로 둥실거리는 모션을 줌(`translateY(0) → -16px → 0`, 4s ease-in-out infinite, `@keyframes trophy-float`). **사용자가 명시적으로 "임시"라고 밝힌 상태** — 최종 3D 배치 전까지의 임시 사진임
-  - 원래 있던 `#454545` 회색 배경 박스와 "트로피 3D 배치 예정." 텍스트는 제거함(사용자 피드백: 이미지가 작고 회색 박스가 어색해 보임) — 지금은 배경 없이 사진만 떠 있음
-  - `.trophy-photo`는 `width: 90%`로 박스를 거의 채움. 이미지 자체가 정사각 캔버스라 트로피 주위에 투명 여백이 있어서 실제 트로피 형상은 이보다 작게 보임 — 나중에 사진이 바뀌거나 여백이 거슬리면 이 값과 사진을 다시 조정할 것
-- **3D 버전 이력**: 사용자가 `.obj`/`.fbx` 3D 파일(오늘의집 최종 트로피)을 한 번 전달해서 Three.js(FBXLoader, CDN 모듈 import) + `<model-viewer>` 대신 커스텀 뷰어로 자동회전 구현까지 완료했었음 (`trophy.js`, `assets/trophy.fbx`)
-  - 재질 질감(석고 느낌 살리려고 procedural grain bump/roughness map + RoomEnvironment 환경광까지 추가)까지 다듬었지만, 사용자가 최종적으로 "맘에 안 든다"고 해서 3D 뷰어를 제거하고 정적 플레이스홀더로 되돌렸었음(그 뒤 지금의 사진으로 다시 교체)
-  - `trophy.js`와 `assets/trophy.fbx`는 나중에 다시 시도할 수 있도록 삭제하지 않고 저장소에 남겨둔 상태 (현재 어떤 HTML에서도 로드하지 않음)
-  - 이어서 작업한다면: `trophy.js`를 다시 `FindTheKey.html`에 `<script type="module">`로 연결하고, 조명/재질을 사용자가 만족할 때까지 다시 튜닝하면 됨. 이전에 시도했다가 별로였던 것: RoomEnvironment 단독 조명(너무 어둡고 드라마틱함), 강한 bumpScale(너무 sparkle함)
+- **모델**: `assets/trophy.glb` (GLTFLoader로 로드). 예전에 시도했던 `.obj`/`.fbx`는 폐기하고 `.glb`로 정착함
+- **텍스처**: `assets/trophy-3d-texture/trophy-texture-seamless.png`를 색상(map)·러프니스(roughnessMap)·범프(bumpMap) 공용으로 재사용, `trophy-texture-normal.png`는 그 이미지의 그레이스케일 높이를 Sobel로 뽑아 만든 노멀맵. **`trophy-texture-org.png`(사진 원본)는 절대 덮어쓰지 말 것** — 예전에 한 번 실수로 덮어써서 사용자가 복구한 적 있음. seamless/normal 파일은 파생본이라 계속 재생성/덮어써도 되는 파일들(이번 세션에도 대비/노멀맵 강도를 여러 번 다시 구웠음)
+- **조명**: HemisphereLight(약한 ambient) + keyLight/embossLight(각인 글자에 raking light로 음영을 살림) + rimLight(옅은 블루 톤 엣지광)
+- **카메라 모션**: 처음엔 `OrbitControls` 자동회전이었는데 사용자가 "정신 사납다"고 해서 제거함. 지금은 커스텀 스피어컬 카메라로, 정지 각도(`baseTheta`/`basePhi`)에서 시작해 마우스가 `#trophyViewer` 위에 있을 때 커서 위치에 따라 `targetTheta`/`targetPhi`가 바뀌고 매 프레임 lerp로 따라감 (`pointerleave` 시 정지 각도로 복귀)
+
+### ⚠️ 다음에 이어서 볼 것: 커서 추적 모션이 아직 사용자 의도와 안 맞을 수 있음
+
+사용자가 "왼쪽으로 마우스 가면 트로피도 왼쪽 보고, 오른쪽 가면 오른쪽", "확확 시원하게 움직이게" 같은 구체적 피드백을 여러 번 줬는데, **이 세션 내내 브라우저 인터랙션 도구(`mcp__claude-in-chrome__*`, Claude in Chrome 익스텐션 연결)가 계속 끊긴 상태**였음 — Claude가 실제 화면을 보거나 스크린샷을 찍을 방법이 전혀 없어서, 매번 사용자의 텍스트 피드백만 보고 파라미터(회전 범위/속도)를 추측으로 계속 키우기만 했음. **방향·범위·속도가 실제로 맞는지 한 번도 시각적으로 검증하지 못한 상태로 세션이 끝남.**
+
+- 마지막으로 커밋된 파라미터: `baseTheta = -18°`, `maxThetaSwing = 55°`, `maxPhiSwing = 18°`, 프레임당 lerp factor `0.3` (`trophy.js`)
+- 방향(마우스 오른쪽 → 트로피가 오른쪽을 보는지)은 손계산(카메라가 origin을 lookAt하는 상태에서 theta 증가 시 화면상 투영이 어떻게 움직이는지 벡터로 유도)으로 한 번 검증해서 "이론상 맞다"고 결론 냈지만, 실제 렌더링으로 확인된 적은 없어서 신뢰도는 낮음
+- **다음에 이어서 작업할 때**: 먼저 브라우저 도구(`mcp__claude-in-chrome__tabs_context_mcp` 등)가 살아있는지 확인할 것. 살아있으면 실제로 마우스를 좌/중/우로 움직여보며 스크린샷으로 확인. 안 살아있으면 사용자에게 "마우스를 트로피 좌/중/우에 두고 스크린샷 3장"을 요청해서 그걸 보고 판단할 것 (이미 한 번 제안해뒀음) — 절대 텍스트 피드백만으로 파라미터를 또 추측해서 키우지 말 것, 이번 세션에 그렇게 해서 사용자가 답답해했음
 
 ## 파일명 변경 이력
 
