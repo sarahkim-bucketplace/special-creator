@@ -210,6 +210,10 @@ html {
   font-weight: 600;
 }
 
+.header__link--off {
+  color: #7e7e7e;
+}
+
 /* CTA pill button (Figma node 48:952 "Open Your Door") */
 .header__cta {
   display: inline-flex;
