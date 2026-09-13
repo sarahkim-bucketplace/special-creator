@@ -208,6 +208,8 @@ html {
 /* on/off variant from the Figma component: "on" marks the current page's nav item */
 .header__link--on {
   font-weight: 600;
+  text-decoration: underline;
+  text-underline-position: from-font;
 }
 
 .header__link--off {

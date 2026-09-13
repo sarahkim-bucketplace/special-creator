@@ -63,6 +63,8 @@ body {
 
 .header__link--on {
   font-weight: 600;
+  text-decoration: underline;
+  text-underline-position: from-font;
 }
 
 .header__cta {
