@@ -357,62 +357,89 @@ html {
   color: #2d2828;
 }
 
-/* ---- finethekey-image-rolling: full-bleed, continuously auto-scrolling row ---- */
-.rolling {
-  /* breaks out of .page's centered max-width to bleed edge to edge */
-  width: 100vw;
+/* ---- about-roll: pinned scroll-driven image + caption roll (replaces the
+   old auto-scrolling rolling marquee). .about-roll is a tall spacer; JS
+   (about-roll.js) pins .about-roll__stage in place (fixed, not sticky — see
+   that file's header comment) while the wrapper's extra height scrolls by,
+   swapping which .about-roll__item is visible as it goes ---- */
+.about-roll {
   position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
+  height: 3200px;
   margin-top: 99px;
-  overflow: hidden;
 }
 
-.rolling__track {
-  display: flex;
-  width: max-content;
-  gap: 16px;
-  /* duration scales with item count (was 32s for 5 items) so the px/s
-     scroll speed stays the same regardless of how many photos are in it */
-  animation: rolling-scroll 45s linear infinite;
+.about-roll__stage {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  /* width computed from viewport units (not %) so it stays identical
+     whether the stage is currently position:absolute (containing block =
+     .about-roll's own box) or position:fixed (containing block = viewport) —
+     a %-based width would silently change size crossing that boundary */
+  width: min(1210px, calc(100vw - 70px));
+  height: 575px;
 }
 
-/* the track renders two identical copies of the items back to back;
-   translating by exactly -50% loops seamlessly regardless of item/gap count */
-@keyframes rolling-scroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+.about-roll__item {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.6s ease;
 }
 
-.rolling__item {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  flex: 0 0 393px;
+.about-roll__item.is-active {
+  opacity: 1;
 }
 
-.rolling__item-photo {
-  height: 495px;
-  overflow: hidden;
-}
-
-.rolling__item-photo img {
+.about-roll__item img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-/* ---- credit line under each rolling photo (Figma "sub" node) ---- */
-.rolling__credit {
-  font-weight: 400;
-  font-size: 13px;
+.about-roll__caption {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  background: rgba(0, 0, 0, 0.25);
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.12px;
   line-height: 1.45;
-  letter-spacing: -0.07px;
-  color: #7b7b7b;
-  white-space: nowrap;
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .about-roll {
+    height: 2400px;
+  }
+  .about-roll__stage {
+    height: 420px;
+  }
+  .about-roll__caption {
+    font-size: 19px;
+    padding: 28px;
+  }
+}
+
+@media (max-width: 600px) {
+  .about-roll {
+    height: 2000px;
+  }
+  .about-roll__stage {
+    width: calc(100vw - 40px);
+    height: 300px;
+  }
+  .about-roll__caption {
+    font-size: 16px;
+    padding: 20px;
+  }
 }
 
 /* ---- insight quote below the rolling row ---- */
@@ -458,12 +485,6 @@ html {
   }
   #find-the-key .hero__subtitle br {
     display: none;
-  }
-  .rolling__item {
-    flex: 0 0 260px;
-  }
-  .rolling__item-photo {
-    height: 328px;
   }
   .insight {
     font-size: 15px;
