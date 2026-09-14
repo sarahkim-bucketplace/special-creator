@@ -20,7 +20,19 @@
     items.forEach((item, i) => item.classList.toggle('is-active', i === index));
   }
 
+  // doc-space bounds, cached so onScroll can cheaply skip this section's
+  // work when scrolled elsewhere instead of calling getBoundingClientRect()
+  // (forces layout) unconditionally on every scroll event page-wide —
+  // see the comment in btd-gallery-stack.js for why that matters
+  let wrapperTop = 0;
+  let wrapperBottom = 0;
+  function measureBounds() {
+    wrapperTop = wrapper.getBoundingClientRect().top + window.scrollY;
+    wrapperBottom = wrapperTop + wrapper.offsetHeight;
+  }
+
   let ticking = false;
+  let lastZone = null; // 'before' | 'during' | 'after'
 
   function update() {
     const scrollableRange = wrapper.offsetHeight - stage.offsetHeight;
@@ -31,11 +43,13 @@
       stage.style.position = 'absolute';
       stage.style.top = '0px';
       setActive(0);
+      lastZone = 'before';
     } else if (-rect.top >= scrollableRange) {
       // scrolled past — sits at the wrapper's own bottom, in flow
       stage.style.position = 'absolute';
       stage.style.top = scrollableRange + 'px';
       setActive(items.length - 1);
+      lastZone = 'after';
     } else {
       // pinned while the wrapper's extra scroll range is being used up
       stage.style.position = 'fixed';
@@ -43,12 +57,21 @@
       const progress = clamp(-rect.top / scrollableRange, 0, 1);
       const index = Math.min(items.length - 1, Math.floor(progress * items.length));
       setActive(index);
+      lastZone = 'during';
     }
 
     ticking = false;
   }
 
   function onScroll() {
+    // cheap zone check first (just arithmetic on cached bounds) so this
+    // section's getBoundingClientRect() + style writes only run while
+    // actually relevant, not on every scroll event for the page's whole
+    // lifetime — see the comment above measureBounds()
+    const y = window.scrollY;
+    const zone = y < wrapperTop ? 'before' : y > wrapperBottom ? 'after' : 'during';
+    if (zone !== 'during' && zone === lastZone) return;
+
     if (!ticking) {
       requestAnimationFrame(update);
       ticking = true;
@@ -56,6 +79,10 @@
   }
 
   window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', onScroll);
+  window.addEventListener('resize', () => {
+    measureBounds();
+    onScroll();
+  });
+  measureBounds();
   update();
 })();

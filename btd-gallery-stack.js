@@ -72,6 +72,20 @@
 
   function updateEnter() {
     const scrollY = window.scrollY;
+
+    // skip entirely once scrolled well clear of the gallery in either
+    // direction — with no guard here, this ran (and wrote 16 custom
+    // properties) on *every* scroll event anywhere on the page, for the
+    // page's whole lifetime, forcing style recalc on 8 elements that
+    // were nowhere near the viewport. That's one of three such
+    // unconditional page-wide scroll handlers (hero-home.js and
+    // about-roll.js do the same for their own sections) competing for
+    // the same per-frame budget, which is what was producing the long
+    // stalls-then-catch-up jank reported against the reference recording.
+    const first = activationY[0] - ENTRANCE_DISTANCE;
+    const last = activationY[activationY.length - 1];
+    if (scrollY < first - 200 || scrollY > last + window.innerHeight) return;
+
     for (let i = 1; i < items.length; i++) {
       const entranceStart = activationY[i] - ENTRANCE_DISTANCE;
       const p = Math.max(0, Math.min(1, (scrollY - entranceStart) / ENTRANCE_DISTANCE));
