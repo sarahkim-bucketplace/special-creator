@@ -898,7 +898,7 @@ html {
 .btd-journey__rolling-track {
   display: flex;
   width: max-content;
-  gap: 15px;
+  gap: 8px;
   animation: btd-journey-rolling-scroll 25s linear infinite;
 }
 
@@ -916,7 +916,7 @@ html {
 
 .btd-journey__rolling-photo {
   width: 100%;
-  aspect-ratio: 390 / 252;
+  aspect-ratio: 252 / 390;
   background-color: #7e7e7e;
   /* identical gray boxes made the scroll motion itself invisible — a
      number placeholder gives the eye something to track moving by */
