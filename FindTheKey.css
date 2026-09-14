@@ -886,18 +886,45 @@ html {
   padding-left: 6px;
 }
 
-.btd-journey__photos {
-  display: flex;
-  gap: 15px;
+/* ---- btd-journey__rolling: each journey step's own small auto-scrolling
+   photo marquee (3-7 images per step, doubled for a seamless loop),
+   replacing the old fixed 2-photo pair — gray placeholders for now,
+   matching the same rolling mechanic used elsewhere on this page */
+.btd-journey__rolling {
   flex: 1;
+  overflow: hidden;
 }
 
-.btd-journey__photo {
-  flex: 1;
+.btd-journey__rolling-track {
+  display: flex;
+  width: max-content;
+  gap: 15px;
+  animation: btd-journey-rolling-scroll 25s linear infinite;
+}
+
+@keyframes btd-journey-rolling-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.btd-journey__rolling-item {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 0 0 240px;
+}
+
+.btd-journey__rolling-photo {
+  width: 100%;
   aspect-ratio: 390 / 252;
   background-color: #7e7e7e;
-  background-size: cover;
-  background-position: center;
+}
+
+.btd-journey__rolling-credit {
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: -0.07px;
+  color: #7b7b7b;
 }
 
 .btd-arrow {
