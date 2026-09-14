@@ -6,7 +6,13 @@
   box-sizing: border-box;
 }
 
-html, body {
+/* overflow-x:hidden only on html, not body: body sitting between html and
+   any position:sticky descendant (e.g. .btd-gallery__stack-photo) makes
+   body count as a scroll-clipping ancestor, which breaks sticky for
+   everything inside it. html is treated as the root scroller by browsers,
+   so clipping there alone still prevents horizontal scrollbars from the
+   full-bleed marquees without that side effect. */
+html {
   overflow-x: hidden;
 }
 
@@ -971,46 +977,33 @@ html {
   max-width: 560px;
 }
 
-/* ---- photo mosaic gallery (Figma photo-01~08 + 28:555) ----
-   row 1: two boxes (~41% / rest). row 2: three equal columns, each an
-   internal stack that totals the same height (580px in the Figma spec)
-   even though the boxes inside are split differently per column */
+/* ---- sticky-stacked photo story (was a mosaic grid — replaced per a
+   screen recording of newmixcoffee.com/ko's story section: each photo
+   pins at the same spot below the header via position:sticky, and the
+   next one in DOM order slides up and covers it as you keep scrolling.
+   Pure CSS, no scroll-linked JS needed — later elements natively paint
+   over earlier ones once both are stuck at the same position) ---- */
 .btd-gallery {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+  position: relative;
   margin-top: 56px;
 }
 
-.btd-gallery__row {
-  display: flex;
-  gap: 15px;
+.btd-gallery__stack-item {
+  /* fallback for before btd-gallery-stack.js measures the photo and sets
+     an exact px height; JS overrides this via inline style */
+  height: 100vh;
 }
 
-.btd-gallery__col {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  flex: 1;
-}
-
-.btd-gallery__row--nested {
-  gap: 15px;
-}
-
-.btd-gallery__photo {
+.btd-gallery__stack-photo {
+  position: sticky;
+  top: 96px;
   width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
   background-color: #d9d9d9;
   background-size: cover;
   background-position: center;
-  opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-
-.btd-gallery__photo.is-visible {
-  opacity: 1;
-  transform: translateY(0);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
 }
 
 /* ---- Special Gift index (Figma 56:2830) ---- */
@@ -1059,11 +1052,8 @@ html {
     flex-basis: auto;
     padding-right: 0;
   }
-  .btd-gallery__row {
-    flex-direction: column;
-  }
-  .btd-gallery__row--nested {
-    flex-direction: row;
+  .btd-gallery__stack-photo {
+    max-width: 100%;
   }
   .btd-gift {
     flex-direction: column;
