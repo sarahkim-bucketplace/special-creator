@@ -22,10 +22,10 @@
   const photos = Array.from(items, (item) => item.querySelector('.btd-gallery__stack-photo'));
   const inners = Array.from(items, (item) => item.querySelector('.btd-gallery__stack-photo-inner'));
 
-  const OVERLAP_RATIO = 0.4; // how much of each photo's height the next one overlaps, in normal flow
+  const OVERLAP_RATIO = 0.3; // how much of each photo's height the next one overlaps, in normal flow
   const MIN_SCALE = 0.72;
   const MIN_OPACITY = 0.35;
-  const FALLOFF = 460; // px of on-screen distance from the focus point over which scale/opacity taper to their minimum
+  const FALLOFF = 750; // px of on-screen distance from the focus point over which scale/opacity taper to their minimum — wider than the item spacing so each photo holds near-full size/opacity for longer instead of the next one crowding in right away
 
   let centerY = []; // doc-space vertical center of each photo, once laid out
   let focusY = 0;
