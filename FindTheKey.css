@@ -984,14 +984,15 @@ html {
    Later elements natively paint over earlier ones once both are stuck
    at the same position.
 
-   Split into two layers because of two independent animations that
-   can't share one `transform`: btd-gallery-stack.js writes --enter
-   every scroll frame (no transition — it IS the eased motion, driving
-   how much of the photo behind it gets covered) on the outer
-   .btd-gallery__stack-photo, while .is-active's scale/shadow "pop" only
-   toggles occasionally and needs its own transition, on the inner
-   -inner element. Combining both on one element would make the
-   transition fight the per-frame scroll updates and lag behind. */
+   No scale/shadow "pop" here on purpose — an earlier version added one,
+   but the reference recording doesn't have any such flourish (photos
+   hold a constant size and sit flush against the background, no
+   shadow), and layering our own bounce on top read as unmotivated
+   motion rather than matching it. Kept the two-layer split (outer
+   .btd-gallery__stack-photo is the sticky element btd-gallery-stack.js
+   writes --enter to every scroll frame; -inner just carries the image)
+   in case a future per-photo effect needs its own transition again
+   without fighting those per-frame writes. */
 .btd-gallery {
   position: relative;
   margin-top: 56px;
@@ -1018,18 +1019,7 @@ html {
   background-color: #d9d9d9;
   background-size: cover;
   background-position: center;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-  transform: scale(0.94);
-  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
-    box-shadow 0.5s ease;
-}
-
-/* toggled by btd-gallery-stack.js as each photo becomes the active
-   (topmost pinned) one — the cubic-bezier overshoots past 1 and settles
-   back, giving each takeover a quick springy "pop" instead of a flat swap */
-.btd-gallery__stack-photo-inner.is-active {
-  transform: scale(1);
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
 }
 
 /* ---- Special Gift index (Figma 56:2830) ---- */

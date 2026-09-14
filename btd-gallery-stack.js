@@ -1,32 +1,25 @@
-// Sticky-stacked photo story for "직접 만나 나누는 시간". Two rounds of
-// feedback against the reference screen recording landed on this model:
+// Sticky-stacked photo story for "직접 만나 나누는 시간", driven by a
+// circular/foreshortening metaphor: the centered/active photo has ~no
+// overlap in front of it, and the overlap should widen progressively the
+// further a photo is pushed toward the back of the stack — like images
+// arranged along the surface of a circle/sphere, where the ones facing
+// the viewer show fully and the ones curving away are increasingly
+// foreshortened behind the ones in front.
 //
-// 1. A flat vh-tall item box left empty scroll space below each (much
-//    shorter) photo, so the next photo's sticky pin never even started
-//    until that blank scroll finished — nothing ever overlapped.
-// 2. A flat negative margin-top made items overlap in normal flow, but
-//    by a *constant* amount everywhere — every transition looked the same.
-// 3. Direct correction: the photo that's currently centered/active should
-//    have ~no overlap in front of it, and the overlap should widen
-//    progressively the further a photo is pushed toward the back of the
-//    stack — "like images arranged along the surface of a circle/sphere,"
-//    where the ones facing the viewer show fully and the ones curving
-//    away are increasingly foreshortened behind the ones in front.
+// The first version drove this with the literal quarter-circle equation
+// (sqrt(1-p^2)), which is where the motion still felt off: that curve's
+// velocity is unbounded as p -> 1 (a vertical tangent), so the photo
+// briefly moved at 3x+ the user's actual scroll speed right as it locked
+// into place — a visible "yank" no real scrolling (or the reference
+// recording) ever does. Swapped for extra = ED * p * (1 - p): a plain
+// parabola that keeps the same "slow near the front, faster toward the
+// back" shape but stays smooth and bounded (peak relative speed 2x,
+// reached gradually, not a spike) — same silhouette as a circular arc,
+// without the singularity.
 //
-// That's a circular easing curve, not a constant offset. Each item's
-// entrance is driven every scroll frame by --enter (a translateY on the
-// sticky .btd-gallery__stack-photo, no CSS transition — the easing IS the
-// motion, so a transition here would just lag behind the math): near the
-// start of its entrance window the extra offset stays close to the plain
-// linear amount (barely any lead — imperceptible overlap), then rapidly
-// collapses to 0 as it finishes, so the covering happens mostly in the
-// back half of the scroll range instead of evenly. That's the classic
-// quarter-circle relationship (extra = ED * (sqrt(1-p^2) - (1-p))).
-//
-// The scale/shadow "pop" as a photo becomes fully active is a separate,
-// occasional class toggle (.is-active) with its own CSS transition, kept
-// on a nested -inner element so it doesn't fight the per-frame --enter
-// writes on the outer sticky element (see FindTheKey.css for why).
+// --enter is a translateY on the sticky .btd-gallery__stack-photo,
+// written every scroll frame with no CSS transition — the easing IS the
+// motion, so a transition here would just lag behind the math.
 (function () {
   const items = Array.from(document.querySelectorAll('.btd-gallery__stack-item'));
   if (!items.length) return;
@@ -69,9 +62,7 @@
     for (let i = 1; i < items.length; i++) {
       const entranceStart = activationY[i] - ENTRANCE_DISTANCE;
       const p = Math.max(0, Math.min(1, (scrollY - entranceStart) / ENTRANCE_DISTANCE));
-      const linear = 1 - p;
-      const circular = Math.sqrt(1 - p * p);
-      const extra = ENTRANCE_DISTANCE * (circular - linear);
+      const extra = ENTRANCE_DISTANCE * p * (1 - p);
       photos[i].style.setProperty('--enter', `${extra.toFixed(1)}px`);
     }
   }
@@ -90,19 +81,4 @@
   window.addEventListener('resize', layout);
   window.addEventListener('scroll', onScroll, { passive: true });
   layout();
-
-  // pop each photo in with a small overshoot-scale as it becomes the
-  // active (topmost pinned) one, instead of just snapping into place
-  const io = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        const i = items.indexOf(entry.target);
-        const inner = inners[i];
-        if (!inner) return;
-        inner.classList.toggle('is-active', entry.isIntersecting);
-      });
-    },
-    { rootMargin: '-96px 0px -55% 0px', threshold: 0 }
-  );
-  items.forEach((item) => io.observe(item));
 })();
