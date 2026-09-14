@@ -17,11 +17,24 @@
 // IntersectionObserver below + the .is-active rule in FindTheKey.css)
 // so the moment it takes over reads as a snappy settle rather than a
 // flat swap — the "쫀득함" the reference has.
+//
+// Still not overlapping enough per direct feedback after the above: a
+// small DWELL only shrinks the empty gap *after* each photo, it
+// doesn't make two photos actually share screen space. Each item's
+// natural (pre-stick) position starts right where the previous item's
+// box ends, so the incoming photo only ever slides up from *below the
+// viewport* — never crossing over the still-pinned current one. Pulling
+// each item up with a negative margin-top (proportional to its own
+// photo's height) makes its box — and therefore its photo, even before
+// it starts sticking — start overlapping the previous photo's box in
+// normal flow, so it visibly slides up *across* the current pinned
+// photo instead of arriving from empty space below it.
 (function () {
   const items = document.querySelectorAll('.btd-gallery__stack-item');
   if (!items.length) return;
 
-  const DWELL = 90;
+  const DWELL = 20;
+  const OVERLAP_RATIO = 0.55;
 
   function layout() {
     items.forEach((item, i) => {
@@ -31,6 +44,7 @@
       const photoHeight = photo.getBoundingClientRect().height;
       const dwell = isLast ? DWELL + window.innerHeight * 0.4 : DWELL;
       item.style.height = `${photoHeight + dwell}px`;
+      item.style.marginTop = i === 0 ? '0' : `-${photoHeight * OVERLAP_RATIO}px`;
     });
   }
 
