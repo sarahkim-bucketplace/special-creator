@@ -717,20 +717,20 @@ html {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 70px;
-  margin-top: 200px;
+  gap: 100px;
+  margin-top: 340px;
 }
 
 .stats__item {
   display: flex;
   flex-direction: column;
-  gap: 31px;
+  gap: 40px;
 }
 
 .stats__label-group {
   display: flex;
   flex-direction: column;
-  gap: 11px;
+  gap: 16px;
 }
 
 .stats__label {
