@@ -1058,7 +1058,7 @@ html {
   inset: 0;
   z-index: 100;
   display: none;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   padding: 24px;
   background: rgba(0, 0, 0, 0.6);
@@ -1072,25 +1072,41 @@ body.ou-modal-open {
   overflow: hidden;
 }
 
+/* per the Figma mockup (node 181:588), the popup is a centered card at
+   roughly 794x474 — not a near-fullscreen takeover — with visible backdrop
+   margin on all four sides, so no corner is flush against the viewport
+   edge (unlike the earlier full-bleed-photo version) */
 .ou-modal__scroll {
   position: relative;
-  width: 100%;
-  max-width: 1280px;
-  max-height: calc(100vh - 48px);
-  overflow-y: auto;
+  width: min(794px, 90vw);
+  aspect-ratio: 794 / 474;
+  overflow: hidden;
   background: #ffffff;
-  border-radius: 0;
 }
 
-/* .detail/.detail__photo keep their original near-fullscreen sizing
-   (min-height:100vh from the standalone page's own CSS) — that's the big
-   popup size that read better than a shrink-to-fit one. Only
-   .detail__content's internal layout changes: instead of
-   justify-content:space-between shoving .detail__nav all the way down to
-   the bottom of that tall box (forcing a scroll to reach it), centering
-   the text+nav block balances the empty space evenly above and below it */
-.ou-modal__content .detail__content {
-  justify-content: center;
+/* above the 900px card breakpoint (matches ou-modal.js's CARD_BREAKPOINT
+   and .detail's own mobile stacking breakpoint): the injected .detail is
+   rendered at a fixed "natural" size (JS sets width/height to 1280x764 —
+   matching the 794:474 card ratio so it maps on with no distortion) and
+   scaled down as one unit via a JS-computed transform. Percentage-based
+   sizing can't shrink the whole component uniformly the way this needs to,
+   since .detail's own layout uses fixed px values (padding, font-size)
+   tuned for a full-size viewport, not a small card. Below 900px, JS clears
+   these inline styles and .detail falls back to its own natural responsive
+   layout (full-screen sheet, see the media query below) */
+@media (min-width: 901px) {
+  .ou-modal__content .detail {
+    position: absolute;
+    top: 0;
+    left: 0;
+    min-height: 0;
+    transform-origin: top left;
+  }
+
+  .ou-modal__content .detail__photo,
+  .ou-modal__content .detail__content {
+    min-height: 0;
+  }
 }
 
 .ou-modal__close {
@@ -1109,13 +1125,15 @@ body.ou-modal-open {
   cursor: pointer;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 900px) {
   .ou-modal {
     padding: 0;
   }
   .ou-modal__scroll {
-    max-height: 100vh;
-    border-radius: 0;
+    width: 100vw;
+    aspect-ratio: auto;
+    height: 100vh;
+    overflow-y: auto;
   }
   .ou-modal__close {
     top: 12px;

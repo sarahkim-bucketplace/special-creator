@@ -9,7 +9,20 @@
   const closeBtn = document.getElementById('ouModalClose');
   if (!modal || !content || !closeBtn) return;
 
+  // above this width the popup is the small fixed-aspect card from the
+  // Figma mockup (node 181:588), rendered at NATURAL_WIDTH then scaled down
+  // to fit — .detail's own layout uses fixed px values (padding, font-size)
+  // tuned for a full viewport, so shrinking it as one scaled unit is the
+  // only way to get the whole thing to fit a small card without it just
+  // looking like a zoomed-in crop. Below this width the card would make
+  // everything too tiny to read, so .detail instead renders at its own
+  // natural (responsive) size inside a fullscreen scrollable sheet.
+  const CARD_BREAKPOINT = 900;
+  const NATURAL_WIDTH = 1280;
+  const NATURAL_HEIGHT = 764;
+
   const loadedStylesheets = new Set();
+  let currentDetail = null;
 
   function ensureStylesheet(href) {
     if (!href || loadedStylesheets.has(href)) return;
@@ -18,6 +31,21 @@
     link.href = href;
     document.head.appendChild(link);
     loadedStylesheets.add(href);
+  }
+
+  function applyLayout() {
+    if (!currentDetail) return;
+    const scroll = content.parentElement;
+    if (window.innerWidth > CARD_BREAKPOINT) {
+      const scale = scroll.clientWidth / NATURAL_WIDTH;
+      currentDetail.style.width = NATURAL_WIDTH + 'px';
+      currentDetail.style.height = NATURAL_HEIGHT + 'px';
+      currentDetail.style.transform = `scale(${scale})`;
+    } else {
+      currentDetail.style.width = '';
+      currentDetail.style.height = '';
+      currentDetail.style.transform = 'none';
+    }
   }
 
   function openModal() {
@@ -31,6 +59,7 @@
     modal.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('ou-modal-open');
     content.innerHTML = '';
+    currentDetail = null;
   }
 
   function isDetailHref(href) {
@@ -53,7 +82,9 @@
 
     content.innerHTML = '';
     content.appendChild(detail);
+    currentDetail = detail;
     content.parentElement.scrollTop = 0;
+    applyLayout();
     openModal();
     initPhotoCarousel(content);
   }
@@ -84,6 +115,8 @@
       }
     }
   });
+
+  window.addEventListener('resize', applyLayout);
 
   closeBtn.addEventListener('click', closeModal);
   modal.addEventListener('click', (e) => {
