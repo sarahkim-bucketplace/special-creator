@@ -20,6 +20,16 @@
 // --enter is a translateY on the sticky .btd-gallery__stack-photo,
 // written every scroll frame with no CSS transition — the easing IS the
 // motion, so a transition here would just lag behind the math.
+//
+// Per a reference screenshot: the front/active photo is at full
+// brightness, and each one further back (already covered) is visibly
+// dimmer — not just hidden behind the next one, but darkened. Reusing
+// the same per-frame p (item i's entrance progress) also drives the
+// PREVIOUS photo's --dim, a filter: brightness() on its -inner element:
+// as item i arrives (p 0->1), item i-1 darkens from full brightness down
+// to MIN_BRIGHTNESS. Brightness (not opacity) so it darkens toward black
+// regardless of this page's cream background, matching the reference
+// rather than fading toward the page color.
 (function () {
   const items = Array.from(document.querySelectorAll('.btd-gallery__stack-item'));
   if (!items.length) return;
@@ -29,6 +39,7 @@
 
   const DWELL = 20; // px of scroll a photo stays fully pinned/uncovered once active
   const ENTRANCE_DISTANCE = 320; // px of scroll over which the next photo eases in
+  const MIN_BRIGHTNESS = 0.45; // how dark a fully-covered photo gets
 
   let activationY = [];
 
@@ -64,6 +75,9 @@
       const p = Math.max(0, Math.min(1, (scrollY - entranceStart) / ENTRANCE_DISTANCE));
       const extra = ENTRANCE_DISTANCE * p * (1 - p);
       photos[i].style.setProperty('--enter', `${extra.toFixed(1)}px`);
+
+      const dim = 1 - (1 - MIN_BRIGHTNESS) * p;
+      inners[i - 1].style.setProperty('--dim', dim.toFixed(2));
     }
   }
 

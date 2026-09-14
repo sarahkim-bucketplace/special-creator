@@ -1016,10 +1016,17 @@ html {
 .btd-gallery__stack-photo-inner {
   width: 100%;
   height: 100%;
+  /* one common ratio for all 9 photos instead of each keeping its
+     original mosaic-grid crop — background-size:cover fills this box
+     from each source image without needing separate cropped files */
+  aspect-ratio: 4 / 3;
   background-color: #d9d9d9;
   background-size: cover;
   background-position: center;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  /* darkens as the next photo covers it — set every scroll frame by
+     btd-gallery-stack.js, no transition (same reasoning as --enter) */
+  filter: brightness(var(--dim, 1));
 }
 
 /* ---- Special Gift index (Figma 56:2830) ---- */
