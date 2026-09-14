@@ -1079,7 +1079,20 @@ body.ou-modal-open {
   max-height: calc(100vh - 120px);
   overflow-y: auto;
   background: #ffffff;
-  border-radius: 16px;
+  /* photo side (left) is flush against the modal edge, so only the text
+     side (right) keeps a rounded corner */
+  border-radius: 0 16px 16px 0;
+}
+
+/* the injected .detail/.detail__photo/.detail__content assume they're
+   filling a whole standalone page (min-height:100vh), which inside this
+   modal just forces extra scroll room and shoves .detail__nav down to the
+   bottom of that empty space — let them size to their actual content
+   instead so the popup hugs its content with no dead scroll area */
+.ou-modal__content .detail,
+.ou-modal__content .detail__photo,
+.ou-modal__content .detail__content {
+  min-height: auto;
 }
 
 .ou-modal__close {
