@@ -911,7 +911,7 @@ html {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  flex: 0 0 240px;
+  flex: 0 0 320px;
 }
 
 .btd-journey__rolling-photo {
