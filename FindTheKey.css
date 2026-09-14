@@ -720,10 +720,10 @@ html {
   gap: 100px;
   margin-top: 340px;
   margin-bottom: 340px;
-  /* an extra mandatory snap point (scroll-snap-type:y mandatory is set
-     globally on html) — scrolling through the 340px buffer below rests
-     here once before continuing on to the next section's own snap point,
-     instead of blowing straight through that empty gap */
+  /* registers as a valid mandatory-snap resting point (so the browser
+     doesn't immediately correct away from it once landed) — stats-pause.js
+     is what actually guarantees scrolling *reaches* this point rather than
+     skipping past it on a fast scroll, native snap alone wasn't reliable */
   scroll-snap-align: start;
   scroll-margin-top: 72px;
 }
