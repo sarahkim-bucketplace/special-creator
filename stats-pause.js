@@ -1,38 +1,28 @@
 // guarantees the "stop once, then continue" buffer the user asked for.
 // .stats also carries scroll-snap-align:start (FindTheKey.css) so it's a
 // valid mandatory-snap resting point, but native snap alone wasn't
-// reliable — on a fast wheel/trackpad scroll the browser can settle on the
-// *next* snap point and skip an intermediate one, especially with a thin
-// detection band or a throttled IntersectionObserver check. This forces
-// it: the first time .stats starts entering the viewport at all, snap the
-// scroll exactly to it and briefly swallow scroll input (wheel/touch/the
-// common scroll keys) so it reads as a deliberate stop, then release
+// reliable, and neither was an earlier version of this file that used
+// preventDefault() on wheel/touchmove to hold the scroll position —
+// trackpad momentum scrolling is already "in flight" as its own native
+// animation by the time JS sees the events, and preventDefault on the
+// individual wheel events doesn't reliably stop that already-committed
+// momentum. Setting overflow:hidden instead removes the ability to
+// scroll at the layout level, which isn't subject to that race.
 (function () {
   const stats = document.querySelector('.stats');
   if (!stats) return;
 
-  const LOCK_MS = 500;
-  const SCROLL_KEYS = ['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', ' ', 'Spacebar', 'Home', 'End'];
+  const LOCK_MS = 600;
   let triggered = false;
 
-  function preventScroll(e) {
-    e.preventDefault();
-  }
-
-  function preventScrollKeys(e) {
-    if (SCROLL_KEYS.includes(e.key)) e.preventDefault();
-  }
-
   function lockScroll() {
-    window.addEventListener('wheel', preventScroll, { passive: false });
-    window.addEventListener('touchmove', preventScroll, { passive: false });
-    window.addEventListener('keydown', preventScrollKeys, { passive: false });
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
   }
 
   function unlockScroll() {
-    window.removeEventListener('wheel', preventScroll);
-    window.removeEventListener('touchmove', preventScroll);
-    window.removeEventListener('keydown', preventScrollKeys);
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow = '';
   }
 
   const observer = new IntersectionObserver(
@@ -41,15 +31,15 @@
         if (entry.isIntersecting && !triggered) {
           triggered = true;
           observer.disconnect();
-          lockScroll();
+          // land exactly on the snap point first, while still scrollable —
+          // programmatic scrollIntoView still works once overflow is
+          // hidden in most browsers, but doing it first avoids relying on that
           stats.scrollIntoView({ block: 'start' });
+          lockScroll();
           window.setTimeout(unlockScroll, LOCK_MS);
         }
       });
     },
-    // no rootMargin shrinking — fires as soon as any part of .stats enters
-    // the viewport at all, so a fast scroll can't jump clean over a thin
-    // trigger band before the observer gets a chance to check
     { threshold: 0 }
   );
 
