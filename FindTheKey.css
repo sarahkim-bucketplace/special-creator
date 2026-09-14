@@ -916,6 +916,7 @@ html {
 }
 
 .btd-journey__rolling-photo {
+  position: relative;
   width: 100%;
   height: 320px;
   background-color: #7e7e7e;
@@ -930,10 +931,13 @@ html {
 }
 
 .btd-journey__rolling-credit {
-  font-size: 13px;
+  position: absolute;
+  right: 12px;
+  bottom: 10px;
+  font-size: 12px;
   font-weight: 400;
-  letter-spacing: -0.07px;
-  color: #7b7b7b;
+  letter-spacing: -0.06px;
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .btd-arrow {
