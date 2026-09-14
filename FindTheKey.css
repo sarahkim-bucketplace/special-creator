@@ -918,6 +918,14 @@ html {
   width: 100%;
   aspect-ratio: 390 / 252;
   background-color: #7e7e7e;
+  /* identical gray boxes made the scroll motion itself invisible — a
+     number placeholder gives the eye something to track moving by */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 32px;
+  font-weight: 600;
 }
 
 .btd-journey__rolling-credit {
