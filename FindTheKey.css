@@ -489,6 +489,7 @@ html {
    (per Figma: ~117px above the trophy vs. ~160px below it) */
 .trophy-placeholder + .insight {
   margin-top: 160px;
+  margin-bottom: 200px;
 }
 
 .insight strong {
