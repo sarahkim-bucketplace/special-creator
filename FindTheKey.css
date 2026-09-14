@@ -710,6 +710,85 @@ html {
   object-fit: contain;
 }
 
+/* ---- stats (Figma node 182:739): four count-up numbers below the brand
+   marquee. Counting itself is driven by stats.js (IntersectionObserver +
+   requestAnimationFrame), triggered once each number scrolls into view */
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 70px;
+  margin-top: 200px;
+}
+
+.stats__item {
+  display: flex;
+  flex-direction: column;
+  gap: 31px;
+}
+
+.stats__label-group {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.stats__label {
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: -0.12px;
+  color: #2d2828;
+  white-space: nowrap;
+}
+
+.stats__line {
+  height: 1px;
+  background: #000000;
+}
+
+.stats__number {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.stats__number-value {
+  font-size: 45px;
+  font-weight: 600;
+  letter-spacing: -0.23px;
+  color: #2d2828;
+}
+
+.stats__number-suffix {
+  font-size: 37px;
+  font-weight: 600;
+  letter-spacing: -0.23px;
+  color: #2d2828;
+}
+
+.stats__number-suffix--plus {
+  font-size: 50px;
+}
+
+@media (max-width: 600px) {
+  .stats {
+    gap: 40px;
+    margin-top: 120px;
+  }
+  .stats__label {
+    font-size: 18px;
+  }
+  .stats__number-value {
+    font-size: 34px;
+  }
+  .stats__number-suffix {
+    font-size: 26px;
+  }
+  .stats__number-suffix--plus {
+    font-size: 36px;
+  }
+}
+
 @media (max-width: 600px) {
   #opportunities-unlocked .hero {
     margin-top: 80px;
