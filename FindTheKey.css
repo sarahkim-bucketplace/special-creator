@@ -355,6 +355,7 @@ html {
   display: block;
   width: 320px;
   height: auto;
+  margin: 0 auto;
 }
 
 .hero__subtitle {
