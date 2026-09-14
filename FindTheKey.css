@@ -665,8 +665,9 @@ html {
 
 /* ---- Brand-Logo-Rolling (Figma node 174:568): continuously auto-scrolling
    row of partner brand logos, full-bleed like the earlier photo marquee.
-   Figma only has gray placeholder boxes (no real logo assets yet) — swap
-   each .brand-rolling__item's background for a real <img> once logos exist */
+   Each logo has its own native size/aspect ratio, so .brand-rolling__item
+   is a fixed 152x59 box (matching Figma) that centers and contain-fits
+   whichever logo is inside it, keeping every slot visually the same size */
 .brand-rolling {
   width: 100vw;
   position: relative;
@@ -695,7 +696,18 @@ html {
 .brand-rolling__item {
   flex: 0 0 152px;
   height: 59px;
-  background: #888888;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand-rolling__item img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
 }
 
 @media (max-width: 600px) {
