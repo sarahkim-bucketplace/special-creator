@@ -981,8 +981,17 @@ html {
    screen recording of newmixcoffee.com/ko's story section: each photo
    pins at the same spot below the header via position:sticky, and the
    next one in DOM order slides up and covers it as you keep scrolling.
-   Pure CSS, no scroll-linked JS needed — later elements natively paint
-   over earlier ones once both are stuck at the same position) ---- */
+   Later elements natively paint over earlier ones once both are stuck
+   at the same position.
+
+   Split into two layers because of two independent animations that
+   can't share one `transform`: btd-gallery-stack.js writes --enter
+   every scroll frame (no transition — it IS the eased motion, driving
+   how much of the photo behind it gets covered) on the outer
+   .btd-gallery__stack-photo, while .is-active's scale/shadow "pop" only
+   toggles occasionally and needs its own transition, on the inner
+   -inner element. Combining both on one element would make the
+   transition fight the per-frame scroll updates and lag behind. */
 .btd-gallery {
   position: relative;
   margin-top: 56px;
@@ -1000,6 +1009,12 @@ html {
   width: 100%;
   max-width: 700px;
   margin: 0 auto;
+  transform: translateY(var(--enter, 0px));
+}
+
+.btd-gallery__stack-photo-inner {
+  width: 100%;
+  height: 100%;
   background-color: #d9d9d9;
   background-size: cover;
   background-position: center;
@@ -1012,7 +1027,7 @@ html {
 /* toggled by btd-gallery-stack.js as each photo becomes the active
    (topmost pinned) one — the cubic-bezier overshoots past 1 and settles
    back, giving each takeover a quick springy "pop" instead of a flat swap */
-.btd-gallery__stack-photo.is-active {
+.btd-gallery__stack-photo-inner.is-active {
   transform: scale(1);
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
 }
