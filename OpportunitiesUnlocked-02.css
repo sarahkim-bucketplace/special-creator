@@ -276,7 +276,7 @@ body {
   justify-content: space-between;
   min-height: 100vh;
   min-height: 100dvh;
-  padding: 120px 17px 0;
+  padding: 50px 17px 0;
 }
 
 .detail__text {
@@ -323,7 +323,7 @@ body {
   align-items: center;
   gap: 10px;
   max-width: 597px;
-  padding-bottom: 40px;
+  padding-bottom: 50px;
   margin-top: 35px;
 }
 
