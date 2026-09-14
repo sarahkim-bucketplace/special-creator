@@ -720,6 +720,12 @@ html {
   gap: 100px;
   margin-top: 340px;
   margin-bottom: 340px;
+  /* an extra mandatory snap point (scroll-snap-type:y mandatory is set
+     globally on html) — scrolling through the 340px buffer below rests
+     here once before continuing on to the next section's own snap point,
+     instead of blowing straight through that empty gap */
+  scroll-snap-align: start;
+  scroll-margin-top: 72px;
 }
 
 .stats__item {
