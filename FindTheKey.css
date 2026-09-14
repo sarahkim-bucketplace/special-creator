@@ -1060,7 +1060,7 @@ html {
   display: none;
   align-items: flex-start;
   justify-content: center;
-  padding: 60px 20px;
+  padding: 24px;
   background: rgba(0, 0, 0, 0.6);
 }
 
@@ -1076,23 +1076,21 @@ body.ou-modal-open {
   position: relative;
   width: 100%;
   max-width: 1280px;
-  max-height: calc(100vh - 120px);
+  max-height: calc(100vh - 48px);
   overflow-y: auto;
   background: #ffffff;
-  /* photo side (left) is flush against the modal edge, so only the text
-     side (right) keeps a rounded corner */
-  border-radius: 0 16px 16px 0;
+  border-radius: 0;
 }
 
-/* the injected .detail/.detail__photo/.detail__content assume they're
-   filling a whole standalone page (min-height:100vh), which inside this
-   modal just forces extra scroll room and shoves .detail__nav down to the
-   bottom of that empty space — let them size to their actual content
-   instead so the popup hugs its content with no dead scroll area */
-.ou-modal__content .detail,
-.ou-modal__content .detail__photo,
+/* .detail/.detail__photo keep their original near-fullscreen sizing
+   (min-height:100vh from the standalone page's own CSS) — that's the big
+   popup size that read better than a shrink-to-fit one. Only
+   .detail__content's internal layout changes: instead of
+   justify-content:space-between shoving .detail__nav all the way down to
+   the bottom of that tall box (forcing a scroll to reach it), centering
+   the text+nav block balances the empty space evenly above and below it */
 .ou-modal__content .detail__content {
-  min-height: auto;
+  justify-content: center;
 }
 
 .ou-modal__close {
