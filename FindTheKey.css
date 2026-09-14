@@ -349,6 +349,14 @@ html {
   margin-bottom: 20px;
 }
 
+/* find-the-key's hero title is the OHOUSE/SPECIAL CREATOR wordmark lockup
+   instead of plain text (the other pages' .hero__title stays text) */
+.hero__title-logo {
+  display: block;
+  width: 320px;
+  height: auto;
+}
+
 .hero__subtitle {
   font-size: 18px;
   font-weight: 400;
@@ -377,8 +385,8 @@ html {
      whether the stage is currently position:absolute (containing block =
      .about-roll's own box) or position:fixed (containing block = viewport) —
      a %-based width would silently change size crossing that boundary */
-  width: min(1210px, calc(100vw - 70px));
-  height: 575px;
+  width: min(1006px, calc(100vw - 70px));
+  height: 584px;
 }
 
 .about-roll__item {
@@ -415,6 +423,16 @@ html {
   text-align: center;
 }
 
+.about-roll__credit {
+  position: absolute;
+  right: 20px;
+  bottom: 16px;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: -0.07px;
+}
+
 @media (max-width: 900px) {
   .about-roll {
     height: 2400px;
@@ -439,6 +457,11 @@ html {
   .about-roll__caption {
     font-size: 16px;
     padding: 20px;
+  }
+  .about-roll__credit {
+    right: 12px;
+    bottom: 10px;
+    font-size: 11px;
   }
 }
 
@@ -479,6 +502,9 @@ html {
   }
   #find-the-key .hero__title {
     font-size: 26px;
+  }
+  .hero__title-logo {
+    width: 220px;
   }
   #find-the-key .hero__subtitle {
     font-size: 15px;
