@@ -485,6 +485,12 @@ html {
   transform: translateY(0);
 }
 
+/* the quote after the trophy sits further down than the one before it
+   (per Figma: ~117px above the trophy vs. ~160px below it) */
+.trophy-placeholder + .insight {
+  margin-top: 160px;
+}
+
 .insight strong {
   font-weight: 700;
 }
@@ -494,7 +500,7 @@ html {
   width: 100%;
   max-width: 803px;
   aspect-ratio: 803 / 917;
-  margin: 56px auto 0;
+  margin: 120px auto 0;
   display: flex;
   align-items: center;
   justify-content: center;
