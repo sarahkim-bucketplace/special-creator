@@ -1,37 +1,20 @@
-// Sticky-stacked photo story for "직접 만나 나누는 시간", driven by a
-// circular/foreshortening metaphor: the centered/active photo has ~no
-// overlap in front of it, and the overlap should widen progressively the
-// further a photo is pushed toward the back of the stack — like images
-// arranged along the surface of a circle/sphere, where the ones facing
-// the viewer show fully and the ones curving away are increasingly
-// foreshortened behind the ones in front.
+// Coverflow photo story for "직접 만나 나누는 시간". Per direct correction
+// against the reference recording: this isn't a one-way "next photo
+// covers the previous one" stack — the photo nearest the focus point
+// (roughly viewport-center) is biggest and fully opaque, and every other
+// photo, whether already passed or still arriving, shrinks and fades
+// symmetrically the further it sits from that point.
 //
-// The first version drove this with the literal quarter-circle equation
-// (sqrt(1-p^2)), which is where the motion still felt off: that curve's
-// velocity is unbounded as p -> 1 (a vertical tangent), so the photo
-// briefly moved at 3x+ the user's actual scroll speed right as it locked
-// into place — a visible "yank" no real scrolling (or the reference
-// recording) ever does. Swapped for extra = ED * p * (1 - p): a plain
-// parabola that keeps the same "slow near the front, faster toward the
-// back" shape but stays smooth and bounded (peak relative speed 2x,
-// reached gradually, not a spike) — same silhouette as a circular arc,
-// without the singularity.
-//
-// --enter is a translateY on the sticky .btd-gallery__stack-photo,
-// written every scroll frame with no CSS transition — the easing IS the
-// motion, so a transition here would just lag behind the math.
-//
-// Per a reference screenshot: the front/active photo is at full opacity,
-// and each one further back (already covered) fades — not just hidden
-// behind the next one, but visibly more transparent itself. Reusing the
-// same per-frame p (item i's entrance progress) also drives the PREVIOUS
-// photo's --dim, an opacity on its -inner element: as item i arrives
-// (p 0->1), item i-1 fades from fully opaque down to MIN_OPACITY. (An
-// earlier version used filter:brightness() instead, on the reasoning
-// that opacity would blend toward this page's cream background rather
-// than darken like the reference's black-background site — but direct
-// feedback was that the photo itself should visibly become translucent,
-// so plain opacity it is.)
+// Earlier versions drove this with position:sticky (pinning each photo
+// at a fixed top, then having the next one cover it) and needed
+// increasingly elaborate math — an entrance easing curve, a dwell
+// buffer, a negative margin — to fake the overlap. This version drops
+// sticky entirely: every photo just scrolls normally, and --scale/--dim
+// are a plain continuous function of that photo's on-screen distance
+// from the focus point, recomputed every scroll frame. Simpler, matches
+// the reference's symmetric taper (which one-way covering never could),
+// and cheaper — no getBoundingClientRect() in the scroll handler at all,
+// just arithmetic against doc-space positions cached once in layout().
 (function () {
   const items = Array.from(document.querySelectorAll('.btd-gallery__stack-item'));
   if (!items.length) return;
@@ -39,70 +22,59 @@
   const photos = Array.from(items, (item) => item.querySelector('.btd-gallery__stack-photo'));
   const inners = Array.from(items, (item) => item.querySelector('.btd-gallery__stack-photo-inner'));
 
-  const DWELL = 20; // px of scroll a photo stays fully pinned/uncovered once active
-  const ENTRANCE_DISTANCE = 320; // px of scroll over which the next photo eases in
-  const MIN_OPACITY = 0.45; // how transparent a fully-covered photo gets
+  const OVERLAP_RATIO = 0.4; // how much of each photo's height the next one overlaps, in normal flow
+  const MIN_SCALE = 0.72;
+  const MIN_OPACITY = 0.35;
+  const FALLOFF = 460; // px of on-screen distance from the focus point over which scale/opacity taper to their minimum
 
-  let activationY = [];
+  let centerY = []; // doc-space vertical center of each photo, once laid out
+  let focusY = 0;
+  let rangeTop = 0;
+  let rangeBottom = 0;
 
   function layout() {
+    const photoHeight = inners[0].getBoundingClientRect().height;
+    const overlap = photoHeight * OVERLAP_RATIO;
+
     items.forEach((item, i) => {
-      const inner = inners[i];
-      if (!inner) return;
-      const isLast = i === items.length - 1;
-      const photoHeight = inner.getBoundingClientRect().height;
-      const dwell = isLast ? DWELL + window.innerHeight * 0.4 : DWELL;
-      item.style.height = `${photoHeight + dwell}px`;
-      item.style.marginTop = '0';
+      item.style.marginTop = i === 0 ? '0' : `-${overlap.toFixed(1)}px`;
     });
 
-    // second pass: cumulative doc-space top of each item, and the
-    // scrollY at which its photo's natural (untransformed) position
-    // reaches the sticky offset (96px) — i.e. when it fully activates
+    focusY = window.innerHeight * 0.45;
+
     const galleryTop = items[0].getBoundingClientRect().top + window.scrollY;
-    let cursor = galleryTop;
-    activationY = items.map((item) => {
-      const activation = cursor - 96;
-      cursor += item.offsetHeight;
-      return activation;
-    });
+    centerY = items.map((_, i) => galleryTop + photoHeight / 2 + i * (photoHeight - overlap));
 
-    updateEnter();
+    rangeTop = centerY[0] - focusY - FALLOFF;
+    rangeBottom = centerY[centerY.length - 1] - focusY + FALLOFF;
+
+    update();
   }
 
-  function updateEnter() {
+  function update() {
     const scrollY = window.scrollY;
-
-    // skip entirely once scrolled well clear of the gallery in either
-    // direction — with no guard here, this ran (and wrote 16 custom
-    // properties) on *every* scroll event anywhere on the page, for the
-    // page's whole lifetime, forcing style recalc on 8 elements that
-    // were nowhere near the viewport. That's one of three such
-    // unconditional page-wide scroll handlers (hero-home.js and
-    // about-roll.js do the same for their own sections) competing for
-    // the same per-frame budget, which is what was producing the long
-    // stalls-then-catch-up jank reported against the reference recording.
-    const first = activationY[0] - ENTRANCE_DISTANCE;
-    const last = activationY[activationY.length - 1];
-    if (scrollY < first - 200 || scrollY > last + window.innerHeight) return;
-
-    for (let i = 1; i < items.length; i++) {
-      const entranceStart = activationY[i] - ENTRANCE_DISTANCE;
-      const p = Math.max(0, Math.min(1, (scrollY - entranceStart) / ENTRANCE_DISTANCE));
-      const extra = ENTRANCE_DISTANCE * p * (1 - p);
-      photos[i].style.setProperty('--enter', `${extra.toFixed(1)}px`);
-
-      const dim = 1 - (1 - MIN_OPACITY) * p;
-      inners[i - 1].style.setProperty('--dim', dim.toFixed(2));
+    for (let i = 0; i < items.length; i++) {
+      const onScreenCenter = centerY[i] - scrollY;
+      const distance = Math.abs(onScreenCenter - focusY);
+      const t = Math.max(0, 1 - distance / FALLOFF);
+      const scale = MIN_SCALE + (1 - MIN_SCALE) * t;
+      const opacity = MIN_OPACITY + (1 - MIN_OPACITY) * t;
+      inners[i].style.setProperty('--scale', scale.toFixed(3));
+      inners[i].style.setProperty('--dim', opacity.toFixed(3));
+      photos[i].style.zIndex = Math.round(t * 1000);
     }
   }
 
   let ticking = false;
   function onScroll() {
+    // cheap range check (plain arithmetic, no layout read) so this skips
+    // entirely once scrolled well clear of the gallery — see the same
+    // guard in about-roll.js for why that matters for scroll perf
+    if (window.scrollY < rangeTop || window.scrollY > rangeBottom) return;
     if (ticking) return;
     ticking = true;
     requestAnimationFrame(() => {
-      updateEnter();
+      update();
       ticking = false;
     });
   }

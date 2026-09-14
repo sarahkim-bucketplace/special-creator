@@ -977,45 +977,39 @@ html {
   max-width: 560px;
 }
 
-/* ---- sticky-stacked photo story (was a mosaic grid — replaced per a
-   screen recording of newmixcoffee.com/ko's story section: each photo
-   pins at the same spot below the header via position:sticky, and the
-   next one in DOM order slides up and covers it as you keep scrolling.
-   Later elements natively paint over earlier ones once both are stuck
-   at the same position.
-
-   No scale/shadow "pop" here on purpose — an earlier version added one,
-   but the reference recording doesn't have any such flourish (photos
-   hold a constant size and sit flush against the background, no
-   shadow), and layering our own bounce on top read as unmotivated
-   motion rather than matching it. Kept the two-layer split (outer
-   .btd-gallery__stack-photo is the sticky element btd-gallery-stack.js
-   writes --enter to every scroll frame; -inner just carries the image)
-   in case a future per-photo effect needs its own transition again
-   without fighting those per-frame writes. */
+/* ---- coverflow photo story ("직접 만나 나누는 시간") — per direct
+   correction, this isn't a one-way "next covers previous" stack: the
+   photo nearest the focus point (roughly viewport-center) should be
+   biggest and fully opaque, and every other photo — the ones already
+   passed AND the ones still arriving — shrinks and fades symmetrically
+   the further it sits from that point, like a coverflow/carousel. No
+   position:sticky at all: btd-gallery-stack.js reads each photo's plain
+   scroll position every frame and derives --scale/--dim/z-index from
+   distance-to-focus, so the effect is a continuous function of scroll
+   position rather than a per-item pinned/covering state — simpler, and
+   avoids the sticky-recalc performance overhead the pinned version had. */
 .btd-gallery {
   position: relative;
   margin-top: 56px;
+  /* room for the first/last photo to reach full scale before the
+     section boundary cuts them off */
+  padding: 20vh 0;
 }
 
 .btd-gallery__stack-item {
-  /* fallback for before btd-gallery-stack.js measures the photo and sets
-     an exact px height; JS overrides this via inline style */
-  height: 100vh;
+  /* marginTop (a constant overlap, from the now-uniform 4:3 photo
+     height) is set once by btd-gallery-stack.js's layout() */
 }
 
 .btd-gallery__stack-photo {
-  position: sticky;
-  top: 96px;
+  position: relative; /* so the per-item z-index below actually applies */
   width: 100%;
   max-width: 700px;
   margin: 0 auto;
-  transform: translateY(var(--enter, 0px));
 }
 
 .btd-gallery__stack-photo-inner {
   width: 100%;
-  height: 100%;
   /* one common ratio for all 9 photos instead of each keeping its
      original mosaic-grid crop — background-size:cover fills this box
      from each source image without needing separate cropped files */
@@ -1024,8 +1018,9 @@ html {
   background-size: cover;
   background-position: center;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-  /* fades as the next photo covers it — set every scroll frame by
-     btd-gallery-stack.js, no transition (same reasoning as --enter) */
+  /* both set every scroll frame by btd-gallery-stack.js, no transition —
+     the falloff curve itself is the easing, a transition would lag it */
+  transform: scale(var(--scale, 1));
   opacity: var(--dim, 1);
 }
 
