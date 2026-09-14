@@ -26,6 +26,7 @@
   const MIN_SCALE = 0.72;
   const MIN_OPACITY = 0.35;
   const FALLOFF = 750; // px of on-screen distance from the focus point over which scale/opacity taper to their minimum — wider than the item spacing so each photo holds near-full size/opacity for longer instead of the next one crowding in right away
+  const OPACITY_DELAY = 0.35; // fraction of FALLOFF where opacity stays at 1 while scale has already started shrinking — so a photo shrinks first, then fades, instead of both at once
 
   let centerY = []; // doc-space vertical center of each photo, once laid out
   let focusY = 0;
@@ -67,8 +68,12 @@
       const onScreenCenter = centerY[i] - scrollY;
       const distance = Math.abs(onScreenCenter - focusY);
       const t = Math.max(0, 1 - distance / FALLOFF);
+
+      const delayDistance = FALLOFF * OPACITY_DELAY;
+      const tOpacity = Math.max(0, 1 - Math.max(0, distance - delayDistance) / (FALLOFF - delayDistance));
+
       const scale = MIN_SCALE + (1 - MIN_SCALE) * t;
-      const opacity = MIN_OPACITY + (1 - MIN_OPACITY) * t;
+      const opacity = MIN_OPACITY + (1 - MIN_OPACITY) * tOpacity;
       inners[i].style.setProperty('--scale', scale.toFixed(3));
       inners[i].style.setProperty('--dim', opacity.toFixed(3));
       photos[i].style.zIndex = Math.round(t * 1000);
