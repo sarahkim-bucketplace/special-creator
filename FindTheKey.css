@@ -663,6 +663,41 @@ html {
   color: #7b7b7b;
 }
 
+/* ---- Brand-Logo-Rolling (Figma node 174:568): continuously auto-scrolling
+   row of partner brand logos, full-bleed like the earlier photo marquee.
+   Figma only has gray placeholder boxes (no real logo assets yet) — swap
+   each .brand-rolling__item's background for a real <img> once logos exist */
+.brand-rolling {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  margin-top: 200px;
+  overflow: hidden;
+}
+
+.brand-rolling__track {
+  display: flex;
+  width: max-content;
+  gap: 35px;
+  animation: brand-rolling-scroll 30s linear infinite;
+}
+
+/* the track renders two identical copies of the items back to back;
+   translating by exactly -50% loops seamlessly regardless of item/gap count */
+@keyframes brand-rolling-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.brand-rolling__item {
+  flex: 0 0 152px;
+  height: 59px;
+  background: #888888;
+}
+
 @media (max-width: 600px) {
   #opportunities-unlocked .hero {
     margin-top: 80px;
