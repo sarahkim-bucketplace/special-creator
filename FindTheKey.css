@@ -1024,9 +1024,9 @@ html {
   background-size: cover;
   background-position: center;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-  /* darkens as the next photo covers it — set every scroll frame by
+  /* fades as the next photo covers it — set every scroll frame by
      btd-gallery-stack.js, no transition (same reasoning as --enter) */
-  filter: brightness(var(--dim, 1));
+  opacity: var(--dim, 1);
 }
 
 /* ---- Special Gift index (Figma 56:2830) ---- */
