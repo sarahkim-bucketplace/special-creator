@@ -725,7 +725,10 @@ html {
      is what actually guarantees scrolling *reaches* this point rather than
      skipping past it on a fast scroll, native snap alone wasn't reliable */
   scroll-snap-align: start;
-  scroll-margin-top: 72px;
+  /* 72px header + 85px, matching the breathing room .hero__title gets
+     below the header on the main section stops (.hero{margin-top:85px})
+     — landing flush at 72px felt jammed against the header */
+  scroll-margin-top: 157px;
 }
 
 .stats__item {
