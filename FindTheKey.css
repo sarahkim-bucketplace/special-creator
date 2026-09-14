@@ -466,14 +466,27 @@ html {
   }
 }
 
-/* ---- insight quote below the rolling row ---- */
+/* ---- insight quotes flanking the trophy — scroll-reveal via scroll-reveal.js
+   (initReveal, called from find-the-key.js) ---- */
 .insight {
-  font-size: 18px;
+  font-size: 24px;
   font-weight: 400;
-  letter-spacing: -0.09px;
-  line-height: 1.45;
+  letter-spacing: -0.12px;
+  line-height: 1.6;
   text-align: center;
   margin-top: 99px;
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.insight.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.insight strong {
+  font-weight: 700;
 }
 
 /* ---- trophy: interactive 3D viewer (trophy.js, drag to rotate) ---- */
@@ -514,7 +527,7 @@ html {
     display: none;
   }
   .insight {
-    font-size: 15px;
+    font-size: 18px;
   }
 }
 
