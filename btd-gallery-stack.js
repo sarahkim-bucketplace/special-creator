@@ -33,14 +33,24 @@
   let rangeBottom = 0;
 
   function layout() {
-    const photoHeight = inners[0].getBoundingClientRect().height;
+    // measured from the OUTER element, not -inner: -inner carries the
+    // transform:scale(var(--scale)) that this same script drives, so at
+    // load time (before any item has reached scale 1) reading its rect
+    // would capture an already-shrunk size and throw off every spacing
+    // calc below it — the outer element is never transformed, so its
+    // rect is always the true, unscaled photo size
+    const photoHeight = photos[0].getBoundingClientRect().height;
     const overlap = photoHeight * OVERLAP_RATIO;
 
     items.forEach((item, i) => {
       item.style.marginTop = i === 0 ? '0' : `-${overlap.toFixed(1)}px`;
     });
 
-    focusY = window.innerHeight * 0.45;
+    // true center of the *visible* viewport — below the 72px fixed
+    // header, not the raw window center, so the biggest/clearest photo
+    // actually lines up with where the screen looks centered to the eye
+    const HEADER_HEIGHT = 72;
+    focusY = HEADER_HEIGHT + (window.innerHeight - HEADER_HEIGHT) / 2;
 
     const galleryTop = items[0].getBoundingClientRect().top + window.scrollY;
     centerY = items.map((_, i) => galleryTop + photoHeight / 2 + i * (photoHeight - overlap));
