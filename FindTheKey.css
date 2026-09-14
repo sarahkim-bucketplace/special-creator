@@ -1046,3 +1046,68 @@ html {
     max-width: 275px;
   }
 }
+
+/* ==========================================================================
+   Opportunities Unlocked case-study popup (ou-modal.js) — clicking an
+   .ou-card loads that case study's .detail block here instead of navigating
+   away; its own OpportunitiesUnlocked-0N.css is loaded alongside this file
+   to style the injected .detail* markup
+   ========================================================================== */
+.ou-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: none;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 60px 20px;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.ou-modal.is-open {
+  display: flex;
+}
+
+body.ou-modal-open {
+  overflow: hidden;
+}
+
+.ou-modal__scroll {
+  position: relative;
+  width: 100%;
+  max-width: 1280px;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+  background: #ffffff;
+  border-radius: 16px;
+}
+
+.ou-modal__close {
+  position: fixed;
+  top: 24px;
+  right: 32px;
+  z-index: 101;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  color: #2d2828;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  .ou-modal {
+    padding: 0;
+  }
+  .ou-modal__scroll {
+    max-height: 100vh;
+    border-radius: 0;
+  }
+  .ou-modal__close {
+    top: 12px;
+    right: 12px;
+  }
+}
