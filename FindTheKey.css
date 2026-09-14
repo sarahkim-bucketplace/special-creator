@@ -1078,7 +1078,7 @@ body.ou-modal-open {
    edge (unlike the earlier full-bleed-photo version) */
 .ou-modal__scroll {
   position: relative;
-  width: min(794px, 90vw);
+  width: min(1191px, 90vw);
   aspect-ratio: 794 / 474;
   overflow: hidden;
   background: #ffffff;
