@@ -719,6 +719,7 @@ html {
   justify-content: center;
   gap: 100px;
   margin-top: 340px;
+  margin-bottom: 340px;
 }
 
 .stats__item {
