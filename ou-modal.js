@@ -83,9 +83,11 @@
     content.innerHTML = '';
     content.appendChild(detail);
     currentDetail = detail;
+    // open before measuring — the card has zero layout size while
+    // display:none, which would compute the scale as 0 (invisible content)
+    openModal();
     content.parentElement.scrollTop = 0;
     applyLayout();
-    openModal();
     initPhotoCarousel(content);
   }
 
