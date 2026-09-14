@@ -898,7 +898,8 @@ html {
 .btd-journey__rolling-track {
   display: flex;
   width: max-content;
-  gap: 8px;
+  /* Figma node 30:1238: 244x320 photos, 15px apart */
+  gap: 15px;
   animation: btd-journey-rolling-scroll 25s linear infinite;
 }
 
@@ -911,12 +912,12 @@ html {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  flex: 0 0 320px;
+  flex: 0 0 244px;
 }
 
 .btd-journey__rolling-photo {
   width: 100%;
-  aspect-ratio: 252 / 390;
+  height: 320px;
   background-color: #7e7e7e;
   /* identical gray boxes made the scroll motion itself invisible — a
      number placeholder gives the eye something to track moving by */
