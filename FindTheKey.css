@@ -542,9 +542,14 @@ html {
   /* the second resting point of the pair (see trophy-pause.js): pinning
      the trophy's own top here — not .insight--after-trophy's — is what
      puts the trophy at the top of the screen with the second quote
-     following below, mirroring stop 1's text-above/trophy-below order */
+     following below, mirroring stop 1's text-above/trophy-below order.
+     Deliberately NOT the usual 157px (72px header + 85px breathing room)
+     — margin-top is 0 between the first quote and the trophy, so at 157
+     there was enough gap above the trophy for the first quote's tail to
+     still peek in. 80px (just past the 72px header) leaves barely any
+     room above the trophy, so that quote stays fully behind the header. */
   scroll-snap-align: start;
-  scroll-margin-top: 157px;
+  scroll-margin-top: 65px;
 }
 
 .trophy-viewer {
