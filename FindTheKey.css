@@ -723,7 +723,7 @@ html {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 100px;
+  gap: 70px;
   margin-top: 340px;
   margin-bottom: 340px;
   /* registers as a valid mandatory-snap resting point (so the browser
@@ -740,13 +740,13 @@ html {
 .stats__item {
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 7px;
 }
 
 .stats__label-group {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 11px;
 }
 
 .stats__label {
