@@ -71,7 +71,11 @@
   }
 
   async function loadDetail(href) {
-    const res = await fetch(href);
+    // no-store: without it the browser's HTTP cache can serve a stale
+    // copy of the detail page indefinitely, so edits to its content
+    // (photos, text) never show up in the modal even after a hard
+    // refresh of the page this script runs on
+    const res = await fetch(href, { cache: 'no-store' });
     const html = await res.text();
     const doc = new DOMParser().parseFromString(html, 'text/html');
     const detail = doc.querySelector('.detail');
