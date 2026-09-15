@@ -1216,6 +1216,16 @@ html {
   align-items: flex-start;
   gap: 24px;
   margin-bottom: 220px;
+  /* scroll-reveal via scroll-reveal.js (initReveal, called from
+     find-the-key.js) — same opacity+translateY rise as .btd-journey__row */
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.cv-row.is-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .cv-row--reverse {
