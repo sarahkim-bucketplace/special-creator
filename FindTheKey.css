@@ -534,9 +534,13 @@ html {
 .trophy-placeholder {
   /* capped by viewport height (not just width) so it actually fits under
      .insight--key within one screen instead of running off the bottom —
-     150% of the object's base 803/917 size, still bounded by 100% so it
-     never overflows narrower viewports */
-  width: min(100%, 1204.5px, 78vh * 803 / 917);
+     bounded by 100% so it never overflows narrower viewports. (A 150%
+     boost was tried here once, but the 3D object's own scale in
+     trophy.js was later rolled back to its original size without this
+     box being reverted to match — the mismatch left a mostly-empty box
+     tall enough to push .insight--after-trophy below the fold with the
+     trophy itself barely visible. This matches the object's real size.) */
+  width: min(100%, 803px, 52vh * 803 / 917);
   aspect-ratio: 803 / 917;
   margin: 0 auto 0;
   display: flex;
