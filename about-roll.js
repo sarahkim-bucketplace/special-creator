@@ -16,7 +16,7 @@
   // block of empty space below the stage on tall viewports, reading as
   // "stuck near the top" instead of centered
   const HEADER_HEIGHT = 72;
-  const CENTER_BIAS = 10; // px above dead-center, per direct feedback
+  const CENTER_BIAS = 20; // px above dead-center, per direct feedback
   function pinTop() {
     return HEADER_HEIGHT + (window.innerHeight - HEADER_HEIGHT - stage.offsetHeight) / 2 - CENTER_BIAS;
   }
