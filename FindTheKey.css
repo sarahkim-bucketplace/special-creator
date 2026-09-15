@@ -1236,7 +1236,9 @@ html {
 .cv-row__photo {
   flex: 0 0 495px;
   height: 340px;
-  background: #d9d9d9;
+  background-color: #d9d9d9;
+  background-size: cover;
+  background-position: center;
 }
 
 .cv-row__text {
