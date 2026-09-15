@@ -37,6 +37,11 @@
           gift.scrollIntoView({ block: 'start' });
           lockScroll();
           window.setTimeout(unlockScroll, LOCK_MS);
+          // open the first entry as part of arriving here, same as a
+          // real click — reuses btd-gift-toggle.js's own handler rather
+          // than duplicating its open logic
+          const firstRow = document.querySelector('.btd-gift__row');
+          if (firstRow) firstRow.click();
         }
       });
     },
