@@ -527,7 +527,7 @@ html {
      never overflows narrower viewports */
   width: min(100%, 1204.5px, 78vh * 803 / 917);
   aspect-ratio: 803 / 917;
-  margin: 20px auto 0;
+  margin: 0 auto 0;
   display: flex;
   align-items: center;
   justify-content: center;
