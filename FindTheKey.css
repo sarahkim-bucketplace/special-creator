@@ -721,6 +721,13 @@ html {
   margin-right: -50vw;
   margin-top: 200px;
   overflow: hidden;
+  /* resting point for the "logo wall + stats" pair (stats-pause.js) —
+     pinning this instead of .stats itself is what keeps the logos in
+     frame together with the numbers below: .stats has a 340px gap above
+     it, so pinning *it* at a small fixed offset left the logos scrolled
+     off above (same class of issue fixed for the trophy/quote pair) */
+  scroll-snap-align: start;
+  scroll-margin-top: 157px;
 }
 
 .brand-rolling__track {
@@ -767,15 +774,6 @@ html {
   gap: clamp(24px, 5.47vw, 70px);
   margin-top: 340px;
   margin-bottom: 340px;
-  /* registers as a valid mandatory-snap resting point (so the browser
-     doesn't immediately correct away from it once landed) — stats-pause.js
-     is what actually guarantees scrolling *reaches* this point rather than
-     skipping past it on a fast scroll, native snap alone wasn't reliable */
-  scroll-snap-align: start;
-  /* 72px header + 85px, matching the breathing room .hero__title gets
-     below the header on the main section stops (.hero{margin-top:85px})
-     — landing flush at 72px felt jammed against the header */
-  scroll-margin-top: 157px;
 }
 
 .stats__item {
