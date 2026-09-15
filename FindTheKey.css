@@ -1050,8 +1050,7 @@ html {
    grid naturally reflows the remaining entries around it */
 .btd-gift {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0 19px;
+  grid-template-columns: 1fr;
   margin-top: 130px;
   margin-bottom: 340px;
 }
