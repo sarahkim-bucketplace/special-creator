@@ -4,60 +4,67 @@
 // .insight--after-trophy carry scroll-snap-align:start (FindTheKey.css)
 // so they're valid mandatory-snap resting points, but native snap alone
 // wasn't reliable — a fast scroll could carry straight through one before
-// it ever settled into view. Setting overflow:hidden removes the ability
-// to scroll at the layout level, which isn't subject to that race the way
-// preventDefault() on wheel/touchmove events is.
+// it ever settled into view.
+//
+// This does NOT use IntersectionObserver (tried first) — with two stops
+// only ~950px apart, a single fast flick can cross both stops' geometry
+// between the sparse, batched frames IntersectionObserver actually samples
+// on a real trackpad gesture, so the second one's callback simply never
+// fires. Same failure mode already hit and fixed in btd-gift-toggle.js's
+// accordion (see its comment) by recomputing from live scroll position on
+// every 'scroll' event instead of waiting for an edge-triggered crossing —
+// applying that same fix here.
 (function () {
   const LOCK_MS = 600;
+  const REFERENCE_LINE = 300; // generous band — these stops sit close together
 
-  // shared across both watchers below: if .insight--key and
-  // .insight--after-trophy both become intersecting before either lock
-  // has run (a tall/short viewport can have both in view near-simultaneously
-  // on a single fast flick), the second one used to mark itself "handled"
-  // and disconnect without ever actually locking, since scrollIntoView is a
-  // no-op while the first lock's overflow:hidden is still in effect — the
-  // trophy+second-quote stop would silently never fire. Queuing here makes
-  // the second one wait for the first lock to finish, then run its own.
+  const targets = Array.from(document.querySelectorAll('.insight--key, .insight--after-trophy'));
+  if (!targets.length) return;
+
+  const handled = new Set();
   let busy = false;
+  let ticking = false;
 
-  function watch(selector) {
-    const el = document.querySelector(selector);
-    if (!el) return;
-
-    let triggered = false;
-
-    function runLock() {
-      if (busy) {
-        window.setTimeout(runLock, 50);
-        return;
-      }
-      busy = true;
-      el.scrollIntoView({ block: 'start' });
-      document.documentElement.style.overflow = 'hidden';
-      document.body.style.overflow = 'hidden';
-      window.setTimeout(() => {
-        document.documentElement.style.overflow = '';
-        document.body.style.overflow = '';
-        busy = false;
-      }, LOCK_MS);
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !triggered) {
-            triggered = true;
-            observer.disconnect();
-            runLock();
-          }
-        });
-      },
-      { threshold: 0 }
-    );
-
-    observer.observe(el);
+  function lockOnto(el) {
+    busy = true;
+    document.documentElement.style.scrollSnapType = 'none';
+    el.scrollIntoView({ block: 'start' });
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+    window.setTimeout(() => {
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+      document.documentElement.style.scrollSnapType = '';
+      busy = false;
+      // re-check right away in case the next stop is already within range
+      checkTargets();
+    }, LOCK_MS);
   }
 
-  watch('.insight--key');
-  watch('.insight--after-trophy');
+  function checkTargets() {
+    ticking = false;
+    if (busy) return;
+    for (const el of targets) {
+      if (handled.has(el)) continue;
+      const top = el.getBoundingClientRect().top;
+      if (top <= REFERENCE_LINE && top > -window.innerHeight) {
+        handled.add(el);
+        lockOnto(el);
+        return;
+      }
+    }
+  }
+
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(checkTargets);
+    },
+    { passive: true }
+  );
+
+  // in case one is already in range on load (e.g. a mid-page refresh)
+  checkTargets();
 })();
