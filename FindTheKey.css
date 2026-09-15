@@ -1146,6 +1146,11 @@ html {
   font-weight: 400;
   letter-spacing: -0.06px;
   color: #dddddd;
+  /* unlike the other rolling credits, these sit over real product photos
+     whose corners aren't reliably dark — a plain light-gray label
+     disappears against a light background (e.g. gift1-01's white card),
+     so give it a shadow to stay legible regardless of what's behind it */
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
 }
 
 .btd-gift__photo.is-visible {
