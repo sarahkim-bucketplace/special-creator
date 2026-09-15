@@ -848,10 +848,14 @@ html {
   border-top: 1px solid #000000;
   padding-top: 10px;
   padding-bottom: 30px;
+  /* matches Figma's 100px gap between items (node 62:610's flex
+     container), on top of each item's own 30px bottom padding */
+  margin-bottom: 100px;
 }
 
 .btd-journey__item:last-child {
   padding-bottom: 0;
+  margin-bottom: 0;
 }
 
 .btd-journey__row {
