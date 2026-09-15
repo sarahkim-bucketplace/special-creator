@@ -997,7 +997,14 @@ html {
      reason (the coverflow doesn't need resting whitespace to ease in;
      it already has the viewport height below the fold to work with) */
   margin-top: 130px;
-  margin-bottom: 130px;
+  /* the last photo's own box is short (~one photo tall) and transform:
+     scale doesn't shrink the space it occupies in the flow — only how
+     it looks — so with just 130px of margin here, it was still fairly
+     large/opaque (its FALLOFF-based decay wasn't done) right as
+     .btd-middle/.btd-gift began, competing with them for attention and
+     pushing the gift list's rest position around depending on exactly
+     where you stopped. More room lets it finish fading out first. */
+  margin-bottom: 600px;
 }
 
 .btd-gallery__stack-item {
