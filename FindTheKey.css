@@ -1311,6 +1311,107 @@ html {
   max-width: 576px;
 }
 
+/* ---- FAQ (Figma 206:711), between the last CV row and the outro text —
+   same toggle language as the Special Gift accordion (border-top line,
+   row with question + chevron, CSS-only max-height/opacity reveal) since
+   Figma only specified the collapsed state; the answer reveal is this
+   project's existing pattern, not a literal Figma spec ---- */
+.faq {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 130px;
+}
+
+.faq__title {
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.14px;
+  color: #2d2828;
+}
+
+.faq__list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.faq__item {
+  border-top: 1px solid #000000;
+}
+
+.faq__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 4px 8px 0;
+  background: none;
+  border: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  outline: none;
+}
+
+.faq__row:focus-visible {
+  outline: 2px solid #000000;
+  outline-offset: 2px;
+}
+
+.faq__question {
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: -0.08px;
+  color: #000000;
+}
+
+.faq__chevron {
+  width: 21px;
+  height: 21px;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.faq__item.is-open .faq__chevron {
+  transform: rotate(180deg);
+}
+
+.faq__answer {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, opacity 0.3s ease;
+}
+
+.faq__item.is-open .faq__answer {
+  max-height: 300px;
+  opacity: 1;
+  padding-bottom: 20px;
+}
+
+.faq__answer p {
+  font-size: 15px;
+  line-height: 1.6;
+  letter-spacing: -0.08px;
+  color: #6b6b6b;
+  max-width: 800px;
+}
+
+@media (max-width: 900px) {
+  .faq__title {
+    font-size: 22px;
+  }
+  .faq__question {
+    font-size: 14px;
+  }
+  .faq__answer p {
+    font-size: 13px;
+  }
+}
+
 /* ---- outro (Figma 55:2735 "sub-text") + apply CTA ---- */
 .cv-outro {
   font-size: 18px;
