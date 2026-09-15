@@ -802,21 +802,27 @@ html {
 }
 
 .stats__number-value {
-  font-size: 45px;
+  /* bumped from the spec's literal 45px: Pretendard's digit glyphs sit
+     noticeably shorter within their em box than Hangul does at the same
+     font-size (measured ink-height ratio to the label came out ~1.54x
+     instead of the ~1.89x the raw font-size numbers implied), so matching
+     the spec value made the numbers visually read as too small next to
+     the label — this size is tuned to match the *intended* visual ratio */
+  font-size: 55px;
   font-weight: 600;
   letter-spacing: -0.23px;
   color: #2d2828;
 }
 
 .stats__number-suffix {
-  font-size: 37px;
+  font-size: 45px;
   font-weight: 600;
   letter-spacing: -0.23px;
   color: #2d2828;
 }
 
 .stats__number-suffix--plus {
-  font-size: 50px;
+  font-size: 61px;
 }
 
 @media (max-width: 600px) {
