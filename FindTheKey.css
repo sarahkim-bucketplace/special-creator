@@ -990,10 +990,15 @@ html {
    avoids the sticky-recalc performance overhead the pinned version had. */
 .btd-gallery {
   position: relative;
-  margin-top: 56px;
-  /* room for the first/last photo to reach full scale before the
-     section boundary cuts them off */
-  padding: 20vh 0;
+  /* matches the title-to-content gap used elsewhere in this section
+     (.btd-journey, .btd-gift are both 130px) — was 56px margin + 20vh
+     padding-top (~210px total), wider than that convention for no real
+     reason (the coverflow doesn't need resting whitespace to ease in;
+     it already has the viewport height below the fold to work with) */
+  margin-top: 130px;
+  /* still room at the *bottom* for the last photo to fade out before
+     the next section's content starts */
+  padding-bottom: 20vh;
 }
 
 .btd-gallery__stack-item {
