@@ -1028,41 +1028,80 @@ html {
   opacity: var(--dim, 1);
 }
 
-/* ---- Special Gift index (Figma 56:2830) ---- */
+/* ---- Special Gift index (Figma 202:530 collapsed / 203:623 expanded) —
+   a 2-column toggle list; opening an entry (btd-gift-toggle.js) spans
+   it across both columns to show a placeholder photo gallery, and the
+   grid naturally reflows the remaining entries around it */
 .btd-gift {
-  display: flex;
-  gap: 19px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 19px;
   margin-top: 130px;
 }
 
-.btd-gift__col {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding-top: 10px;
+.btd-gift__entry {
   border-top: 1px solid #000000;
 }
 
-.btd-gift__label {
-  font-size: 22px;
-  font-weight: 400;
-  letter-spacing: -0.11px;
-  color: #000000;
+.btd-gift__entry.is-open {
+  grid-column: 1 / -1;
+}
+
+.btd-gift__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 4px 8px 0;
+  background: none;
+  border: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
 }
 
 .btd-gift__item {
   font-size: 16px;
-  font-weight: 400;
+  font-weight: 500;
   letter-spacing: -0.08px;
   color: #000000;
-  padding-top: 8px;
-  border-top: 1px solid #000000;
 }
 
-.btd-gift__item:first-child {
-  border-top: none;
-  padding-top: 0;
+.btd-gift__chevron {
+  width: 21px;
+  height: 21px;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.btd-gift__entry.is-open .btd-gift__chevron {
+  transform: rotate(180deg);
+}
+
+.btd-gift__gallery {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+  padding-bottom: 24px;
+}
+
+.btd-gift__gallery[hidden] {
+  display: none;
+}
+
+.btd-gift__photo {
+  background-color: #d1d2d2;
+}
+
+.btd-gift__photo--lg {
+  grid-column: span 3;
+  aspect-ratio: 590 / 406;
+}
+
+.btd-gift__photo--sm {
+  grid-column: span 2;
+  aspect-ratio: 388 / 406;
 }
 
 @media (max-width: 900px) {
@@ -1078,8 +1117,15 @@ html {
     max-width: 100%;
   }
   .btd-gift {
-    flex-direction: column;
-    gap: 32px;
+    grid-template-columns: 1fr;
+  }
+  .btd-gift__gallery {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .btd-gift__photo--lg,
+  .btd-gift__photo--sm {
+    grid-column: span 1;
+    aspect-ratio: 388 / 406;
   }
 }
 
