@@ -11,8 +11,15 @@
   const items = Array.from(wrapper.querySelectorAll('.about-roll__item'));
   if (!stage || !items.length) return;
 
-  // must match .about-roll__stage's `top` in FindTheKey.css
-  const PIN_TOP = 96;
+  // pin point: vertically centered in the visible viewport below the
+  // fixed 72px header, not a flat top offset — a flat 96px left a big
+  // block of empty space below the stage on tall viewports, reading as
+  // "stuck near the top" instead of centered
+  const HEADER_HEIGHT = 72;
+  const CENTER_BIAS = 10; // px above dead-center, per direct feedback
+  function pinTop() {
+    return HEADER_HEIGHT + (window.innerHeight - HEADER_HEIGHT - stage.offsetHeight) / 2 - CENTER_BIAS;
+  }
 
   const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
 
@@ -53,7 +60,7 @@
     } else {
       // pinned while the wrapper's extra scroll range is being used up
       stage.style.position = 'fixed';
-      stage.style.top = PIN_TOP + 'px';
+      stage.style.top = pinTop() + 'px';
       const progress = clamp(-rect.top / scrollableRange, 0, 1);
       const index = Math.min(items.length - 1, Math.floor(progress * items.length));
       setActive(index);
