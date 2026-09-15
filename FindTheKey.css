@@ -510,9 +510,14 @@ html {
 
 /* the quote after the trophy sits further down than the one before it
    (per Figma: ~117px above the trophy vs. ~160px below it) */
-.trophy-placeholder + .insight {
-  margin-top: 160px;
+.insight--after-trophy {
+  margin-top: 40px;
   margin-bottom: 340px;
+  /* its own resting/snap point, same reasoning as .insight--key above —
+     scrolling past the trophy should bring this quote in close behind it
+     instead of leaving a long empty run before it appears */
+  scroll-snap-align: start;
+  scroll-margin-top: 157px;
 }
 
 .insight strong {
