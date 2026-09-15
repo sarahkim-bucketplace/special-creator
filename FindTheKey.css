@@ -512,7 +512,13 @@ html {
    (per Figma: ~117px above the trophy vs. ~160px below it) */
 .insight--after-trophy {
   margin-top: 40px;
-  margin-bottom: 340px;
+  /* viewport-height-based, not a flat px value: the resting position
+     (scroll-margin-top below) is now reliably reached (trophy-pause.js),
+     so on a tall/short window 340px flat left enough room in the same
+     screen for Opportunities Unlocked's hero to bleed in right below this
+     quote — a vh-based margin scales with the window instead of only
+     covering one screen height */
+  margin-bottom: 70vh;
   /* its own resting/snap point, same reasoning as .insight--key above —
      scrolling past the trophy should bring this quote in close behind it
      instead of leaving a long empty run before it appears */
