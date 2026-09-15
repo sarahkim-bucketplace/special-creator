@@ -1126,13 +1126,26 @@ html {
 }
 
 .btd-gift__photo {
+  position: relative;
   background-color: #d1d2d2;
+  background-size: cover;
+  background-position: center;
   /* staggered per-photo reveal on open, same opacity+translateY pattern as
      the scroll-reveal content above (.insight/.btd-journey__row) — the
      per-item transition-delay is set inline by btd-gift-toggle.js */
   opacity: 0;
   transform: translateY(20px);
   transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.btd-gift__photo-credit {
+  position: absolute;
+  right: 12px;
+  bottom: 10px;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: -0.06px;
+  color: #dddddd;
 }
 
 .btd-gift__photo.is-visible {
