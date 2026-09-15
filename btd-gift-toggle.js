@@ -2,7 +2,13 @@
 // each entry's chevron opens a placeholder photo gallery below it. Toggling
 // .is-open (CSS gives it grid-column:1/-1) is enough to make an open entry
 // span the full width and let the grid reflow the rest around it — no
-// layout math needed here, just show/hide the gallery and flip the class.
+// layout math needed here, just flip the class.
+//
+// The gallery's own show/hide is CSS-only (max-height/opacity transition
+// on .is-open .btd-gift__gallery, see FindTheKey.css) rather than toggling
+// the `hidden` attribute here — hidden's display:none/block swap has no
+// animatable middle state, so opening read as an instant jump-cut instead
+// of an unfold.
 (function () {
   const entries = document.querySelectorAll('.btd-gift__entry');
 
@@ -14,7 +20,6 @@
     row.addEventListener('click', () => {
       const isOpen = entry.classList.toggle('is-open');
       row.setAttribute('aria-expanded', String(isOpen));
-      gallery.hidden = !isOpen;
     });
   });
 })();

@@ -1066,6 +1066,15 @@ html {
   font: inherit;
   text-align: left;
   cursor: pointer;
+  /* a <button>'s default click-focus outline read as an unintended blue
+     box around the row — suppressed for mouse/touch, kept (as a subtler
+     ring) for real keyboard navigation via :focus-visible below */
+  outline: none;
+}
+
+.btd-gift__row:focus-visible {
+  outline: 2px solid #000000;
+  outline-offset: 2px;
 }
 
 .btd-gift__item {
@@ -1090,11 +1099,20 @@ html {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 8px;
-  padding-bottom: 24px;
+  /* collapsed by default: clipped to 0 height and faded out, rather than
+     a hard display:none/block snap, so opening reads as an unfold
+     instead of a jump-cut. max-height is a generous cap (real content is
+     always shorter) since the actual height varies by breakpoint */
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, opacity 0.3s ease;
 }
 
-.btd-gift__gallery[hidden] {
-  display: none;
+.btd-gift__entry.is-open .btd-gift__gallery {
+  max-height: 1600px;
+  opacity: 1;
+  padding-bottom: 24px;
 }
 
 .btd-gift__photo {
