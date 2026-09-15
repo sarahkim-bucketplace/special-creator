@@ -16,21 +16,39 @@
 // scrolled into view) — matches the staggered reveal already used further
 // up the page (.btd-journey__row, .btd-gallery__photo).
 //
-// Exactly one entry is open at a time (accordion), driven by two inputs
-// that share the same openOnly() so they never fight each other: a click
-// on a row, and — as the user scrolls through this section — whichever
-// row is the last one to have crossed a reference line near the top of
-// the viewport. That's recomputed from scratch on every scroll event
-// (not edge/crossing-triggered) specifically so a fast flick that skips
-// several rows in one jump still lands on the right entry — an
-// IntersectionObserver watching a thin band was tried first and missed
-// fast scrolls that jumped clean over the band between sampled frames.
+// Exactly one entry is open at a time (accordion): a click on a row, or —
+// while scrolling through this section — wheel input, both funneled
+// through the same openOnly().
+//
+// Scroll-position recomputation (read current position, pick the entry
+// whose row has crossed a reference line) was tried first and reliably
+// failed: opening one entry collapses/expands a large gallery, which by
+// itself can shove the next couple of rows past the line before the next
+// 'scroll' event is even read, so a real flick — even an ordinary-paced
+// one — could jump straight from entry 1 to entry 4, with 2 and 3 toggled
+// open for less than a frame and never actually seen. Locking briefly
+// after each detected change didn't help either, since the wrong entry
+// (too-far-ahead) had already been detected by the time the lock could
+// engage — the read itself was already wrong, not just unresponded-to.
+//
+// So this takes over wheel input entirely while inside the list: each
+// wheel tick advances or retreats the open entry by exactly one step and
+// applies a small, fixed scroll nudge itself (STEP_SCROLL) rather than
+// letting the browser apply whatever raw (and on a fast flick, large)
+// native delta it wants. At the first entry (scrolling up) or the last
+// (scrolling down) it stops intercepting so normal page scroll continues
+// on into .btd-middle--gift above or Creator Voices below.
 const GIFT_PHOTO_STAGGER_MS = 80;
-const SCROLL_REFERENCE_LINE = 220;
+const STEP_LOCK_MS = 350;
+const STEP_SCROLL = 140;
+const WHEEL_THRESHOLD = 40;
 
 (function () {
   const entryEls = document.querySelectorAll('.btd-gift__entry');
   if (!entryEls.length) return;
+
+  const gift = document.querySelector('.btd-gift');
+  if (!gift) return;
 
   const entries = Array.from(entryEls).map((entry) => {
     const row = entry.querySelector('.btd-gift__row');
@@ -52,6 +70,10 @@ const SCROLL_REFERENCE_LINE = 220;
     entries.forEach((item, i) => setOpen(item, i === idx));
   }
 
+  function currentIdx() {
+    return entries.findIndex((item) => item.entry.classList.contains('is-open'));
+  }
+
   entries.forEach((item, idx) => {
     if (!item.row) return;
     item.row.addEventListener('click', () => {
@@ -60,33 +82,56 @@ const SCROLL_REFERENCE_LINE = 220;
     });
   });
 
-  let lastActive = -1;
-  let ticking = false;
+  let busy = false;
+  let accum = 0;
 
-  function updateActiveByScroll() {
-    ticking = false;
-    // the active entry is the last one (in DOM order) whose row has
-    // already crossed the reference line — recomputed fresh each time,
-    // so it's correct no matter how far a single scroll jump travels
-    let activeIdx = -1;
-    entries.forEach((item, i) => {
-      if (item.row && item.row.getBoundingClientRect().top <= SCROLL_REFERENCE_LINE) {
-        activeIdx = i;
-      }
-    });
-    if (activeIdx !== lastActive) {
-      lastActive = activeIdx;
-      openOnly(activeIdx);
-    }
+  function step(newIdx, dir) {
+    busy = true;
+    accum = 0;
+    openOnly(newIdx);
+    window.scrollBy(0, dir * STEP_SCROLL);
+    window.setTimeout(() => {
+      busy = false;
+    }, STEP_LOCK_MS);
   }
 
+  function nearGift() {
+    const rect = gift.getBoundingClientRect();
+    return rect.bottom > -window.innerHeight && rect.top < window.innerHeight * 2;
+  }
+
+  // none of the individual entries are scroll-snap points (only
+  // .btd-middle--gift above this list is) — on this page's
+  // scroll-snap-type:mandatory html, leaving snap active while inside the
+  // list means every window.scrollBy() step below risks getting corrected
+  // straight back to that snap point once it "settles". Suppressed for as
+  // long as the list is anywhere near view, restored once it isn't.
+  function updateSnapSuppression() {
+    document.documentElement.style.scrollSnapType = nearGift() ? 'none' : '';
+  }
+
+  window.addEventListener('scroll', updateSnapSuppression, { passive: true });
+  updateSnapSuppression();
+
   window.addEventListener(
-    'scroll',
-    () => {
-      if (ticking) return;
-      ticking = true;
-      window.requestAnimationFrame(updateActiveByScroll);
+    'wheel',
+    (e) => {
+      if (!nearGift()) return;
+      const idx = currentIdx();
+      if (e.deltaY > 0 && idx >= entries.length - 1) return; // last entry: release, continue to next section
+      if (e.deltaY < 0 && idx <= 0) return; // first entry (or none open): release, continue back up
+      if (e.deltaY === 0) return;
+
+      e.preventDefault();
+      if (busy) return;
+
+      accum += e.deltaY;
+      if (Math.abs(accum) < WHEEL_THRESHOLD) return;
+
+      const dir = accum > 0 ? 1 : -1;
+      const newIdx = Math.max(0, Math.min(entries.length - 1, idx + dir));
+      step(newIdx, dir);
     },
-    { passive: true }
+    { passive: false }
   );
 })();
