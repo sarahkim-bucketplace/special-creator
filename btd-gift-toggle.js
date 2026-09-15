@@ -19,11 +19,14 @@
 // Exactly one entry is open at a time (accordion), driven by two inputs
 // that share the same openOnly() so they never fight each other: a click
 // on a row, and — as the user scrolls through this section — whichever
-// row is passing through a band near the top of the viewport. That band
-// (see SCROLL_ROOT_MARGIN) is what makes entries open in order and close
-// the one above as you scroll past it, without hardcoding pixel offsets.
+// row is the last one to have crossed a reference line near the top of
+// the viewport. That's recomputed from scratch on every scroll event
+// (not edge/crossing-triggered) specifically so a fast flick that skips
+// several rows in one jump still lands on the right entry — an
+// IntersectionObserver watching a thin band was tried first and missed
+// fast scrolls that jumped clean over the band between sampled frames.
 const GIFT_PHOTO_STAGGER_MS = 80;
-const SCROLL_ROOT_MARGIN = '-20% 0px -75% 0px';
+const SCROLL_REFERENCE_LINE = 220;
 
 (function () {
   const entryEls = document.querySelectorAll('.btd-gift__entry');
@@ -57,20 +60,33 @@ const SCROLL_ROOT_MARGIN = '-20% 0px -75% 0px';
     });
   });
 
-  if (!('IntersectionObserver' in window)) return;
+  let lastActive = -1;
+  let ticking = false;
 
-  const scrollObserver = new IntersectionObserver(
-    (observed) => {
-      observed.forEach((obs) => {
-        if (!obs.isIntersecting) return;
-        const idx = entries.findIndex((item) => item.row === obs.target);
-        if (idx !== -1) openOnly(idx);
-      });
+  function updateActiveByScroll() {
+    ticking = false;
+    // the active entry is the last one (in DOM order) whose row has
+    // already crossed the reference line — recomputed fresh each time,
+    // so it's correct no matter how far a single scroll jump travels
+    let activeIdx = -1;
+    entries.forEach((item, i) => {
+      if (item.row && item.row.getBoundingClientRect().top <= SCROLL_REFERENCE_LINE) {
+        activeIdx = i;
+      }
+    });
+    if (activeIdx !== lastActive) {
+      lastActive = activeIdx;
+      openOnly(activeIdx);
+    }
+  }
+
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(updateActiveByScroll);
     },
-    { rootMargin: SCROLL_ROOT_MARGIN, threshold: 0 }
+    { passive: true }
   );
-
-  entries.forEach((item) => {
-    if (item.row) scrollObserver.observe(item.row);
-  });
 })();
