@@ -434,7 +434,7 @@ html {
   position: absolute;
   right: 20px;
   bottom: 16px;
-  color: #7e7e7e;
+  color: #dddddd;
   font-size: 13px;
   font-weight: 400;
   letter-spacing: -0.07px;
@@ -947,7 +947,7 @@ html {
   font-size: 12px;
   font-weight: 400;
   letter-spacing: -0.06px;
-  color: rgba(255, 255, 255, 0.85);
+  color: #dddddd;
 }
 
 .btd-arrow {
