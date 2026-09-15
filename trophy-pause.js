@@ -10,20 +10,36 @@
 (function () {
   const LOCK_MS = 600;
 
+  // shared across both watchers below: if .insight--key and
+  // .insight--after-trophy both become intersecting before either lock
+  // has run (a tall/short viewport can have both in view near-simultaneously
+  // on a single fast flick), the second one used to mark itself "handled"
+  // and disconnect without ever actually locking, since scrollIntoView is a
+  // no-op while the first lock's overflow:hidden is still in effect — the
+  // trophy+second-quote stop would silently never fire. Queuing here makes
+  // the second one wait for the first lock to finish, then run its own.
+  let busy = false;
+
   function watch(selector) {
     const el = document.querySelector(selector);
     if (!el) return;
 
     let triggered = false;
 
-    function lockScroll() {
+    function runLock() {
+      if (busy) {
+        window.setTimeout(runLock, 50);
+        return;
+      }
+      busy = true;
+      el.scrollIntoView({ block: 'start' });
       document.documentElement.style.overflow = 'hidden';
       document.body.style.overflow = 'hidden';
-    }
-
-    function unlockScroll() {
-      document.documentElement.style.overflow = '';
-      document.body.style.overflow = '';
+      window.setTimeout(() => {
+        document.documentElement.style.overflow = '';
+        document.body.style.overflow = '';
+        busy = false;
+      }, LOCK_MS);
     }
 
     const observer = new IntersectionObserver(
@@ -32,9 +48,7 @@
           if (entry.isIntersecting && !triggered) {
             triggered = true;
             observer.disconnect();
-            el.scrollIntoView({ block: 'start' });
-            lockScroll();
-            window.setTimeout(unlockScroll, LOCK_MS);
+            runLock();
           }
         });
       },
