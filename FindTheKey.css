@@ -1122,6 +1122,7 @@ html {
 .btd-gift__entry.is-open .btd-gift__gallery {
   max-height: 1600px;
   opacity: 1;
+  padding-top: 15px;
   padding-bottom: 24px;
 }
 
