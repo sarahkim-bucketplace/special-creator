@@ -1044,13 +1044,14 @@ html {
   grid-template-columns: 1fr 1fr;
   gap: 0 19px;
   margin-top: 130px;
-  /* this is the LAST content before a top-level scroll-snap section
-     boundary (Creator Voices), not just another inter-part gap — 340px
-     let normal scroll momentum carry straight through it into the next
-     section's hero with no sense of arriving/settling here first. A
-     full viewport of runway gives the scroll room to actually slow
-     down and stop being felt as "this section" before the next begins */
-  margin-bottom: 100vh;
+  margin-bottom: 340px;
+  /* registers as a valid mandatory-snap resting point (so the browser
+     doesn't immediately correct away from it once landed) — btd-gift-pause.js
+     is what actually guarantees scrolling *reaches* this point rather than
+     skipping past it into Creator Voices on a fast scroll, native snap
+     alone wasn't reliable (same issue .stats had, see stats-pause.js) */
+  scroll-snap-align: start;
+  scroll-margin-top: 157px;
 }
 
 .btd-gift__entry {
