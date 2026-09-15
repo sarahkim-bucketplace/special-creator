@@ -962,6 +962,15 @@ html {
   margin-top: 200px;
 }
 
+/* the two .btd-middle blocks share markup/copy styling, but only the one
+   right before .btd-gift ("함께한 시간에 마음을 담아") should be a snap
+   resting point — landing on .btd-gift alone scrolled straight past this
+   title, so the section appeared to jump in already mid-content */
+.btd-middle--gift {
+  scroll-snap-align: start;
+  scroll-margin-top: 157px;
+}
+
 .btd-middle__title {
   font-size: 28px;
   font-weight: 600;
@@ -1045,13 +1054,6 @@ html {
   gap: 0 19px;
   margin-top: 130px;
   margin-bottom: 340px;
-  /* registers as a valid mandatory-snap resting point (so the browser
-     doesn't immediately correct away from it once landed) — btd-gift-pause.js
-     is what actually guarantees scrolling *reaches* this point rather than
-     skipping past it into Creator Voices on a fast scroll, native snap
-     alone wasn't reliable (same issue .stats had, see stats-pause.js) */
-  scroll-snap-align: start;
-  scroll-margin-top: 157px;
 }
 
 .btd-gift__entry {
