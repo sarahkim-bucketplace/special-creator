@@ -954,13 +954,6 @@ html {
   color: #dddddd;
 }
 
-.btd-arrow {
-  display: block;
-  width: 22px;
-  height: 22px;
-  margin: 30px auto 7px;
-}
-
 /* ---- middle-text (Figma 56:2822/56:2823), reused twice ---- */
 .btd-middle {
   display: flex;
