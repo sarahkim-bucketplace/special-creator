@@ -496,7 +496,11 @@ html {
 .insight--key {
   margin-top: 80px;
   scroll-snap-align: start;
-  scroll-margin-top: 157px;
+  /* less than the usual 157px header-only offset — at 157 the about-roll
+     gallery above still had a few px poking out under the (opaque)
+     header on some loads, so this rests a bit further down the page to
+     keep it comfortably clear */
+  scroll-margin-top: 100px;
 }
 
 .insight.is-visible {
@@ -523,7 +527,7 @@ html {
      never overflows narrower viewports */
   width: min(100%, 1204.5px, 78vh * 803 / 917);
   aspect-ratio: 803 / 917;
-  margin: 40px auto 0;
+  margin: 20px auto 0;
   display: flex;
   align-items: center;
   justify-content: center;
