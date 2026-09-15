@@ -24,18 +24,38 @@
   const handled = new Set();
   let busy = false;
   let ticking = false;
+  // native mandatory scroll-snap re-engaging between the two locks (as soon
+  // as the first one releases) is what kept carrying real trackpad
+  // momentum straight past the second stop before its own lock ever got a
+  // chance to grab it — toggling snap off/on per-lock wasn't enough.
+  // Instead: the moment the FIRST of these two targets is seen anywhere
+  // near, snap stays off for this whole quote/trophy/quote stretch, and
+  // only comes back once both stops are done.
+  let snapSuppressed = false;
+
+  function suppressSnap() {
+    if (snapSuppressed) return;
+    snapSuppressed = true;
+    document.documentElement.style.scrollSnapType = 'none';
+  }
+
+  function restoreSnapIfDone() {
+    if (targets.every((el) => handled.has(el))) {
+      document.documentElement.style.scrollSnapType = '';
+      snapSuppressed = false;
+    }
+  }
 
   function lockOnto(el) {
     busy = true;
-    document.documentElement.style.scrollSnapType = 'none';
     el.scrollIntoView({ block: 'start' });
     document.documentElement.style.overflow = 'hidden';
     document.body.style.overflow = 'hidden';
     window.setTimeout(() => {
       document.documentElement.style.overflow = '';
       document.body.style.overflow = '';
-      document.documentElement.style.scrollSnapType = '';
       busy = false;
+      restoreSnapIfDone();
       // re-check right away in case the next stop is already within range
       checkTargets();
     }, LOCK_MS);
@@ -48,9 +68,15 @@
       if (handled.has(el)) continue;
       const top = el.getBoundingClientRect().top;
       if (top <= REFERENCE_LINE && top > -window.innerHeight) {
+        suppressSnap();
         handled.add(el);
         lockOnto(el);
         return;
+      }
+      // approaching (within a couple viewport heights) — kill snap early
+      // so it can't yank past this target before checkTargets next runs
+      if (top <= window.innerHeight * 2) {
+        suppressSnap();
       }
     }
   }
