@@ -201,6 +201,15 @@ body {
   object-fit: cover;
 }
 
+/* the 93 CUPS poster (slide 1) is a portrait image in this landscape
+   box — cover crops its top/bottom heavily, so this shows the whole
+   poster uncropped instead, with the gap filled in the poster's own
+   background color rather than cropping or a mismatched letterbox color */
+.detail__photo-img--contain {
+  object-fit: contain;
+  background-color: #bcad99;
+}
+
 /* placeholder slide deck — drop a real <img> (object-fit: cover, same as
    .detail__photo-img above) into each .detail__photo-slide once photos
    for this case exist, no other markup needs to change */
