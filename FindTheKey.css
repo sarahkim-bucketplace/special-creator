@@ -996,9 +996,7 @@ html {
      reason (the coverflow doesn't need resting whitespace to ease in;
      it already has the viewport height below the fold to work with) */
   margin-top: 130px;
-  /* still room at the *bottom* for the last photo to fade out before
-     the next section's content starts */
-  padding-bottom: 20vh;
+  margin-bottom: 130px;
 }
 
 .btd-gallery__stack-item {
