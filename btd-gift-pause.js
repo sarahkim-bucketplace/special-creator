@@ -1,6 +1,6 @@
 // guarantees the "stop once, then continue" buffer the user asked for,
 // same pattern as stats-pause.js. Anchored on .btd-middle (the "함께한
-// 시간에 마음을 담아" title right above the gift list), not .btd-gift
+// 시간에 마음을 담아" title right above the gift grid), not .btd-gift
 // itself — landing on .btd-gift alone scrolled past that title, so the
 // section read as jumping in already mid-content. .btd-middle carries
 // scroll-snap-align:start (FindTheKey.css) so it's a valid mandatory-snap
@@ -37,11 +37,6 @@
           gift.scrollIntoView({ block: 'start' });
           lockScroll();
           window.setTimeout(unlockScroll, LOCK_MS);
-          // open the first entry as part of arriving here, same as a
-          // real click — reuses btd-gift-toggle.js's own handler rather
-          // than duplicating its open logic
-          const firstRow = document.querySelector('.btd-gift__row');
-          if (firstRow) firstRow.click();
         }
       });
     },

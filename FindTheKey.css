@@ -1084,123 +1084,106 @@ html {
   opacity: var(--dim, 1);
 }
 
-/* ---- Special Gift index (Figma 202:530 collapsed / 203:623 expanded) —
-   a 2-column toggle list; opening an entry (btd-gift-toggle.js) spans
-   it across both columns to show a placeholder photo gallery, and the
-   grid naturally reflows the remaining entries around it */
+/* ---- Special Gift index (Figma 216:572) — a static 2x2 grid of preview
+   cards (replaces the earlier accordion, per updated Figma design). Each
+   card fans 3 thumbnails (only images 01-03 of each gift's set, per
+   direct instruction) into a tilted photo-stack; the gray placeholder
+   boxes in Figma were position reference only, not the intended visual,
+   so the stack's tilt/overlap/shadow follows the brandazine.com/clients
+   reference the user pointed to instead of Figma's flat offset rects */
 .btd-gift {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 39px;
   margin-top: 130px;
   margin-bottom: 340px;
 }
 
-.btd-gift__entry {
-  border-top: 1px solid #000000;
-}
-
-.btd-gift__entry.is-open {
-  grid-column: 1 / -1;
-}
-
-.btd-gift__row {
+.btd-gift__card {
+  background: transparent;
+  padding: 48px 24px 30px;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  width: 100%;
-  padding: 10px 4px 8px 0;
-  background: none;
-  border: none;
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-  /* a <button>'s default click-focus outline read as an unintended blue
-     box around the row — suppressed for mouse/touch, kept (as a subtler
-     ring) for real keyboard navigation via :focus-visible below */
-  outline: none;
 }
 
-.btd-gift__row:focus-visible {
-  outline: 2px solid #000000;
-  outline-offset: 2px;
-}
-
-.btd-gift__item {
-  font-size: 16px;
-  font-weight: 500;
-  letter-spacing: -0.08px;
-  color: #000000;
-}
-
-.btd-gift__chevron {
-  width: 21px;
-  height: 21px;
-  flex-shrink: 0;
-  transition: transform 0.3s ease;
-}
-
-.btd-gift__entry.is-open .btd-gift__chevron {
-  transform: rotate(180deg);
-}
-
-.btd-gift__gallery {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 8px;
-  /* collapsed by default: clipped to 0 height and faded out, rather than
-     a hard display:none/block snap, so opening reads as an unfold
-     instead of a jump-cut. max-height is a generous cap (real content is
-     always shorter) since the actual height varies by breakpoint */
-  max-height: 0;
-  opacity: 0;
-  overflow: hidden;
-  transition: max-height 0.4s ease, opacity 0.3s ease;
-}
-
-.btd-gift__entry.is-open .btd-gift__gallery {
-  max-height: 1600px;
-  opacity: 1;
-  padding-top: 15px;
-  padding-bottom: 30px;
-}
-
-.btd-gift__photo {
+.btd-gift__stack {
   position: relative;
+  width: 100%;
+  height: 390px;
+  flex-shrink: 0;
+}
+
+/* thumbnails sized at 130% of the original fan-stack (224x283 / front
+   248x313 vs the original 172x218 / 190x241) — offsets scale by the same
+   1.3x so the fan's proportions stay the same, just bigger */
+.btd-gift__stack-photo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 224px;
+  height: 283px;
   background-color: #d1d2d2;
   background-size: cover;
   background-position: center;
-  /* staggered per-photo reveal on open, same opacity+translateY pattern as
-     the scroll-reveal content above (.insight/.btd-journey__row) — the
-     per-item transition-delay is set inline by btd-gift-toggle.js */
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
-.btd-gift__photo-credit {
-  position: absolute;
-  right: 12px;
-  bottom: 10px;
-  font-size: 12px;
-  font-weight: 400;
-  letter-spacing: -0.06px;
-  color: #dddddd;
+.btd-gift__stack-photo--left {
+  transform: translate(-50%, -50%) translateX(-83px) rotate(-8deg);
+  z-index: 1;
 }
 
-.btd-gift__photo.is-visible {
-  opacity: 1;
-  transform: translateY(0);
+.btd-gift__stack-photo--right {
+  transform: translate(-50%, -50%) translateX(83px) rotate(8deg);
+  z-index: 1;
 }
 
-.btd-gift__photo--lg {
-  grid-column: span 3;
-  aspect-ratio: 590 / 406;
+.btd-gift__stack-photo--front {
+  width: 248px;
+  height: 313px;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+  z-index: 2;
 }
 
-.btd-gift__photo--sm {
-  grid-column: span 2;
-  aspect-ratio: 388 / 406;
+/* line/title/button block now comes BEFORE the photo stack (Figma
+   216:580) — padding-top is the gap from the card edge down to the
+   line, padding-bottom is the gap from the title/button row down to
+   the photo stack that now follows it */
+.btd-gift__info {
+  width: 100%;
+  padding: 14px 0 30px;
+  border-top: 1px solid #000000;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.btd-gift__title {
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: -0.12px;
+  color: #000000;
+}
+
+.btd-gift__more {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  height: 30px;
+  padding: 0 14px;
+  border-radius: 999px;
+  /* same bg/text color as the header's Apply button (.header__cta) */
+  background: #909182;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.077px;
+  color: #fff;
+  text-decoration: none;
+  white-space: nowrap;
 }
 
 @media (max-width: 900px) {
@@ -1218,14 +1201,6 @@ html {
   .btd-gift {
     grid-template-columns: 1fr;
   }
-  .btd-gift__gallery {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .btd-gift__photo--lg,
-  .btd-gift__photo--sm {
-    grid-column: span 1;
-    aspect-ratio: 388 / 406;
-  }
 }
 
 @media (max-width: 600px) {
@@ -1237,6 +1212,26 @@ html {
   }
   .btd-journey__num {
     font-size: 17px;
+  }
+  .btd-gift__stack {
+    height: 300px;
+  }
+  .btd-gift__stack-photo {
+    width: 172px;
+    height: 218px;
+  }
+  .btd-gift__stack-photo--left {
+    transform: translate(-50%, -50%) translateX(-62px) rotate(-8deg);
+  }
+  .btd-gift__stack-photo--right {
+    transform: translate(-50%, -50%) translateX(62px) rotate(8deg);
+  }
+  .btd-gift__stack-photo--front {
+    width: 190px;
+    height: 240px;
+  }
+  .btd-gift__title {
+    font-size: 20px;
   }
 }
 
