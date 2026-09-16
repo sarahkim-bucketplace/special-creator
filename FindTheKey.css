@@ -355,15 +355,6 @@ html {
   margin-bottom: 20px;
 }
 
-/* find-the-key's hero title is the OHOUSE/SPECIAL CREATOR wordmark lockup
-   instead of plain text (the other pages' .hero__title stays text) */
-.hero__title-logo {
-  display: block;
-  width: 320px;
-  height: auto;
-  margin: 0 auto;
-}
-
 .hero__subtitle {
   font-size: 18px;
   font-weight: 400;
@@ -372,28 +363,103 @@ html {
   color: #2d2828;
 }
 
-/* ---- about-roll: pinned scroll-driven image + caption roll (replaces the
-   old auto-scrolling rolling marquee). .about-roll is a tall spacer; JS
-   (about-roll.js) pins .about-roll__stage in place (fixed, not sticky — see
-   that file's header comment) while the wrapper's extra height scrolls by,
-   swapping which .about-roll__item is visible as it goes ---- */
-.about-roll {
-  position: relative;
-  height: 3200px;
-  margin-top: 99px;
+/* ---- about section (Figma 233:1182) — static photo scrapbook replacing
+   the old pinned-scroll carousel: a standalone heading, one big hero
+   photo with an overlaid caption, a two-column staggered "masonry" pair
+   of photos, a closing heading, then the SC badge leading into the
+   insight quotes ---- */
+/* scroll-reveal (initReveal, find-the-key.js) — same rise+fade as
+   .insight elsewhere on this page. .about-roll gets an opacity-only
+   variant (no transform): about-hero-roll.js toggles position:fixed on
+   its child .about-photo--hero, and ANY transform on an ancestor
+   (including a resting translateY(0)) would create a new containing
+   block for that fixed child, silently breaking the pin */
+.about-heading,
+.about-badge {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
-.about-roll__stage {
+.about-heading.is-visible,
+.about-badge.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* the wrapper, not the inner .about-photo--hero stage — that element gets
+   position:fixed and re-centered in the viewport by about-hero-roll.js
+   once pinned, which fights an IntersectionObserver watching it directly
+   (its viewport position stops tracking scroll normally while pinned, so
+   a delayed-entry rootMargin never gets satisfied). .about-roll itself
+   stays in normal flow throughout, so it behaves predictably */
+.about-roll {
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.about-roll.is-visible {
+  opacity: 1;
+}
+
+.about-heading {
+  font-size: 30px;
+  font-weight: 500;
+  letter-spacing: -0.225px;
+  line-height: 1.6;
+  color: #2f2f2f;
+  text-align: center;
+  margin-top: 140px;
+}
+
+/* the opening line only — centered in the screen at first reveal (scroll-
+   snap rests here), rather than sitting near the top like the other two
+   .about-heading instances further down the page */
+.about-heading--intro {
+  margin-top: 0;
+  min-height: calc(100vh - 140px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.about-photo {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.about-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ---- about-roll: pinned scroll-driven roll of photos in the hero photo
+   slot only (about-hero-roll.js). .about-roll is a tall spacer; the
+   script pins .about-photo--hero in place while the wrapper's extra
+   height scrolls by, swapping which .about-roll__item is visible ---- */
+.about-roll {
+  position: relative;
+  height: 1900px;
+  margin-top: 120px;
+}
+
+.about-photo--hero {
   position: absolute;
   top: 0;
   left: 50%;
   transform: translateX(-50%);
-  /* width computed from viewport units (not %) so it stays identical
-     whether the stage is currently position:absolute (containing block =
-     .about-roll's own box) or position:fixed (containing block = viewport) —
-     a %-based width would silently change size crossing that boundary */
   width: min(1006px, calc(100vw - 70px));
   height: 584px;
+}
+
+.about-photo--hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.49);
 }
 
 .about-roll__item {
@@ -407,77 +473,197 @@ html {
   opacity: 1;
 }
 
-.about-roll__item img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.about-roll__caption {
+.about-photo__caption {
   position: absolute;
   inset: 0;
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 40px;
-  background: rgba(0, 0, 0, 0.25);
   color: #ffffff;
-  font-size: 24px;
+  font-size: 30px;
   font-weight: 500;
-  letter-spacing: -0.12px;
-  line-height: 1.45;
+  letter-spacing: -0.225px;
+  line-height: 1.6;
   text-align: center;
 }
 
-.about-roll__credit {
+.about-photo__credit {
   position: absolute;
   right: 20px;
   bottom: 16px;
+  z-index: 1;
   color: #dddddd;
-  font-size: 13px;
-  font-weight: 400;
+  font-size: 14px;
+  font-weight: 500;
   letter-spacing: -0.07px;
 }
 
+.about-scrapbook {
+  display: flex;
+  gap: 15px;
+  width: min(1220px, calc(100% - 70px));
+  margin: 120px auto 0;
+}
+
+.about-scrapbook__col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+.about-scrapbook__col--offset {
+  margin-top: 155px;
+}
+
+.about-scrapbook .about-photo {
+  width: 100%;
+  aspect-ratio: 597 / 678;
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.about-scrapbook .about-photo.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* the two photos in a pair have a dark tint (lighter than the hero
+   photo's) but no caption text of their own */
+.about-scrapbook .about-photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.about-badge {
+  display: block;
+  width: 120px;
+  height: 120px;
+  margin: 200px auto 0;
+}
+
 @media (max-width: 900px) {
-  .about-roll {
-    height: 2400px;
+  .about-heading {
+    font-size: 26px;
   }
-  .about-roll__stage {
+  .about-roll {
+    height: 1500px;
+  }
+  .about-photo--hero {
     height: 420px;
   }
-  .about-roll__caption {
-    font-size: 19px;
+  .about-photo__caption {
+    font-size: 24px;
     padding: 28px;
+  }
+  .about-scrapbook {
+    flex-direction: column;
+  }
+  .about-scrapbook__col--offset {
+    margin-top: 0;
   }
 }
 
 @media (max-width: 600px) {
-  .about-roll {
-    height: 2000px;
+  .about-heading {
+    font-size: 20px;
   }
-  .about-roll__stage {
-    width: calc(100vw - 40px);
+  .about-roll {
+    height: 1200px;
+  }
+  .about-photo--hero {
     height: 300px;
   }
-  .about-roll__caption {
-    font-size: 16px;
+  .about-photo__caption {
+    font-size: 18px;
     padding: 20px;
   }
-  .about-roll__credit {
+  .about-photo__credit {
     right: 12px;
     bottom: 10px;
     font-size: 11px;
   }
+  .about-badge {
+    width: 90px;
+    height: 90px;
+    margin-top: 100px;
+  }
 }
 
-/* ---- insight quotes flanking the trophy — scroll-reveal via scroll-reveal.js
-   (initReveal, called from find-the-key.js) ---- */
+/* ---- the two "key" quote-photos between the insight quotes — still
+   placeholder gray (no real photo chosen yet), each with a quote
+   fragment overlaid; the second is intentionally wider than the page
+   gutter (full-bleed-ish), matching the Figma layout ---- */
+.about-key-photo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: min(963px, calc(100% - 70px));
+  height: 568px;
+  margin: 120px auto 0;
+  padding: 40px;
+  border-radius: 20px;
+  background: #d9d9d9;
+  color: #2d2828;
+  font-size: 28px;
+  font-weight: 500;
+  letter-spacing: -0.14px;
+  line-height: 1.6;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.about-key-photo.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.about-key-photo--wide {
+  width: min(1335px, calc(100% + 28px));
+  height: 788px;
+  margin-top: 40px;
+}
+
+.about-key-photo strong {
+  font-weight: 700;
+}
+
+@media (max-width: 900px) {
+  .about-key-photo {
+    height: 400px;
+    font-size: 22px;
+  }
+  .about-key-photo--wide {
+    width: min(963px, calc(100% - 70px));
+    height: 400px;
+  }
+}
+
+@media (max-width: 600px) {
+  .about-key-photo {
+    height: 280px;
+    font-size: 18px;
+    padding: 24px;
+  }
+  .about-key-photo--wide {
+    height: 280px;
+  }
+}
+
+/* ---- insight quotes — scroll-reveal via scroll-reveal.js (initReveal,
+   called from find-the-key.js). Sized to match the hero-title treatment
+   per the redesign (Figma 233:1182), up from the old 24px ---- */
 .insight {
-  font-size: 24px;
-  font-weight: 400;
-  letter-spacing: -0.12px;
+  font-size: 36px;
+  font-weight: 500;
+  letter-spacing: -0.18px;
   line-height: 1.6;
   text-align: center;
   margin-top: 230px;
@@ -486,20 +672,11 @@ html {
   transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
-/* the quote right before the trophy: tightened so the quote and the
-   trophy below it can both actually fit on screen together (230px was
-   sized for this quote alone, not for leaving room under it too), and
-   it's the resting/snap point for that "quote + trophy" pair —
-   trophy-pause.js is what guarantees scrolling actually reaches it
-   rather than leaving the trophy half off-screen, same reasoning as
-   .stats/.btd-middle--gift */
+/* first quote, right after the SC badge — still the resting/snap point
+   trophy-pause.js locks onto first (see that file) */
 .insight--key {
-  margin-top: 80px;
+  margin-top: 140px;
   scroll-snap-align: start;
-  /* less than the usual 157px header-only offset — at 157 the about-roll
-     gallery above still had a few px poking out under the (opaque)
-     header on some loads, so this rests a bit further down the page to
-     keep it comfortably clear */
   scroll-margin-top: 100px;
 }
 
@@ -508,48 +685,35 @@ html {
   transform: translateY(0);
 }
 
-/* the quote after the trophy sits further down than the one before it
-   (per Figma: ~117px above the trophy vs. ~160px below it) */
+/* second quote, between the two "key" placeholder photos and the trophy */
 .insight--after-trophy {
-  margin-top: 40px;
-  /* viewport-height-based, not a flat px value: the resting position
-     (scroll-margin-top on .trophy-placeholder below, not this element —
-     see its comment) is now reliably reached (trophy-pause.js), so on a
-     tall/short window 340px flat left enough room in the same screen for
-     Opportunities Unlocked's hero to bleed in right below this quote —
-     a vh-based margin scales with the window instead of only covering
-     one screen height */
-  margin-bottom: 70vh;
+  margin-top: 120px;
 }
 
 .insight strong {
   font-weight: 700;
 }
 
-/* ---- trophy: interactive 3D viewer (trophy.js, drag to rotate) ---- */
+/* ---- trophy: interactive 3D viewer (trophy.js, drag to rotate) — now the
+   last element in the about section, straight after the closing quote ---- */
 .trophy-placeholder {
-  /* capped by viewport height (not just width) so it actually fits under
-     .insight--key within one screen instead of running off the bottom —
-     150% of the object's base 803/917 size, still bounded by 100% so it
-     never overflows narrower viewports */
+  /* capped by viewport height (not just width) so it actually fits on
+     screen — 150% of the object's base 803/917 size, still bounded by
+     100% so it never overflows narrower viewports */
   width: min(100%, 1204.5px, 69vh * 803 / 917);
   aspect-ratio: 803 / 917;
-  margin: 0 auto 0;
+  margin: 140px auto 0;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  /* the second resting point of the pair (see trophy-pause.js): pinning
-     the trophy's own top here — not .insight--after-trophy's — is what
-     puts the trophy at the top of the screen with the second quote
-     following below, mirroring stop 1's text-above/trophy-below order.
-     Deliberately NOT the usual 157px (72px header + 85px breathing room)
-     — margin-top is 0 between the first quote and the trophy, so at 157
-     there was enough gap above the trophy for the first quote's tail to
-     still peek in. 80px (just past the 72px header) leaves barely any
-     room above the trophy, so that quote stays fully behind the header. */
+  /* second resting point of the pair (see trophy-pause.js) */
   scroll-snap-align: start;
   scroll-margin-top: 65px;
+  /* viewport-height-based, not a flat px value, so there's room for
+     Opportunities Unlocked's hero to bleed in right below on any window
+     height (was on .insight--after-trophy before the trophy moved below it) */
+  margin-bottom: 70vh;
 }
 
 .trophy-viewer {
@@ -562,23 +726,8 @@ html {
 }
 
 @media (max-width: 600px) {
-  #find-the-key .hero {
-    margin-top: 80px;
-  }
-  #find-the-key .hero__title {
-    font-size: 26px;
-  }
-  .hero__title-logo {
-    width: 220px;
-  }
-  #find-the-key .hero__subtitle {
-    font-size: 15px;
-  }
-  #find-the-key .hero__subtitle br {
-    display: none;
-  }
   .insight {
-    font-size: 18px;
+    font-size: 22px;
   }
 }
 

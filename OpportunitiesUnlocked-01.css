@@ -236,7 +236,8 @@ body {
   opacity: 1;
 }
 
-/* cycles the photo slides above (detail-photo-carousel.js) */
+/* arrows now do something — the real prev/next PAGE links still live in
+   .detail__nav below; these cycle the photo slides above */
 .detail__arrows {
   position: absolute;
   inset: 0;
@@ -318,6 +319,56 @@ body {
   max-width: 576px;
 }
 
+.detail__nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  max-width: 597px;
+  padding-bottom: 50px;
+  margin-top: 35px;
+}
+
+.detail__nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.detail__nav-line {
+  width: 100%;
+  max-width: 597px;
+  height: 1px;
+  background: #000000;
+}
+
+.detail__nav-link {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  color: #000000;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.07px;
+  text-decoration: underline;
+  white-space: nowrap;
+  opacity: 0.6;
+}
+
+.detail__nav-arrow {
+  width: 17px;
+  height: 17px;
+}
+
+.detail__nav-link--prev .detail__nav-arrow {
+  transform: rotate(90deg);
+}
+
+.detail__nav-link--next .detail__nav-arrow {
+  transform: rotate(-90deg);
+}
+
 @media (max-width: 900px) {
   .detail {
     flex-direction: column;
@@ -335,5 +386,13 @@ body {
   }
   .detail__title {
     font-size: 20px;
+  }
+  .detail__nav {
+    padding-bottom: 32px;
+    margin-top: 24px;
+  }
+  .detail__nav-row {
+    gap: 24px;
+    justify-content: space-between;
   }
 }

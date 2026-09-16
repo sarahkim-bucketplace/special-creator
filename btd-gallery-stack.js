@@ -83,8 +83,8 @@
   let ticking = false;
   function onScroll() {
     // cheap range check (plain arithmetic, no layout read) so this skips
-    // entirely once scrolled well clear of the gallery — see the same
-    // guard in about-roll.js for why that matters for scroll perf
+    // entirely once scrolled well clear of the gallery, instead of calling
+    // getBoundingClientRect() (forces layout) on every scroll event
     if (window.scrollY < rangeTop || window.scrollY > rangeBottom) return;
     if (ticking) return;
     ticking = true;
