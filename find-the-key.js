@@ -12,7 +12,7 @@
   initReveal('.about-heading');
   initReveal('.about-scrapbook .about-photo', { stagger: 100 });
   initReveal('.about-badge');
-  initReveal('.about-key-photo', { stagger: 100 });
+  initReveal('.about-key-photo');
 
   // Creator Voices rows — same rise-in-as-a-block treatment as
   // .btd-journey__row (see BeyondTheDoor.js)

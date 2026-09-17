@@ -653,40 +653,72 @@ html {
   }
 }
 
-/* ---- the two "key" quote-photos between the insight quotes — still
-   placeholder gray (no real photo chosen yet), each with a quote
-   fragment overlaid; the second is intentionally wider than the page
-   gutter (full-bleed-ish), matching the Figma layout ---- */
+/* ---- the "key" quote-photo between the insight quotes — still
+   placeholder gray (no real photo chosen yet). Rests small showing the
+   lead-in line, then about-key-photo-grow.js pins it and grows it to fill
+   the screen while crossfading to the second line, then releases it to
+   scroll away — the same pin-and-grow technique as the hero photo's own
+   fullscreen grow (about-hero-roll.js), just without that one's photo
+   cycling or entering-rise beforehand. .key-photo-roll is the tall
+   spacer (JS-sized) that reserves room for the grow; .about-key-photo is
+   the stage JS repositions within it. ---- */
+.key-photo-roll {
+  position: relative;
+  /* generous, viewport-relative gap — .insight--key above needs to have
+     fully scrolled past before this frame comes into view, or the two
+     read as one crowded screen instead of separate beats */
+  margin-top: 45vh;
+}
+
 .about-key-photo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
   width: min(963px, calc(100% - 70px));
   height: 568px;
-  margin: 120px auto 0;
-  padding: 40px;
   border-radius: 20px;
+  overflow: hidden;
   background: #d9d9d9;
-  color: #2d2828;
+  color: #ffffff;
   font-size: 28px;
   font-weight: 500;
   letter-spacing: -0.14px;
   line-height: 1.6;
   text-align: center;
   opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transition: opacity 0.6s ease;
 }
 
 .about-key-photo.is-visible {
   opacity: 1;
-  transform: translateY(0);
 }
 
-.about-key-photo--wide {
-  width: min(1335px, calc(100% + 28px));
-  height: 788px;
-  margin-top: 40px;
+.about-key-photo__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.about-key-photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.about-key-photo__text {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  opacity: 0;
+  transition: opacity 0.5s ease;
 }
 
 .about-key-photo strong {
@@ -695,23 +727,16 @@ html {
 
 @media (max-width: 900px) {
   .about-key-photo {
-    height: 400px;
     font-size: 22px;
-  }
-  .about-key-photo--wide {
-    width: min(963px, calc(100% - 70px));
-    height: 400px;
   }
 }
 
 @media (max-width: 600px) {
   .about-key-photo {
-    height: 280px;
     font-size: 18px;
-    padding: 24px;
   }
-  .about-key-photo--wide {
-    height: 280px;
+  .about-key-photo__text {
+    padding: 24px;
   }
 }
 
