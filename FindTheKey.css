@@ -369,11 +369,7 @@ html {
    of photos, a closing heading, then the SC badge leading into the
    insight quotes ---- */
 /* scroll-reveal (initReveal, find-the-key.js) — same rise+fade as
-   .insight elsewhere on this page. .about-roll gets an opacity-only
-   variant (no transform): about-hero-roll.js toggles position:fixed on
-   its child .about-photo--hero, and ANY transform on an ancestor
-   (including a resting translateY(0)) would create a new containing
-   block for that fixed child, silently breaking the pin */
+   .insight elsewhere on this page. */
 .about-heading,
 .about-badge {
   opacity: 0;
@@ -387,19 +383,44 @@ html {
   transform: translateY(0);
 }
 
-/* the wrapper, not the inner .about-photo--hero stage — that element gets
-   position:fixed and re-centered in the viewport by about-hero-roll.js
-   once pinned, which fights an IntersectionObserver watching it directly
-   (its viewport position stops tracking scroll normally while pinned, so
-   a delayed-entry rootMargin never gets satisfied). .about-roll itself
-   stays in normal flow throughout, so it behaves predictably */
-.about-roll {
-  opacity: 0;
-  transition: opacity 0.6s ease;
+/* the heading right after the hero photo roll additionally blurs in as it
+   settles (toss.im's own direction for this kind of reveal, unlike
+   .about-heading--intro above which is deliberately reversed) — same
+   is-visible toggle from initReveal, just with filter layered on top */
+.about-heading--blur-in {
+  filter: blur(10px);
+  transition: opacity 0.6s ease, transform 0.6s ease, filter 0.6s ease;
 }
 
-.about-roll.is-visible {
-  opacity: 1;
+/* compound selector so this outranks the base .about-heading rule further
+   down regardless of source order (that rule also sets font-size/weight) */
+.about-heading.about-heading--blur-in {
+  font-size: 38px;
+  font-weight: 600;
+  /* a plain single line only sits near vertical-center for an instant as
+     it scrolls past — widening its own box to most of the viewport height
+     and centering the line within it gives a much longer, more reliably
+     "centered on screen" window while scrolling through this heading */
+  margin-top: 0;
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.about-heading--blur-in.is-visible {
+  filter: blur(0px);
+}
+
+/* .about-roll's opacity/rise is NOT a class-toggled CSS transition like the
+   above — about-hero-roll.js drives wrapper.style.opacity directly, every
+   scroll frame, in lockstep with the same progress value that animates the
+   hero photo's translateY as it rises to cover .about-heading--intro. A
+   time-based CSS transition would drift out of sync with scroll speed and
+   could leave a blank gap between the heading disappearing and the photo
+   fading in on a fast scroll */
+.about-roll {
+  opacity: 0;
 }
 
 .about-heading {
@@ -409,7 +430,18 @@ html {
   line-height: 1.6;
   color: #2f2f2f;
   text-align: center;
-  margin-top: 140px;
+  margin-top: 230px;
+}
+
+/* resting point for the logo motion pair (about-badge-pause.js) — pinned
+   on this heading, not .about-badge itself, so the heading and the badge
+   land in frame together: .about-badge has a 170px gap above it, so
+   pinning *it* at a small fixed offset left the heading scrolled off
+   above (same class of issue fixed for the brand-rolling/stats pair in
+   stats-pause.js) */
+.about-heading--before-badge {
+  scroll-snap-align: start;
+  scroll-margin-top: 130px;
 }
 
 /* the opening line only — centered in the screen at first reveal (scroll-
@@ -421,6 +453,8 @@ html {
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 38px;
+  font-weight: 600;
 }
 
 .about-photo {
@@ -482,11 +516,20 @@ html {
   justify-content: center;
   padding: 40px;
   color: #ffffff;
-  font-size: 30px;
-  font-weight: 500;
+  font-size: 38px;
+  font-weight: 600;
   letter-spacing: -0.225px;
   line-height: 1.6;
   text-align: center;
+  /* hidden until about-hero-roll.js reveals it on the 4th rolling photo;
+     during the grow-to-fullscreen exit it's faded out again via an inline
+     opacity override (higher specificity than this class either way) */
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.about-photo__caption.is-visible {
+  opacity: 1;
 }
 
 .about-photo__credit {
@@ -504,7 +547,7 @@ html {
   display: flex;
   gap: 15px;
   width: min(1220px, calc(100% - 70px));
-  margin: 120px auto 0;
+  margin: 150px auto 0;
 }
 
 .about-scrapbook__col {
@@ -544,12 +587,23 @@ html {
   display: block;
   width: 350px;
   height: 350px;
-  margin: 200px auto 0;
+  margin: 135px auto 0;
+  /* second resting point of the quote/trophy pair (trophy-pause.js) —
+     pinned here, not .insight--key itself, so the logo and the first
+     quote land in frame together (same fix as about-badge-pause.js: the
+     quote has a 140px gap above it, so pinning *it* scrolled the badge
+     off above) */
+  scroll-snap-align: start;
+  scroll-margin-top: 130px;
 }
 
 @media (max-width: 900px) {
   .about-heading {
     font-size: 26px;
+  }
+  .about-heading--intro,
+  .about-heading.about-heading--blur-in {
+    font-size: 33px;
   }
   .about-roll {
     height: 1500px;
@@ -558,7 +612,7 @@ html {
     height: 420px;
   }
   .about-photo__caption {
-    font-size: 24px;
+    font-size: 33px;
     padding: 28px;
   }
   .about-scrapbook {
@@ -573,6 +627,10 @@ html {
   .about-heading {
     font-size: 20px;
   }
+  .about-heading--intro,
+  .about-heading.about-heading--blur-in {
+    font-size: 25px;
+  }
   .about-roll {
     height: 1200px;
   }
@@ -580,7 +638,7 @@ html {
     height: 300px;
   }
   .about-photo__caption {
-    font-size: 18px;
+    font-size: 25px;
     padding: 20px;
   }
   .about-photo__credit {
@@ -591,7 +649,7 @@ html {
   .about-badge {
     width: 263px;
     height: 263px;
-    margin-top: 100px;
+    margin-top: 80px;
   }
 }
 
@@ -672,13 +730,9 @@ html {
   transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
-/* first quote, right after the SC badge — still the resting/snap point
-   trophy-pause.js locks onto first (see that file) */
 .insight--key {
   font-size: 30px;
   margin-top: 140px;
-  scroll-snap-align: start;
-  scroll-margin-top: 100px;
 }
 
 .insight.is-visible {
