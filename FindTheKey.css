@@ -664,10 +664,10 @@ html {
    the stage JS repositions within it. ---- */
 .key-photo-roll {
   position: relative;
-  /* generous, viewport-relative gap — .insight--key above needs to have
-     fully scrolled past before this frame comes into view, or the two
-     read as one crowded screen instead of separate beats */
-  margin-top: 45vh;
+  /* viewport-relative gap — .insight--key above needs to have scrolled
+     mostly past before this frame comes into view, or the two read as
+     one crowded screen instead of separate beats */
+  margin-top: 30vh;
 }
 
 .about-key-photo {
