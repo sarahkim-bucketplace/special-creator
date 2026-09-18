@@ -765,9 +765,22 @@ html {
   transform: translateY(0);
 }
 
-/* second quote, between the two "key" placeholder photos and the trophy */
+/* second quote, between the two "key" placeholder photos and the trophy.
+   Needs its own scroll-snap-align, unlike the plain .insight base — every
+   other pause-script target on this page (about-heading--before-badge,
+   about-badge, trophy-placeholder, brand-rolling) is a real native snap
+   point, and this was the one exception. Without it, mandatory snap has
+   nothing of its own to grab in this whole stretch and either flings
+   straight past this quote to .trophy-placeholder's snap point ahead or
+   stalls short of it, bypassing insight-after-trophy-pause.js's own
+   centering before that script ever gets a chance to react. The
+   scroll-margin-top here is just a reasonable static approximation of
+   center for snap to land near — the pause script still does the exact
+   centering on top of it */
 .insight--after-trophy {
   margin-top: 120px;
+  scroll-snap-align: start;
+  scroll-margin-top: 350px;
 }
 
 .insight strong {
@@ -778,11 +791,17 @@ html {
    last element in the about section, straight after the closing quote ---- */
 .trophy-placeholder {
   /* capped by viewport height (not just width) so it actually fits on
-     screen — 150% of the object's base 803/917 size, still bounded by
-     100% so it never overflows narrower viewports */
-  width: min(100%, 1204.5px, 69vh * 803 / 917);
+     screen — 180% of the object's base 803/917 size (150% * 1.2), still
+     bounded by 100% so it never overflows narrower viewports */
+  width: min(100%, 1445.4px, 82.8vh * 803 / 917);
   aspect-ratio: 803 / 917;
-  margin: 140px auto 0;
+  /* viewport-relative, not a flat px value — the closing quote right
+     above this now pauses centered on screen (insight-after-trophy-pause.js),
+     and a flat 140px gap let the trophy's top edge peek in at the bottom
+     of that paused frame. This keeps the trophy fully below the fold
+     while paused, regardless of viewport height, and only brings it up
+     once the user scrolls again */
+  margin: 60vh auto 0;
   display: flex;
   align-items: center;
   justify-content: center;

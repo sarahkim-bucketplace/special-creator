@@ -50,6 +50,7 @@
   function growRange() {
     return window.innerHeight * 1.1;
   }
+  const MAX_GROW_BLUR = 20; // matches about-hero-roll.js's own dissolve blur
   function settleRange() {
     // same "just enough, plus a small buffer" geometry as
     // about-hero-roll.js's settleRange — guarantees the grown frame fully
@@ -96,6 +97,7 @@
       stage.style.width = restingWidth() + 'px';
       stage.style.height = restingHeight() + 'px';
       stage.style.borderRadius = '20px';
+      stage.style.filter = '';
       stage.style.zIndex = '';
       text1.style.opacity = '0';
       text2.style.opacity = '0';
@@ -103,25 +105,37 @@
     } else {
       const d = centerLine() - rect.top;
       if (d < growRange()) {
-        const growT = easeInOutCubic(clamp(d / growRange(), 0, 1));
+        // rawT (0-1) covers the whole grow+hold+dissolve sequence, but the
+        // *size* only grows across its first half (sizeT) — freeing up the
+        // second half as a genuine sharp, still hold before the dissolve
+        // even starts, so text 2 stays clearly readable for longer, and
+        // the blur itself ramps across a wider (slower) stretch than before
+        const rawT = clamp(d / growRange(), 0, 1);
+        const sizeT = easeInOutCubic(clamp(rawT / 0.5, 0, 1));
         const fromWidth = restingWidth();
         const fromHeight = restingHeight();
         const fromLeft = (window.innerWidth - fromWidth) / 2;
         stage.style.position = 'fixed';
-        stage.style.top = lerp(centerLine(), 0, growT) + 'px';
-        stage.style.left = lerp(fromLeft, 0, growT) + 'px';
-        stage.style.width = lerp(fromWidth, window.innerWidth, growT) + 'px';
-        stage.style.height = lerp(fromHeight, window.innerHeight, growT) + 'px';
+        stage.style.top = lerp(centerLine(), 0, sizeT) + 'px';
+        stage.style.left = lerp(fromLeft, 0, sizeT) + 'px';
+        stage.style.width = lerp(fromWidth, window.innerWidth, sizeT) + 'px';
+        stage.style.height = lerp(fromHeight, window.innerHeight, sizeT) + 'px';
         stage.style.transform = 'none';
-        stage.style.borderRadius = lerp(20, 0, growT) + 'px';
+        stage.style.borderRadius = lerp(20, 0, sizeT) + 'px';
         stage.style.zIndex = '';
-        // text 1 is already fully visible at growT=0 (the paused spot);
-        // crossfade to text 2 across the middle of the grow, not the
-        // whole span — reads as "the image changes" mid-motion rather
-        // than a slow dissolve
-        const textT = clamp((growT - 0.3) / 0.4, 0, 1);
+        // text 1 is already fully visible at rawT=0 (the paused spot);
+        // crossfade to text 2 early, well before the size finishes growing
+        const textT = clamp((rawT - 0.2) / 0.2, 0, 1);
+        // sharp hold from rawT 0.4 to 0.75 (fullscreen since sizeT=1 by
+        // 0.5), then blurs out across a wide 0.75-1 stretch, dissolving
+        // into whatever scrolls up next — same idea as
+        // about-hero-roll.js's own fullscreen dissolve, just slower. text 2
+        // fades out together with the blur instead of sitting there
+        // readable-but-blurred
+        const blurT = clamp((rawT - 0.75) / 0.25, 0, 1);
         text1.style.opacity = String(1 - textT);
-        text2.style.opacity = String(textT);
+        text2.style.opacity = String(textT * (1 - blurT));
+        stage.style.filter = `blur(${blurT * MAX_GROW_BLUR}px)`;
         lastZone = 'during';
       } else {
         stage.style.position = 'absolute';
@@ -137,13 +151,14 @@
         stage.style.height = window.innerHeight + 'px';
         stage.style.transform = 'none';
         stage.style.borderRadius = '0px';
+        stage.style.filter = `blur(${MAX_GROW_BLUR}px)`;
         // position:absolute is still a *positioned* element, so on its own
         // it would keep painting above the next (non-positioned) quote
         // even once scrolled past it — a negative z-index drops it behind
         // normal-flow content instead (same fix as about-hero-roll.js)
         stage.style.zIndex = '-1';
         text1.style.opacity = '0';
-        text2.style.opacity = '1';
+        text2.style.opacity = '0';
         lastZone = 'after';
       }
     }
