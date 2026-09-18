@@ -86,20 +86,61 @@ if (container) {
   // coords around the origin (the object is re-centered on load below)
   // preserving the original framing's distance and elevation
   const radius = Math.hypot(0, 0.4, 4.2);
-  const baseTheta = THREE.MathUtils.degToRad(-18);
-  const basePhi = Math.acos(0.4 / radius);
+  // "base" (home) orientation — reassigned once the user drags, so the
+  // hover-follow and the leave-reset below continue from wherever they
+  // left it instead of snapping back to the original angle every time
+  let baseTheta = THREE.MathUtils.degToRad(-18);
+  let basePhi = Math.acos(0.4 / radius);
   const maxThetaSwing = THREE.MathUtils.degToRad(55);
   const maxPhiSwing = THREE.MathUtils.degToRad(18);
+  // how close to straight up/down a drag can tip it before it'd flip
+  // through the pole — full swings still cover well past a 3/4 view
+  const PHI_LIMIT = THREE.MathUtils.degToRad(10);
 
   let targetTheta = baseTheta;
   let targetPhi = basePhi;
   let theta = baseTheta;
   let phi = basePhi;
 
-  // scoped to the viewer itself (not the whole window) — otherwise the
-  // object visibly turns in response to cursor movement happening nowhere
-  // near it, which reads as random rather than responsive
+  // click-and-drag free rotation, same trophy the hover-follow below
+  // already nudges — drag takes over entirely while active (unclamped
+  // theta so a full spin is possible, phi clamped just enough to avoid
+  // flipping over the pole), and pointer capture keeps the drag going
+  // even if the cursor slips outside the small viewer bounds mid-drag
+  let isDragging = false;
+  let dragStartX = 0;
+  let dragStartY = 0;
+  let dragStartTheta = baseTheta;
+  let dragStartPhi = basePhi;
+  const DRAG_SENSITIVITY = 0.012; // radians per pixel dragged
+
+  container.addEventListener('pointerdown', (e) => {
+    isDragging = true;
+    dragStartX = e.clientX;
+    dragStartY = e.clientY;
+    dragStartTheta = targetTheta;
+    dragStartPhi = targetPhi;
+    container.classList.add('is-dragging');
+    container.setPointerCapture(e.pointerId);
+  });
+
+  // scoped to the viewer itself (not the whole window) for the passive
+  // hover-follow — otherwise the object visibly turns in response to
+  // cursor movement happening nowhere near it, which reads as random
+  // rather than responsive. While dragging, pointer capture means these
+  // events keep firing on the container even past its own edges.
   container.addEventListener('pointermove', (e) => {
+    if (isDragging) {
+      const dx = e.clientX - dragStartX;
+      const dy = e.clientY - dragStartY;
+      targetTheta = dragStartTheta + dx * DRAG_SENSITIVITY;
+      targetPhi = THREE.MathUtils.clamp(
+        dragStartPhi - dy * DRAG_SENSITIVITY,
+        PHI_LIMIT,
+        Math.PI - PHI_LIMIT
+      );
+      return;
+    }
     const rect = container.getBoundingClientRect();
     const nx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
     const ny = ((e.clientY - rect.top) / rect.height) * 2 - 1;
@@ -107,7 +148,23 @@ if (container) {
     targetPhi = basePhi - THREE.MathUtils.clamp(ny, -1, 1) * maxPhiSwing;
   });
 
+  function endDrag(e) {
+    if (!isDragging) return;
+    isDragging = false;
+    container.classList.remove('is-dragging');
+    if (container.hasPointerCapture(e.pointerId)) {
+      container.releasePointerCapture(e.pointerId);
+    }
+    // wherever the drag left it becomes the new "home" orientation
+    baseTheta = targetTheta;
+    basePhi = targetPhi;
+  }
+
+  container.addEventListener('pointerup', endDrag);
+  container.addEventListener('pointercancel', endDrag);
+
   container.addEventListener('pointerleave', () => {
+    if (isDragging) return; // pointer capture keeps the drag itself going
     targetTheta = baseTheta;
     targetPhi = basePhi;
   });
