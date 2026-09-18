@@ -86,11 +86,10 @@ if (container) {
   // coords around the origin (the object is re-centered on load below)
   // preserving the original framing's distance and elevation
   const radius = Math.hypot(0, 0.4, 4.2);
-  // "base" (home) orientation — reassigned once the user drags, so the
-  // hover-follow and the leave-reset below continue from wherever they
-  // left it instead of snapping back to the original angle every time
-  let baseTheta = THREE.MathUtils.degToRad(-18);
-  let basePhi = Math.acos(0.4 / radius);
+  // "base" (home) orientation — fixed. A drag springs it back here the
+  // moment the pointer lifts, rather than leaving it wherever it was let go
+  const baseTheta = THREE.MathUtils.degToRad(-18);
+  const basePhi = Math.acos(0.4 / radius);
   const maxThetaSwing = THREE.MathUtils.degToRad(55);
   const maxPhiSwing = THREE.MathUtils.degToRad(18);
   // how close to straight up/down a drag can tip it before it'd flip
@@ -155,9 +154,9 @@ if (container) {
     if (container.hasPointerCapture(e.pointerId)) {
       container.releasePointerCapture(e.pointerId);
     }
-    // wherever the drag left it becomes the new "home" orientation
-    baseTheta = targetTheta;
-    basePhi = targetPhi;
+    // spring back to the original angle the instant the pointer lifts
+    targetTheta = baseTheta;
+    targetPhi = basePhi;
   }
 
   container.addEventListener('pointerup', endDrag);
