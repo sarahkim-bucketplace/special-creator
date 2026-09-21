@@ -122,7 +122,16 @@ html {
   position: relative;
   max-width: 1280px;
   margin: 0 auto;
-  padding: 35px 35px 400px;
+  padding: 35px 35px 0;
+}
+
+/* the page's bottom breathing room lives INSIDE the last section, not on
+   .page: with mandatory scroll-snap, the last section's snap area ends at
+   its own bottom edge, so anything below it (the old 400px .page padding)
+   was unreachable — scrolling stopped with the apply button flush against
+   the bottom of the window */
+#creator-voices {
+  padding-bottom: 400px;
 }
 
 /* opaque backdrop band behind the header (blocks scrolled content), built
@@ -219,7 +228,7 @@ html {
 }
 
 .header__link--off {
-  color: #7e7e7e;
+  color: #7b7b7b;
 }
 
 /* CTA pill button (Figma node 48:952 "Open Your Door") */
@@ -429,7 +438,7 @@ html {
   font-weight: 500;
   letter-spacing: -0.15px;
   line-height: 1.6;
-  color: #2f2f2f;
+  color: #2d2828;
   text-align: center;
   margin-top: 230px;
 }
@@ -813,10 +822,11 @@ html {
   /* second resting point of the pair (see trophy-pause.js) */
   scroll-snap-align: start;
   scroll-margin-top: 65px;
-  /* viewport-height-based, not a flat px value, so there's room for
-     Opportunities Unlocked's hero to bleed in right below on any window
-     height (was on .insight--after-trophy before the trophy moved below it) */
-  margin-bottom: 70vh;
+  /* the site-wide 340px section gap. The trophy's own top is pinned 65px from
+     the viewport top at its resting stop and it is only ~83vh tall, so the
+     next section's hero is still well below the fold there on any window
+     height (was 70vh, which left far more empty space than that needed) */
+  margin-bottom: 340px;
 }
 
 .trophy-viewer {
@@ -977,7 +987,7 @@ html {
   right: 50%;
   margin-left: -50vw;
   margin-right: -50vw;
-  margin-top: 200px;
+  margin-top: 340px;
   overflow: hidden;
   /* resting point for the "logo wall + stats" pair (stats-pause.js) —
      pinning this instead of .stats itself is what keeps the logos in
@@ -985,7 +995,10 @@ html {
      it, so pinning *it* at a small fixed offset left the logos scrolled
      off above (same class of issue fixed for the trophy/quote pair) */
   scroll-snap-align: start;
-  scroll-margin-top: 157px;
+  /* pinned closer to the header than before (was 157px) so the 250px gap to
+     the stats title below fits: logos + title + numbers must all land in one
+     screen with the down-hint arrow still clear of the numbers */
+  scroll-margin-top: 105px;
 }
 
 .brand-rolling__track {
@@ -1139,7 +1152,9 @@ html {
    ========================================================================== */
 /* ---- journey list (Figma 28:1004), 5 numbered steps ---- */
 .btd-journey {
-  margin-top: 130px;
+  /* main-title-to-content gap, same 220px as Opportunities' cards and
+     Creator Voices' first row */
+  margin-top: 220px;
 }
 
 .btd-journey__item {
@@ -1182,7 +1197,7 @@ html {
   font-size: 22px;
   font-weight: 600;
   letter-spacing: -0.11px;
-  color: #000000;
+  color: #2d2828;
 }
 
 .btd-journey__desc {
@@ -1190,7 +1205,7 @@ html {
   font-weight: 400;
   letter-spacing: -0.08px;
   line-height: 1.45;
-  color: #000000;
+  color: #2d2828;
   padding-left: 6px;
 }
 
@@ -1257,7 +1272,7 @@ html {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  margin-top: 200px;
+  margin-top: 340px;
 }
 
 /* the two .btd-middle blocks share markup/copy styling, but only the one
@@ -1289,6 +1304,13 @@ html {
    other two, but its one-line body is longer than the 560px cap, and the
    stats row below it takes the standard 130px title-to-content gap instead
    of its own 340px section gap */
+.stats-intro {
+  /* exception to the 340px section gap: this block shares one screen with the
+     logo wall above and the numbers below (stats-pause.js pins the logos at
+     105px, see .brand-rolling) — 340px here pushes the numbers off the screen */
+  margin-top: 250px;
+}
+
 .stats-intro .btd-middle__desc {
   max-width: none;
 }
@@ -1365,7 +1387,11 @@ html {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 39px;
-  margin-top: 130px;
+  /* the top rule of each card sits 48px inside the card (its padding-top),
+     so 130px - 48px would put that visible rule the standard 130px below the
+     "함께한 시간에 마음을 담아" text above; a further 20px is trimmed per
+     direct request, so the rule lands 110px below it */
+  margin-top: 62px;
   margin-bottom: 340px;
 }
 
@@ -1435,7 +1461,7 @@ html {
   font-size: 22px;
   font-weight: 500;
   letter-spacing: -0.11px;
-  color: #000000;
+  color: #2d2828;
 }
 
 .btd-gift__more {
@@ -1566,14 +1592,14 @@ html {
   font-size: 22px;
   font-weight: 600;
   letter-spacing: -0.11px;
-  color: #000000;
+  color: #2d2828;
 }
 
 .cv-row__title-author {
   font-size: 14px;
   font-weight: 500;
   letter-spacing: -0.07px;
-  color: #838383;
+  color: #7b7b7b;
 }
 
 .cv-row__body {
@@ -1581,7 +1607,7 @@ html {
   font-weight: 400;
   letter-spacing: -0.08px;
   line-height: 1.45;
-  color: #000000;
+  color: #2d2828;
   max-width: 576px;
 }
 
@@ -1593,7 +1619,8 @@ html {
 .faq {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  /* subtitle-to-content gap, same 130px as the other .btd-middle titles */
+  gap: 130px;
   margin-bottom: 130px;
 }
 
@@ -1639,7 +1666,7 @@ html {
   font-size: 16px;
   font-weight: 500;
   letter-spacing: -0.08px;
-  color: #000000;
+  color: #2d2828;
 }
 
 .faq__chevron {
@@ -1670,7 +1697,7 @@ html {
   font-size: 16px;
   line-height: 1.6;
   letter-spacing: -0.08px;
-  color: #6b6b6b;
+  color: #7b7b7b;
   max-width: 800px;
 }
 

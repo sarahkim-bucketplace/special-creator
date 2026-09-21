@@ -14,7 +14,7 @@ body {
   position: relative;
   background: #ffffff;
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
-  color: #000000;
+  color: #2d2828;
   /* fixed header (105px) takes no space in normal flow — this compensates
      so content doesn't start out hidden underneath it */
   padding-top: 105px;

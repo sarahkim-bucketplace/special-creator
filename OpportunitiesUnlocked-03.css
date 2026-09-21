@@ -14,7 +14,7 @@ body {
   position: relative;
   background: #ffffff;
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
-  color: #000000;
+  color: #2d2828;
 }
 
 /* ---- header (same component/behavior as the other pages) ---- */
@@ -291,14 +291,14 @@ body {
   font-size: 14px;
   font-weight: 500;
   letter-spacing: -0.07px;
-  color: #5d5d5d;
+  color: #7b7b7b;
 }
 
 .detail__title {
   font-size: 22px;
   font-weight: 600;
   letter-spacing: -0.11px;
-  color: #000000;
+  color: #2d2828;
 }
 
 .detail__body {
@@ -306,7 +306,7 @@ body {
   font-weight: 400;
   letter-spacing: -0.08px;
   line-height: 1.45;
-  color: #000000;
+  color: #2d2828;
   max-width: 576px;
 }
 
@@ -338,7 +338,7 @@ body {
   display: flex;
   align-items: center;
   gap: 3px;
-  color: #000000;
+  color: #2d2828;
   font-size: 14px;
   font-weight: 500;
   letter-spacing: -0.07px;

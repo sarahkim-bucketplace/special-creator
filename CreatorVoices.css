@@ -305,14 +305,14 @@ body {
   font-size: 22px;
   font-weight: 600;
   letter-spacing: -0.11px;
-  color: #000000;
+  color: #2d2828;
 }
 
 .cv-row__title-author {
   font-size: 14px;
   font-weight: 500;
   letter-spacing: -0.07px;
-  color: #838383;
+  color: #7b7b7b;
 }
 
 .cv-row__body {
@@ -320,7 +320,7 @@ body {
   font-weight: 400;
   letter-spacing: -0.08px;
   line-height: 1.45;
-  color: #000000;
+  color: #2d2828;
   max-width: 576px;
 }
 

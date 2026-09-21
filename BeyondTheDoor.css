@@ -303,7 +303,7 @@ body {
   font-size: 22px;
   font-weight: 600;
   letter-spacing: -0.11px;
-  color: #000000;
+  color: #2d2828;
 }
 
 .btd-journey__desc {
@@ -311,7 +311,7 @@ body {
   font-weight: 400;
   letter-spacing: -0.08px;
   line-height: 1.45;
-  color: #000000;
+  color: #2d2828;
   padding-left: 6px;
 }
 
@@ -422,14 +422,14 @@ body {
   font-size: 22px;
   font-weight: 400;
   letter-spacing: -0.11px;
-  color: #000000;
+  color: #2d2828;
 }
 
 .btd-gift__item {
   font-size: 16px;
   font-weight: 400;
   letter-spacing: -0.08px;
-  color: #000000;
+  color: #2d2828;
   padding-top: 8px;
   border-top: 1px solid #000000;
 }
