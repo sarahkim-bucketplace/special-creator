@@ -1329,11 +1329,12 @@ body.is-fullframe-hero .down-hint img {
 }
 
 /* the middle-text blocks no longer carry a title: the body line IS the subtitle now —
-   centered, at the subtitle size (30px / 500, same as the About headings and quotes) */
+   centered, 27px / 500 (the statement-block size shared with .cv-outro; a deliberate
+   off-scale size per direct request — the About headings/quotes stay at 30px) */
 .btd-middle__desc {
-  font-size: 30px;
+  font-size: 27px;
   font-weight: 500;
-  letter-spacing: -0.15px;
+  letter-spacing: -0.135px;
   line-height: 1.6;
   color: #2d2828;
   max-width: none;
@@ -1346,17 +1347,17 @@ body.is-fullframe-hero .down-hint img {
 .stats-intro {
   margin-top: 250px;
   /* resting point for the statement + numbers pair (stats-pause.js): the whole block
-     (statement 96 + gap 150 + numbers 108 = 354px) is centered in the area under the
+     (statement 86 + gap 160 + numbers 108 = 354px) is centered in the area under the
      72px header, i.e. its top sits (100vh + 72px - 354px) / 2 from the top */
   scroll-snap-align: start;
   scroll-margin-top: calc((100vh + 72px - 354px) / 2);
 }
 
-/* statement -> numbers: 150px (the usual subtitle gap is 130px; +20px here per direct
-   request). If this or the block's height changes, update the 354px in .stats-intro's
-   scroll-margin-top above so the resting point stays centered */
+/* statement -> numbers: 160px, the site-wide subtitle-to-content gap (see also the gallery,
+   the gift cards and the apply button). If this or the block's height changes, update the
+   354px in .stats-intro's scroll-margin-top above so the resting point stays centered */
 .stats-intro + .stats {
-  margin-top: 150px;
+  margin-top: 160px;
 }
 
 /* ---- coverflow photo story ("직접 만나 나누는 시간") — per direct
@@ -1373,11 +1374,11 @@ body.is-fullframe-hero .down-hint img {
 .btd-gallery {
   position: relative;
   /* matches the title-to-content gap used elsewhere in this section
-     (.btd-journey, .btd-gift are both 130px) — was 56px margin + 20vh
+     (160px subtitle-to-content everywhere) — was 56px margin + 20vh
      padding-top (~210px total), wider than that convention for no real
      reason (the coverflow doesn't need resting whitespace to ease in;
      it already has the viewport height below the fold to work with) */
-  margin-top: 130px;
+  margin-top: 160px;
   /* the last photo's own box is short (~one photo tall) and transform:
      scale doesn't shrink the space it occupies in the flow — only how
      it looks — so with just 130px of margin here, it was still fairly
@@ -1429,11 +1430,9 @@ body.is-fullframe-hero .down-hint img {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 39px;
-  /* the top rule of each card sits 48px inside the card (its padding-top),
-     so 130px - 48px would put that visible rule the standard 130px below the
-     "함께한 시간에 마음을 담아" text above; a further 20px is trimmed per
-     direct request, so the rule lands 110px below it */
-  margin-top: 62px;
+  /* the top rule of each card sits 48px inside the card (its padding-top), so
+     160px - 48px puts that visible rule the standard 160px below the statement above */
+  margin-top: 112px;
   margin-bottom: 340px;
 }
 
@@ -1680,9 +1679,11 @@ body.is-fullframe-hero .down-hint img {
 .faq {
   display: flex;
   flex-direction: column;
-  /* subtitle-to-content gap, same 130px as the other .btd-middle titles */
-  gap: 130px;
-  margin-bottom: 130px;
+  /* the FAQ list comes AFTER the apply button, 260px below it — deliberately much wider than
+     the 130px between the statement and the button. (Its title was removed; the section's own
+     400px bottom padding closes the page.) */
+  gap: 60px;
+  margin-top: 260px;
 }
 
 .faq__title {
@@ -1772,27 +1773,31 @@ body.is-fullframe-hero .down-hint img {
 }
 
 /* ---- outro (Figma 55:2735 "sub-text") + apply CTA ---- */
+/* closing statement above the apply button — like the other statement blocks
+   (.btd-middle__desc): 27px / 500 (off the 5-step scale, per direct request), centered,
+   340px below the last interview row */
 .cv-outro {
-  font-size: 16px;
-  font-weight: 400;
-  letter-spacing: -0.08px;
-  line-height: 1.45;
+  font-size: 27px;
+  font-weight: 500;
+  letter-spacing: -0.135px;
+  line-height: 1.6;
   text-align: center;
+  margin-top: 340px;
 }
 
 .cv-apply {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 275px;
-  height: 56px;
-  margin: 56px auto 0;
+  width: 380px;
+  height: 72px;
+  margin: 160px auto 0;
   border-radius: 52px;
   background: #464646;
   color: #ffffff;
-  font-size: 16px;
+  font-size: 22px;
   font-weight: 400;
-  letter-spacing: -0.08px;
+  letter-spacing: -0.11px;
   text-decoration: none;
   white-space: nowrap;
 }
@@ -1963,6 +1968,7 @@ body.ou-modal-open {
   }
 
   /* ② Title 22 */
+  .cv-outro,
   .about-heading,
   .insight,
   .about-key-photo,
@@ -1984,7 +1990,6 @@ body.ou-modal-open {
   /* ④ Body 15 */
   .btd-journey__desc,
   .cv-row__body,
-  .cv-outro,
   .cv-apply,
   .faq__question,
   .faq__answer p,
@@ -2006,6 +2011,12 @@ body.ou-modal-open {
   }
 
   /* section gaps 340 -> 120 */
+  .cv-outro {
+    margin-top: 120px;
+  }
+  .cv-apply {
+    margin-top: 48px;
+  }
   .trophy-placeholder {
     margin-bottom: 120px;
   }
@@ -2040,7 +2051,8 @@ body.ou-modal-open {
     margin-top: 0;
   }
   .faq {
-    gap: 48px;
+    gap: 40px;
+    margin-top: 120px;
   }
 
   .btd-middle__desc {
