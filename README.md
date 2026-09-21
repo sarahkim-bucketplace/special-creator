@@ -39,7 +39,7 @@ OpportunitiesUnlocked.html / .css / .js        OU 목록 (Figma 0:236)
 OpportunitiesUnlocked-01~05.html / .css        OU 사례 상세 — ★ ou-modal.js가 이 파일을 fetch해서 팝업에 넣기 때문에 삭제하면 안 됨
 CreatorVoices.html / .css                      Creator Voices 독립판 (Figma 0:519)
 BeyondTheDoor.html / .css / .js                Beyond the Door 독립판 (Figma 28:476)
-BeyondTheDoor-gift1~4.html / BeyondTheDoor-gift.css / gift-detail-reveal.js   선물 4종 상세 페이지 (메인의 "더 알아보기"가 연결) — 실제로 쓰이는 페이지
+BeyondTheDoor-gift1~4.html / BeyondTheDoor-gift.css / gift-detail-reveal.js   선물 4종 상세 페이지 (메인의 "더보기"가 연결) — 실제로 쓰이는 페이지
 ```
 
 독립 페이지들(`OpportunitiesUnlocked.html`, `CreatorVoices.html`, `BeyondTheDoor.html`)은 통합 페이지와 **간격/레이아웃이 다를 수 있음** — 폰트 크기·색은 같이 맞춰뒀지만 간격 정리 등은 통합 페이지에만 적용됨. 사용 여부를 정해서 지우거나 유지할 것 (남은 할 일 참고).
@@ -89,7 +89,7 @@ python3 -m http.server 5173
 | ① Display | 38px | -0.19px | About 오프닝·롤링 직후 헤딩·히어로 캡션, 섹션 히어로 타이틀 |
 | ② Title = **서브타이틀 전부(30px / 500)** | 30px | -0.15px | About 일반 헤딩·인용문(`.insight`)·키 사진 문구, **문구형 서브타이틀(`.btd-middle__desc` 3곳: 통계 위·갤러리 위·선물 위)**, FAQ 타이틀(500). `.btd-middle__title`은 통합 페이지에선 안 쓰임(독립 페이지용) |
 | ③ Subtitle | 22px | -0.11px | 통계 라벨, 여정 번호, 선물 카드 제목, CV 행 제목, OU 상세 제목 |
-| ④ Body | 16px | -0.08px | 본문 전반, FAQ 질문·답변, 버튼("더 알아보기", 지원하기) |
+| ④ Body | 16px | -0.08px | 본문 전반, FAQ 질문·답변, 지원하기 버튼(16px) — 다른 버튼은 아래 "버튼" 참고 |
 | ⑤ Caption | 14px | -0.07px | 크레딧, OU 카드 부제, 저자명, 헤더 링크·Apply |
 
 **예외**: 통계 숫자 69px / 단위 37px, 모달 닫기 ×(24px), **섹션 히어로 소개 문구 21px**(`.hero__subtitle`, 줄 높이 1.6, 타이틀 38px과 조합 — 16px일 땐 30px 서브타이틀 옆에서 너무 작아 보여 키움). 자간은 크기 × -0.5%.
@@ -101,7 +101,7 @@ python3 -m http.server 5173
 
 ### 웨이트 3가지
 
-Regular **400**(본문) / Medium **500**(인용문·About 일반 헤딩·라벨·크레딧) / Semibold **600**(38px 헤딩·타이틀류·번호). `strong` 강조는 600 (700은 쓰지 않음).
+Regular **400**(본문·**모든 CTA 버튼**) / Medium **500**(인용문·About 일반 헤딩·라벨·크레딧) / Semibold **600**(38px 헤딩·타이틀류·번호). `strong` 강조는 600 (700은 쓰지 않음).
 
 ### 글자색
 
@@ -111,7 +111,7 @@ Regular **400**(본문) / Medium **500**(인용문·About 일반 헤딩·라벨�
 
 ### 버튼 색
 
-CTA 필 버튼은 전부 **`#464646`** + 흰 글자: 헤더 Apply(`.header__cta`), 선물 카드 "더 알아보기"(`.btd-gift__more`), 스페셜 크리에이터 지원하기(`.cv-apply`). (예전 `#909182`는 폐기)
+CTA 필 버튼은 전부 **`#464646`** + 흰 글자 + **웨이트 400(Regular)**: 헤더 Apply(`.header__cta`, 14px), 선물 카드 **"더보기"**(`.btd-gift__more`, 15px, 좌우 padding 18px — 박스는 라벨 폭 + 36px, 높이 30px), 스페셜 크리에이터 지원하기(`.cv-apply`, 16px). (예전 `#909182`는 폐기, "더 알아보기"였던 문구는 "더보기"로 바뀜)
 
 ### 간격 (About 제외, 데스크톱)
 
@@ -165,7 +165,7 @@ CTA 필 버튼은 전부 **`#464646`** + 흰 글자: 헤더 Apply(`.header__cta`
 ### Beyond the Door (`#beyond-the-door`, Figma 28:476)
 - **여정 리스트**: 4단계(1 오프닝 밋업 / 2 스페셜 크리에이터 활동 / 3 오프라인 클래스 / 4 페어웰 — "브랜드 콜라보"는 삭제됨). 각 단계는 위 구분선 + 텍스트 + **롤링 마키 사진**(244×320, gap 15, 사진 안에 "Photo by. 이름" 크레딧). 단계 사이 화살표는 Figma에서 삭제되어 제거, 단계 간격 120px. 롤링은 원본+복제 세트를 `translateX(0→-50%)`로 돌림(아이템 수를 바꾸면 duration을 비례해서 조정)
 - **"직접 만나 나누는 시간" 갤러리**: 코버플로 — 뷰포트 중앙에 가까운 사진이 가장 크고 진하고, 나머지는 거리에 따라 작아지고 fade. `position:sticky`는 안 씀(성능·깨짐), `btd-gallery-stack.js`가 스크롤 위치에서 매 프레임 계산. 사진 `assets/Beyond-the-Door/meetup/image-1~9.jpg`
-- **Special Gift**: 2열 **카드 그리드**(예전 토글/아코디언 목록에서 재설계됨). 카드 = 위 구분선 + 제목 + "더 알아보기"(→ `BeyondTheDoor-gift1~4.html`, 사진 그리드+크레딧 상세 페이지) + 부채꼴로 겹친 썸네일. 선물 4종: 스페셜 웰컴 굿즈 / 브랜드 콜라보 굿즈 / 프리미엄 가구 협찬 / 페어웰 기프트
+- **Special Gift**: 2열 **카드 그리드**(예전 토글/아코디언 목록에서 재설계됨). 카드 = 위 구분선 + 제목 + "더보기"(→ `BeyondTheDoor-gift1~4.html`, 사진 그리드+크레딧 상세 페이지) + 겹친 썸네일 3장(평소엔 **기울기 없이 똑바로** 앞 사진 뒤에 나란히 겹쳐 있고, **`.btd-gift__stack`에 마우스를 올리면 양옆 사진이 ±118px 밀려나며 ±7° 기울어지며 펼쳐짐**, 0.4s ease — 브랜디자인 clients 페이지 참고. 모바일은 ±88px). 선물 4종: 스페셜 웰컴 굿즈 / 브랜드 콜라보 굿즈 / 프리미엄 가구 협찬 / 페어웰 기프트
 - 이미지 hover 플로팅(원본 미리보기) 효과는 시도했다가 뺌. 다시 필요하면 같은 `<img>` 하나를 옮기지 말고 "배경 썸네일 + 플로팅용 별도 `<img>`" 두 레이어로 만들 것
 - 파일 대소문자·한글 파일명 주의: macOS는 대소문자 무시(로컬에서 안 걸리고 GitHub Pages 등에서 404), 한글 파일명은 NFD/NFC 차이로 URL이 404. 새 애셋은 **ASCII 파일명 + 소문자 폴더**로 (`journey`, `meetup`, `gift`)
 
