@@ -348,17 +348,17 @@ html {
 }
 
 .hero__title {
-  font-size: 36px;
+  font-size: 38px;
   font-weight: 600;
-  letter-spacing: -0.18px;
+  letter-spacing: -0.19px;
   line-height: normal;
   margin-bottom: 20px;
 }
 
 .hero__subtitle {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 400;
-  letter-spacing: -0.09px;
+  letter-spacing: -0.08px;
   line-height: 1.45;
   color: #2d2828;
 }
@@ -396,6 +396,7 @@ html {
    down regardless of source order (that rule also sets font-size/weight) */
 .about-heading.about-heading--blur-in {
   font-size: 38px;
+  letter-spacing: -0.19px;
   font-weight: 600;
   /* a plain single line only sits near vertical-center for an instant as
      it scrolls past — widening its own box to most of the viewport height
@@ -426,7 +427,7 @@ html {
 .about-heading {
   font-size: 30px;
   font-weight: 500;
-  letter-spacing: -0.225px;
+  letter-spacing: -0.15px;
   line-height: 1.6;
   color: #2f2f2f;
   text-align: center;
@@ -454,6 +455,7 @@ html {
   align-items: center;
   justify-content: center;
   font-size: 38px;
+  letter-spacing: -0.19px;
   font-weight: 600;
 }
 
@@ -518,7 +520,7 @@ html {
   color: #ffffff;
   font-size: 38px;
   font-weight: 600;
-  letter-spacing: -0.225px;
+  letter-spacing: -0.19px;
   line-height: 1.6;
   text-align: center;
   /* hidden until about-hero-roll.js reveals it on the 4th rolling photo;
@@ -681,9 +683,9 @@ html {
   overflow: hidden;
   background: #d9d9d9;
   color: #ffffff;
-  font-size: 28px;
+  font-size: 30px;
   font-weight: 500;
-  letter-spacing: -0.14px;
+  letter-spacing: -0.15px;
   line-height: 1.6;
   text-align: center;
   opacity: 0;
@@ -722,7 +724,7 @@ html {
 }
 
 .about-key-photo strong {
-  font-weight: 700;
+  font-weight: 600;
 }
 
 @media (max-width: 900px) {
@@ -744,9 +746,9 @@ html {
    called from find-the-key.js). Sized to match the hero-title treatment
    per the redesign (Figma 233:1182), up from the old 24px ---- */
 .insight {
-  font-size: 36px;
+  font-size: 30px;
   font-weight: 500;
-  letter-spacing: -0.18px;
+  letter-spacing: -0.15px;
   line-height: 1.6;
   text-align: center;
   margin-top: 230px;
@@ -756,7 +758,6 @@ html {
 }
 
 .insight--key {
-  font-size: 30px;
   margin-top: 140px;
 }
 
@@ -784,7 +785,7 @@ html {
 }
 
 .insight strong {
-  font-weight: 700;
+  font-weight: 600;
 }
 
 /* ---- trophy: interactive 3D viewer (trophy.js, drag to rotate) — now the
@@ -800,8 +801,11 @@ html {
      and a flat 140px gap let the trophy's top edge peek in at the bottom
      of that paused frame. This keeps the trophy fully below the fold
      while paused, regardless of viewport height, and only brings it up
-     once the user scrolls again */
-  margin: 60vh auto 0;
+     once the user scrolls again. The canvas has ~15vh of transparent
+     space above the model itself (measured), so this box gap is 32vh,
+     not the 60vh it used to be: 32vh + that blank still lands the
+     model's top just past the bottom edge of the paused frame */
+  margin: 32vh auto 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1046,7 +1050,7 @@ html {
 .stats__label {
   font-size: 22px;
   font-weight: 500;
-  letter-spacing: -0.12px;
+  letter-spacing: -0.11px;
   color: #2d2828;
   white-space: nowrap;
 }
@@ -1175,9 +1179,9 @@ html {
 }
 
 .btd-journey__num {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 600;
-  letter-spacing: -0.1px;
+  letter-spacing: -0.11px;
   color: #000000;
 }
 
@@ -1242,9 +1246,9 @@ html {
   position: absolute;
   right: 12px;
   bottom: 10px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 400;
-  letter-spacing: -0.06px;
+  letter-spacing: -0.07px;
   color: #dddddd;
 }
 
@@ -1266,9 +1270,9 @@ html {
 }
 
 .btd-middle__title {
-  font-size: 28px;
+  font-size: 30px;
   font-weight: 600;
-  letter-spacing: -0.14px;
+  letter-spacing: -0.15px;
   color: #2d2828;
 }
 
@@ -1279,6 +1283,18 @@ html {
   line-height: 1.45;
   color: #2d2828;
   max-width: 560px;
+}
+
+/* title block right above the stats numbers — same .btd-middle look as the
+   other two, but its one-line body is longer than the 560px cap, and the
+   stats row below it takes the standard 130px title-to-content gap instead
+   of its own 340px section gap */
+.stats-intro .btd-middle__desc {
+  max-width: none;
+}
+
+.stats-intro + .stats {
+  margin-top: 130px;
 }
 
 /* ---- coverflow photo story ("직접 만나 나누는 시간") — per direct
@@ -1416,9 +1432,9 @@ html {
 }
 
 .btd-gift__title {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 500;
-  letter-spacing: -0.12px;
+  letter-spacing: -0.11px;
   color: #000000;
 }
 
@@ -1432,9 +1448,9 @@ html {
   border-radius: 999px;
   /* same bg/text color as the header's Apply button (.header__cta) */
   background: #909182;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 500;
-  letter-spacing: -0.077px;
+  letter-spacing: -0.08px;
   color: #fff;
   text-decoration: none;
   white-space: nowrap;
@@ -1582,9 +1598,9 @@ html {
 }
 
 .faq__title {
-  font-size: 28px;
+  font-size: 30px;
   font-weight: 600;
-  letter-spacing: -0.14px;
+  letter-spacing: -0.15px;
   color: #2d2828;
 }
 
@@ -1651,7 +1667,7 @@ html {
 }
 
 .faq__answer p {
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.6;
   letter-spacing: -0.08px;
   color: #6b6b6b;
@@ -1672,9 +1688,9 @@ html {
 
 /* ---- outro (Figma 55:2735 "sub-text") + apply CTA ---- */
 .cv-outro {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 400;
-  letter-spacing: -0.09px;
+  letter-spacing: -0.08px;
   line-height: 1.45;
   text-align: center;
 }
@@ -1689,9 +1705,9 @@ html {
   border-radius: 52px;
   background: #464646;
   color: #ffffff;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
-  letter-spacing: -0.09px;
+  letter-spacing: -0.08px;
   text-decoration: none;
   white-space: nowrap;
 }

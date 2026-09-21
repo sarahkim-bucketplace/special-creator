@@ -52,13 +52,16 @@
   }
   const MAX_GROW_BLUR = 20; // matches about-hero-roll.js's own dissolve blur
   function settleRange() {
-    // same "just enough, plus a small buffer" geometry as
-    // about-hero-roll.js's settleRange — guarantees the grown frame fully
-    // clears the viewport before the next quote's own margin-top (120px)
-    // starts to enter it
+    // trailing space after the frozen fullscreen frame, sized so the frame's
+    // bottom edge sits a fixed FRAME_TO_QUOTE_GAP above the next quote
+    // (.insight--after-trophy, whose own margin-top is already part of that
+    // gap). The frame is z-index:-1 above the quote in document order, so any
+    // gap >= 0 never overlaps them — the old "2 * innerHeight" copy of
+    // about-hero-roll.js's formula (different geometry there) left ~two
+    // screens of empty scroll between the two
     const NEXT_MARGIN_TOP = 120;
-    const BUFFER = 40;
-    return Math.max(0, 2 * window.innerHeight - NEXT_MARGIN_TOP + BUFFER);
+    const FRAME_TO_QUOTE_GAP = 230;
+    return Math.max(0, FRAME_TO_QUOTE_GAP - NEXT_MARGIN_TOP);
   }
 
   const clamp = (v, min, max) => Math.min(max, Math.max(min, v));

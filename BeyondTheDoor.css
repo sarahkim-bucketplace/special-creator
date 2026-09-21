@@ -247,17 +247,17 @@ body {
 }
 
 .hero__title {
-  font-size: 36px;
+  font-size: 38px;
   font-weight: 600;
-  letter-spacing: -0.18px;
+  letter-spacing: -0.19px;
   line-height: normal;
   margin-bottom: 20px;
 }
 
 .hero__subtitle {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 400;
-  letter-spacing: -0.09px;
+  letter-spacing: -0.08px;
   line-height: 1.45;
   color: #2d2828;
 }
@@ -300,9 +300,9 @@ body {
 }
 
 .btd-journey__num {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 600;
-  letter-spacing: -0.1px;
+  letter-spacing: -0.11px;
   color: #000000;
 }
 
@@ -345,9 +345,9 @@ body {
 }
 
 .btd-middle__title {
-  font-size: 28px;
+  font-size: 30px;
   font-weight: 600;
-  letter-spacing: -0.14px;
+  letter-spacing: -0.15px;
   color: #2d2828;
 }
 
