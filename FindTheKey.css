@@ -403,22 +403,24 @@ body.is-fullframe-hero .down-hint img {
 .hero__icon {
   width: 39.2px;
   height: 39.2px;
-  margin-bottom: 32px;
+  margin-bottom: 44px;
 }
 
+/* section hero: main title 38px + intro 21px (the intro was 16px, which read too small next
+   to the 30px centered statements further down; 21px is a deliberate off-scale size) */
 .hero__title {
   font-size: 38px;
   font-weight: 600;
   letter-spacing: -0.19px;
   line-height: normal;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
 }
 
 .hero__subtitle {
-  font-size: 16px;
+  font-size: 21px;
   font-weight: 400;
-  letter-spacing: -0.08px;
-  line-height: 1.45;
+  letter-spacing: -0.105px;
+  line-height: 1.6;
   color: #2d2828;
 }
 
@@ -899,7 +901,7 @@ body.is-fullframe-hero .down-hint img {
   left: 50%;
   width: 1618px;
   margin-left: -809px;
-  margin-top: 130px;
+  margin-top: 60px;
   /* reserves room (>= the 90px hover-grow amount below) INSIDE the box —
      under 1680px this row gets overflow-x:auto, which forces overflow-y
      to clip too, so a hovered card's upward growth (negative margin-top)
@@ -1028,7 +1030,8 @@ body.is-fullframe-hero .down-hint img {
   right: 50%;
   margin-left: -50vw;
   margin-right: -50vw;
-  margin-top: 340px;
+  /* cards -> logo wall: 200px (tighter than the 340px between sections, per direct request) */
+  margin-top: 200px;
   overflow: hidden;
   /* (no snap point here anymore: the stop moved to the statement + numbers below,
      see .stats-intro and stats-pause.js) */
@@ -1182,9 +1185,9 @@ body.is-fullframe-hero .down-hint img {
    ========================================================================== */
 /* ---- journey list (Figma 28:1004), 5 numbered steps ---- */
 .btd-journey {
-  /* main-title-to-content gap, same 220px as Opportunities' cards and
+  /* main-title-to-content gap, same 150px as Opportunities' cards and
      Creator Voices' first row */
-  margin-top: 220px;
+  margin-top: 150px;
 }
 
 .btd-journey__item {
@@ -1325,11 +1328,11 @@ body.is-fullframe-hero .down-hint img {
 }
 
 /* the middle-text blocks no longer carry a title: the body line IS the subtitle now —
-   centered, 28px (a deliberate off-scale size per direct request) */
+   centered, at the subtitle size (30px / 500, same as the About headings and quotes) */
 .btd-middle__desc {
-  font-size: 28px;
+  font-size: 30px;
   font-weight: 500;
-  letter-spacing: -0.14px;
+  letter-spacing: -0.15px;
   line-height: 1.6;
   color: #2d2828;
   max-width: none;
@@ -1342,14 +1345,14 @@ body.is-fullframe-hero .down-hint img {
 .stats-intro {
   margin-top: 250px;
   /* resting point for the statement + numbers pair (stats-pause.js): the whole block
-     (statement 90 + gap 150 + numbers 128 = 368px) is centered in the area under the
-     72px header, i.e. its top sits (100vh + 72px - 368px) / 2 from the top */
+     (statement 96 + gap 150 + numbers 128 = 374px) is centered in the area under the
+     72px header, i.e. its top sits (100vh + 72px - 374px) / 2 from the top */
   scroll-snap-align: start;
-  scroll-margin-top: calc((100vh + 72px - 368px) / 2);
+  scroll-margin-top: calc((100vh + 72px - 374px) / 2);
 }
 
 /* statement -> numbers: 150px (the usual subtitle gap is 130px; +20px here per direct
-   request). If this or the block's height changes, update the 368px in .stats-intro's
+   request). If this or the block's height changes, update the 374px in .stats-intro's
    scroll-margin-top above so the resting point stays centered */
 .stats-intro + .stats {
   margin-top: 150px;
@@ -1570,7 +1573,7 @@ body.is-fullframe-hero .down-hint img {
    Creator Voices section (from CreatorVoices.css)
    ========================================================================== */
 #creator-voices .hero {
-  margin-bottom: 220px;
+  margin-bottom: 150px;
 }
 
 /* ---- CV-Contents rows (Figma 48:1057 "01" / 48:1112 "02"), alternating
@@ -1662,7 +1665,7 @@ body.is-fullframe-hero .down-hint img {
 
 .faq__title {
   font-size: 30px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: -0.15px;
   color: #2d2828;
 }
@@ -1927,6 +1930,16 @@ body.ou-modal-open {
     letter-spacing: -0.13px;
   }
 
+  /* section hero: tighter title -> intro gap on phones (40px on desktop); intro is 18 (its
+     desktop size is 21, off the 5-step scale) */
+  .hero__title {
+    margin-bottom: 24px;
+  }
+  .hero__subtitle {
+    font-size: 18px;
+    letter-spacing: -0.09px;
+  }
+
   /* ② Title 22 */
   .about-heading,
   .insight,
@@ -1947,7 +1960,6 @@ body.ou-modal-open {
   }
 
   /* ④ Body 15 */
-  .hero__subtitle,
   .btd-journey__desc,
   .cv-row__body,
   .cv-outro,

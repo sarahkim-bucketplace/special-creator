@@ -243,7 +243,7 @@ body {
 .hero__icon {
   width: 39.2px;
   height: 39.2px;
-  margin-bottom: 32px;
+  margin-bottom: 44px;
 }
 
 .hero__title {
@@ -251,14 +251,14 @@ body {
   font-weight: 600;
   letter-spacing: -0.19px;
   line-height: normal;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
 }
 
 .hero__subtitle {
-  font-size: 16px;
+  font-size: 21px;
   font-weight: 400;
-  letter-spacing: -0.08px;
-  line-height: 1.45;
+  letter-spacing: -0.105px;
+  line-height: 1.6;
   color: #2d2828;
 }
 
