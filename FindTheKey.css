@@ -153,6 +153,19 @@ html {
   overflow: hidden;
 }
 
+/* a fullscreen About photo frame (about-key-photo-grow.js toggles
+   .is-fullframe, about-hero-roll.js toggles .is-fullframe-hero, both on
+   <body>): drop the opaque band so the photo runs edge-to-edge behind the
+   header links */
+.header-backdrop {
+  transition: opacity 0.3s ease;
+}
+
+body.is-fullframe .header-backdrop,
+body.is-fullframe-hero .header-backdrop {
+  opacity: 0;
+}
+
 .header-backdrop::before {
   content: "";
   position: absolute;
@@ -331,13 +344,11 @@ html {
     width: 100%;
     padding: 14px 0;
     border-bottom: 1px solid rgba(45, 40, 40, 0.1);
-    font-size: 16px;
   }
   .header__cta {
     width: 100%;
     margin-top: 16px;
     padding: 12px 0;
-    font-size: 15px;
   }
 }
 
@@ -610,11 +621,9 @@ html {
 
 @media (max-width: 900px) {
   .about-heading {
-    font-size: 26px;
   }
   .about-heading--intro,
   .about-heading.about-heading--blur-in {
-    font-size: 33px;
   }
   .about-roll {
     height: 1500px;
@@ -623,7 +632,6 @@ html {
     height: 420px;
   }
   .about-photo__caption {
-    font-size: 33px;
     padding: 28px;
   }
   .about-scrapbook {
@@ -636,11 +644,9 @@ html {
 
 @media (max-width: 600px) {
   .about-heading {
-    font-size: 20px;
   }
   .about-heading--intro,
   .about-heading.about-heading--blur-in {
-    font-size: 25px;
   }
   .about-roll {
     height: 1200px;
@@ -649,13 +655,11 @@ html {
     height: 300px;
   }
   .about-photo__caption {
-    font-size: 25px;
     padding: 20px;
   }
   .about-photo__credit {
     right: 12px;
     bottom: 10px;
-    font-size: 11px;
   }
   .about-badge {
     width: 263px;
@@ -738,13 +742,11 @@ html {
 
 @media (max-width: 900px) {
   .about-key-photo {
-    font-size: 22px;
   }
 }
 
 @media (max-width: 600px) {
   .about-key-photo {
-    font-size: 18px;
   }
   .about-key-photo__text {
     padding: 24px;
@@ -846,7 +848,6 @@ html {
 
 @media (max-width: 600px) {
   .insight {
-    font-size: 22px;
   }
 }
 
@@ -1103,7 +1104,6 @@ html {
     margin-top: 120px;
   }
   .stats__label {
-    font-size: 18px;
   }
   .stats__number-value {
     font-size: 34px;
@@ -1121,10 +1121,8 @@ html {
     margin-top: 80px;
   }
   #opportunities-unlocked .hero__title {
-    font-size: 22px;
   }
   #opportunities-unlocked .hero__subtitle {
-    font-size: 15px;
   }
   #opportunities-unlocked .hero__subtitle br {
     display: none;
@@ -1501,13 +1499,10 @@ html {
 
 @media (max-width: 600px) {
   .btd-middle__title {
-    font-size: 22px;
   }
   .btd-middle__desc {
-    font-size: 15px;
   }
   .btd-journey__num {
-    font-size: 17px;
   }
   .btd-gift__stack {
     height: 300px;
@@ -1527,7 +1522,6 @@ html {
     height: 240px;
   }
   .btd-gift__title {
-    font-size: 20px;
   }
 }
 
@@ -1703,13 +1697,10 @@ html {
 
 @media (max-width: 900px) {
   .faq__title {
-    font-size: 22px;
   }
   .faq__question {
-    font-size: 14px;
   }
   .faq__answer p {
-    font-size: 13px;
   }
 }
 
@@ -1756,7 +1747,6 @@ html {
     height: 240px;
   }
   .cv-row__title-main {
-    font-size: 19px;
   }
 }
 
@@ -1765,16 +1755,13 @@ html {
     margin-top: 80px;
   }
   #creator-voices .hero__title {
-    font-size: 26px;
   }
   #creator-voices .hero__subtitle {
-    font-size: 15px;
   }
   #creator-voices .hero__subtitle br {
     display: none;
   }
   .cv-outro {
-    font-size: 15px;
   }
   .cv-outro br {
     display: none;
@@ -1876,5 +1863,120 @@ body.ou-modal-open {
   .ou-modal__close {
     top: 12px;
     right: 12px;
+  }
+}
+
+/* ==========================================================================
+   Mobile type scale + spacing (<=900px) — same 5-size / 3-weight rules as
+   desktop, one scale for phones and tablets. Kept as ONE block at the end of
+   the file so it wins over every earlier rule at the same specificity; the
+   per-section @media blocks above no longer set font-size (stats numbers are
+   the one exception, see .stats__number-value).
+   ① 26 Display  ② 22 Title  ③ 18 Subtitle  ④ 15 Body  ⑤ 13 Caption
+   Gaps: section 120 / main-title->content 80 / subtitle->content 48
+   ========================================================================== */
+@media (max-width: 900px) {
+  /* ① Display 26 */
+  .hero__title,
+  .about-heading--intro,
+  .about-heading.about-heading--blur-in,
+  .about-photo__caption {
+    font-size: 26px;
+    letter-spacing: -0.13px;
+  }
+
+  /* ② Title 22 */
+  .about-heading,
+  .insight,
+  .about-key-photo,
+  .btd-middle__title,
+  .faq__title {
+    font-size: 22px;
+    letter-spacing: -0.11px;
+  }
+
+  /* ③ Subtitle 18 */
+  .stats__label,
+  .btd-gift__title,
+  .cv-row__title-main,
+  .btd-journey__num {
+    font-size: 18px;
+    letter-spacing: -0.09px;
+  }
+
+  /* ④ Body 15 */
+  .hero__subtitle,
+  .btd-middle__desc,
+  .btd-journey__desc,
+  .cv-row__body,
+  .cv-outro,
+  .cv-apply,
+  .faq__question,
+  .faq__answer p,
+  .ou-card__title span,
+  .btd-gift__more,
+  .header__link,
+  .header__cta {
+    font-size: 15px;
+    letter-spacing: -0.075px;
+  }
+
+  /* ⑤ Caption 13 */
+  .about-photo__credit,
+  .btd-journey__rolling-credit,
+  .ou-card__sub,
+  .cv-row__title-author {
+    font-size: 13px;
+    letter-spacing: -0.065px;
+  }
+
+  /* section gaps 340 -> 120 */
+  .trophy-placeholder {
+    margin-bottom: 120px;
+  }
+  .brand-rolling,
+  .btd-middle {
+    margin-top: 120px;
+  }
+  .stats,
+  .btd-gift {
+    margin-bottom: 120px;
+  }
+
+  /* main title -> content 80 */
+  .ou-contents,
+  .btd-journey {
+    margin-top: 80px;
+  }
+  #creator-voices .hero {
+    margin-bottom: 80px;
+  }
+  .stats-intro {
+    margin-top: 80px;
+  }
+
+  /* subtitle -> content 48 */
+  .stats-intro + .stats,
+  .btd-gallery {
+    margin-top: 48px;
+  }
+  .btd-gift {
+    /* the cards' own 48px padding-top already supplies the visible gap */
+    margin-top: 0;
+  }
+  .faq {
+    gap: 48px;
+  }
+
+  /* the journey rows stack in a column here, but the base rule's
+     align-items:flex-start stopped the rolling marquee from stretching to the
+     row's width, so it sized to its whole (thousands of px) track and made
+     the entire page horizontally wider than the phone */
+  .btd-journey__row {
+    align-items: stretch;
+  }
+  .btd-journey__rolling {
+    width: 100%;
+    min-width: 0;
   }
 }

@@ -100,6 +100,18 @@
     return wrapper.getBoundingClientRect().left;
   }
 
+  // while the frame is fullscreen (through its dissolve, until it scrolls
+  // off the top), the header's opaque backdrop band is hidden so the photo
+  // reads edge-to-edge — body.is-fullframe-hero in FindTheKey.css (the
+  // key-photo frame further down uses its own class). Only touches the DOM
+  // when the state actually flips.
+  let fullframe = false;
+  function setFullframe(on) {
+    if (on === fullframe) return;
+    fullframe = on;
+    document.body.classList.toggle('is-fullframe-hero', on);
+  }
+
   const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
   const lerp = (a, b, t) => a + (b - a) * t;
   const easeOutQuad = (t) => 1 - (1 - t) * (1 - t);
@@ -166,6 +178,7 @@
       setCaptionVisible(false);
       if (readyToReveal) wrapper.style.opacity = '0';
       if (heading) heading.style.filter = '';
+      setFullframe(false);
       lastZone = 'before';
     } else if (rect.top > 0) {
       const progress = clamp(1 - rect.top / range, 0, 1);
@@ -182,6 +195,7 @@
       setCaptionVisible(false);
       if (readyToReveal) wrapper.style.opacity = String(opacity);
       if (heading) heading.style.filter = `blur(${easeOutQuad(progress) * MAX_HEADING_BLUR}px)`;
+      setFullframe(false);
       lastZone = 'during';
     } else {
       const d = -rect.top;
@@ -197,6 +211,7 @@
         const index = Math.min(items.length - 2, Math.floor(progress * (items.length - 1)));
         setActive(index);
         setCaptionVisible(false);
+        setFullframe(false);
         lastZone = 'during';
       } else if (d < CYCLE_RANGE + growRange()) {
         setActive(items.length - 1);
@@ -223,6 +238,7 @@
         stage.style.zIndex = '';
         caption.style.opacity = String(clamp(capInT - capOutT, 0, 1));
         credit.style.opacity = String(1 - creditT);
+        setFullframe(sizeT >= 0.999);
         lastZone = 'during';
       } else {
         setActive(items.length - 1);
@@ -249,6 +265,7 @@
         stage.style.zIndex = '-1';
         caption.style.opacity = '0';
         credit.style.opacity = '0';
+        setFullframe(stage.getBoundingClientRect().bottom > HEADER_HEIGHT);
         lastZone = 'after';
       }
     }
@@ -263,7 +280,13 @@
     // the rise animation mid-scroll
     const y = window.scrollY;
     const zone = y < wrapperTop - enterRange() ? 'before' : y > wrapperBottom ? 'after' : 'during';
-    if (zone !== 'during' && zone === lastZone) return;
+    if (zone !== 'during' && zone === lastZone) {
+      // the frozen frame's styles don't change out here, but it still keeps
+      // scrolling up with the page — give the header its backdrop back once
+      // it has fully cleared the header band
+      if (fullframe) setFullframe(stage.getBoundingClientRect().bottom > HEADER_HEIGHT);
+      return;
+    }
 
     if (!ticking) {
       requestAnimationFrame(update);

@@ -64,6 +64,18 @@
     return Math.max(0, FRAME_TO_QUOTE_GAP - NEXT_MARGIN_TOP);
   }
 
+  // while the frame covers the top of the screen (fullscreen through its
+  // dissolve, until it scrolls off), the header's opaque backdrop band is
+  // hidden so the photo reads edge-to-edge — see body.is-fullframe in
+  // FindTheKey.css. Only touches the DOM when the state actually flips.
+  const HEADER_HEIGHT = 72;
+  let fullframe = false;
+  function setFullframe(on) {
+    if (on === fullframe) return;
+    fullframe = on;
+    document.body.classList.toggle('is-fullframe', on);
+  }
+
   const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
   const lerp = (a, b, t) => a + (b - a) * t;
   const easeInOutCubic = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
@@ -104,6 +116,7 @@
       stage.style.zIndex = '';
       text1.style.opacity = '0';
       text2.style.opacity = '0';
+      setFullframe(false);
       lastZone = 'before';
     } else {
       const d = centerLine() - rect.top;
@@ -139,6 +152,7 @@
         text1.style.opacity = String(1 - textT);
         text2.style.opacity = String(textT * (1 - blurT));
         stage.style.filter = `blur(${blurT * MAX_GROW_BLUR}px)`;
+        setFullframe(sizeT >= 0.999);
         lastZone = 'during';
       } else {
         stage.style.position = 'absolute';
@@ -162,6 +176,7 @@
         stage.style.zIndex = '-1';
         text1.style.opacity = '0';
         text2.style.opacity = '0';
+        setFullframe(stage.getBoundingClientRect().bottom > HEADER_HEIGHT);
         lastZone = 'after';
       }
     }
@@ -176,7 +191,13 @@
     // as the frame reaches its paused/centered spot
     const y = window.scrollY;
     const zone = y < wrapperTop - centerLine() ? 'before' : y > wrapperBottom ? 'after' : 'during';
-    if (zone !== 'during' && zone === lastZone) return;
+    if (zone !== 'during' && zone === lastZone) {
+      // the frozen frame's styles don't change out here, but it still keeps
+      // scrolling up with the page — give the header its backdrop back once
+      // it has fully cleared the header band
+      if (fullframe) setFullframe(stage.getBoundingClientRect().bottom > HEADER_HEIGHT);
+      return;
+    }
 
     if (!ticking) {
       requestAnimationFrame(update);
