@@ -94,6 +94,11 @@ python3 -m http.server 5173
 
 **예외**: 통계 숫자 69px / 단위 37px, 모달 닫기 ×(24px). 자간은 크기 × -0.5%.
 
+### 이미지 박스 모서리 (border-radius)
+
+- 사진 박스는 **5px** 하나로 통일: 여정 롤링 사진(`.btd-journey__rolling-photo`), 갤러리(`.btd-gallery__stack-photo`/`-inner`), 선물 카드 썸네일(`.btd-gift__stack-photo`), CV 인터뷰 사진(`.cv-row__photo`), OU 카드 썸네일(`.ou-card__photo`), 선물 상세 그리드(`.gift-detail__item`). 독립 페이지의 같은 박스에도 동일 적용
+- 예외: About 사진·키 사진은 **20px**(원래 디자인), 로고·아이콘·브랜드 로고월은 사진 박스가 아니라 0, OU 상세 팝업의 왼쪽 사진(`.detail__photo`)은 팝업 가장자리에 붙는 패널이라 0. 새 사진 박스를 만들 땐 5px을 넣을 것
+
 ### 웨이트 3가지
 
 Regular **400**(본문) / Medium **500**(인용문·About 일반 헤딩·라벨·크레딧) / Semibold **600**(38px 헤딩·타이틀류·번호). `strong` 강조는 600 (700은 쓰지 않음).

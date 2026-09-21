@@ -207,6 +207,7 @@ body {
   opacity: 0;
   transform: translateY(24px);
   transition: opacity 0.5s ease, transform 0.5s ease;
+  border-radius: 5px;
 }
 
 .gift-detail__item.is-visible {

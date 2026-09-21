@@ -956,6 +956,7 @@ body.is-fullframe-hero .down-hint img {
   overflow: hidden;
   background: #d9d9d9;
   transition: height 0.35s ease, margin-top 0.35s ease;
+  border-radius: 5px;
 }
 
 .ou-card__photo img {
@@ -1292,6 +1293,7 @@ body.is-fullframe-hero .down-hint img {
   color: rgba(255, 255, 255, 0.6);
   font-size: 32px;
   font-weight: 600;
+  border-radius: 5px;
 }
 
 .btd-journey__rolling-credit {
@@ -1395,6 +1397,7 @@ body.is-fullframe-hero .down-hint img {
   width: 100%;
   max-width: 700px;
   margin: 0 auto;
+  border-radius: 5px;
 }
 
 .btd-gallery__stack-photo-inner {
@@ -1411,6 +1414,7 @@ body.is-fullframe-hero .down-hint img {
      the falloff curve itself is the easing, a transition would lag it */
   transform: scale(var(--scale, 1));
   opacity: var(--dim, 1);
+  border-radius: 5px;
 }
 
 /* ---- Special Gift index (Figma 216:572) — a static 2x2 grid of preview
@@ -1459,6 +1463,7 @@ body.is-fullframe-hero .down-hint img {
   background-color: #d1d2d2;
   background-size: cover;
   background-position: center;
+  border-radius: 5px;
 }
 
 .btd-gift__stack-photo--left {
@@ -1602,6 +1607,7 @@ body.is-fullframe-hero .down-hint img {
   background-color: #d9d9d9;
   background-size: cover;
   background-position: center;
+  border-radius: 5px;
 }
 
 .cv-row__text {
