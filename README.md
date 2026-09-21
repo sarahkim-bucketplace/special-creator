@@ -25,7 +25,7 @@ about-badge-pause.js                           배지(SC 로고) 앞 멈춤 지�
 about-key-photo-grow.js / about-key-photo-pause.js   키 사진 프레임: 중앙 정지 → 확대 → 디졸브
 insight-after-trophy-pause.js / trophy-pause.js      마지막 인용문·트로피 멈춤 지점
 OpportunitiesUnlocked.js                       OU 카드 행 마우스 드래그 스크롤
-stats.js / stats-pause.js                      통계 숫자 카운트업 / 로고월+통계 멈춤 지점
+stats.js / stats-pause.js                      통계 숫자 카운트업 / 문구+통계 숫자 블록의 멈춤 지점(세로 가운데)
 BeyondTheDoor.js                               여정 리스트 reveal (+ 독립 페이지용 갤러리 reveal)
 btd-gallery-stack.js                           "직접 만나 나누는 시간" 코버플로 갤러리
 btd-gift-pause.js                              선물 섹션 진입 멈춤 지점
@@ -87,7 +87,7 @@ python3 -m http.server 5173
 | 단계 | 크기 | 자간 | 쓰이는 곳 |
 |---|---|---|---|
 | ① Display | 38px | -0.19px | About 오프닝·롤링 직후 헤딩·히어로 캡션, 섹션 히어로 타이틀 |
-| ② Title | 30px | -0.15px | About 일반 헤딩·인용문(`.insight`)·키 사진 문구, `.btd-middle__title`(서브타이틀), FAQ 타이틀 |
+| ② Title | 30px | -0.15px | About 일반 헤딩·인용문(`.insight`)·키 사진 문구, `.btd-middle__title`(현재 통합 페이지에선 안 쓰임 — 독립 페이지용), FAQ 타이틀 |
 | ③ Subtitle | 22px | -0.11px | 통계 라벨, 여정 번호, 선물 카드 제목, CV 행 제목, OU 상세 제목 |
 | ④ Body | 16px | -0.08px | 본문 전반, 히어로 서브타이틀, FAQ 질문·답변, 버튼("더 알아보기", 지원하기) |
 | ⑤ Caption | 14px | -0.07px | 크레딧, OU 카드 부제, 저자명, 헤더 링크·Apply |
@@ -117,8 +117,8 @@ CTA 필 버튼은 전부 **`#464646`** + 흰 글자: 헤더 Apply(`.header__cta`
 
 - **섹션 사이 340px**: 트로피→OU, OU 카드→로고월, 통계→BTD, 여정→"직접 만나 나누는 시간", 선물→CV
 - **메인 타이틀(히어로) → 콘텐츠 220px**: OU 카드(박스 130 + hover 성장 여유 padding 90), BTD 여정 리스트, CV 첫 행
-- **서브타이틀 → 콘텐츠 130px**: `.btd-middle` 블록(통계 제목, 직접 만나는 시간, 함께한 시간), FAQ. 선물 카드만 예외로 카드 안쪽 rule이 제목 아래 110px에 오게 함(`.btd-gift { margin-top: 62px }` = 130 - 카드 padding 48 - 사용자 요청 20)
-- **의도적 예외**: 로고월→통계 제목 **250px**(로고+제목+숫자가 한 화면에 들어와야 하고 아래 화살표를 안 가려야 해서. 로고 멈춤 위치를 `scroll-margin-top: 105px`로 올려 맞춤), 갤러리→선물 제목 **600px**(마지막 사진이 완전히 fade된 뒤에 나와야 해서)
+- **서브타이틀 → 콘텐츠 130px**: `.btd-middle` 블록(직접 만나는 시간 갤러리 위, 함께한 시간 선물 위), FAQ. **`.btd-middle`의 타이틀은 지웠고 본문 한 줄이 서브타이틀** — 세 블록(통계 위·갤러리 위·선물 위) 모두 **가운데 정렬 28px/500**(폰트 5단계 밖의 의도적 예외, 요청값). 통계 위 블록만 문구→숫자 **150px**. 선물 카드만 예외로 카드 안쪽 rule이 문구 아래 110px에 오게 함(`.btd-gift { margin-top: 62px }` = 130 - 카드 padding 48 - 사용자 요청 20)
+- **의도적 예외**: 로고월→통계 문구 **250px**(문구+숫자 블록을 세로 가운데에서 멈추게 하는 위치와 화면 안 배치를 위해 넓힌 값), 갤러리→선물 문구 **600px**(마지막 사진이 완전히 fade된 뒤에 나와야 해서). 아래 화살표(`.down-hint`)는 `bottom: 24px`(원래 40px — 통계 블록이 화살표에 안 가려지게 낮춤)
 - About 파트 내부 간격(120/150/230/135/140/30vh/230/32vh 등)은 스크롤 연출·멈춤 위치와 얽혀 있어서 통일하지 않음 — 건드릴 땐 pause 스크립트 동작을 같이 확인
 
 ### 모바일 (≤900px 하나로 통일, `FindTheKey.css` 맨 끝의 마지막 `@media` 블록)
@@ -133,7 +133,7 @@ CTA 필 버튼은 전부 **`#464646`** + 흰 글자: 헤더 Apply(`.header__cta`
 - 섹션 4개(`#find-the-key`, `#opportunities-unlocked`, `#beyond-the-door`, `#creator-voices`), 각각 `.page > section[id]`. 헤더 nav는 `#앵커`로 이동하고 `scroll-spy.js`가 현재 섹션의 링크를 `--on`으로 표시
 - `html { scroll-snap-type: y mandatory }` + 섹션 시작마다 snap. 섹션 안에서는 자유 스크롤. **함정**: 마지막 섹션 밖의 여백은 snap 영역 바깥이라 스크롤로 도달 못 함 → 페이지 하단 여백 400px은 `.page`가 아니라 `#creator-voices { padding-bottom: 400px }` 안에 있음 (밖에 두면 지원 버튼이 창 맨 아래에 붙어버렸음)
 - **멈춤(pause) 스크립트 패턴**: `*-pause.js`들은 특정 요소에 도달하면 `overflow:hidden`으로 600ms 락을 걸어 "한 번 멈췄다 가는" 지점을 만듦. `scroll-snap-align: start`도 같이 있지만 native snap만으론 빠른 스크롤에서 놓쳐서 JS로 보강한 것. IntersectionObserver는 빠른 플릭에서 콜백이 누락돼서 **매 scroll 이벤트마다 위치를 재계산하는 방식**으로 재작성됨 — 새 멈춤 지점도 같은 방식으로 만들 것. 멈춤 지점: About 배지 앞 헤딩 / 인용문(키 사진 앞) / 키 사진 프레임(중앙) / 마지막 인용문 / 트로피 / 로고월(+통계) / 선물 제목
-- 통계 멈춤은 `.brand-rolling`에 걸림 — `.stats`가 아님(로고와 숫자를 한 화면에 넣으려고). 그 구간 요소를 늘리면 화면 높이 안에 안 들어가니 항상 높이 계산(로고 top 105 + 59 + 250 + 제목 79 + 130 + 숫자 128 ≈ 751px)을 확인할 것
+- **통계 멈춤은 `.stats-intro`(문구)+`.stats`(숫자)를 한 덩어리로 보고 헤더(72px) 아래 영역의 세로 가운데에 맞춤**(`stats-pause.js`가 매 scroll마다 위치를 재계산해 한 번 락 + `.stats-intro { scroll-snap-align: start; scroll-margin-top: calc((100vh + 72px - 368px) / 2) }`로 스냅 지점도 같은 자리). 로고월은 그 시점엔 이미 위로 지나가 있고 로고월 자체엔 멈춤이 없음. 문구 줄 수·문구↔숫자 간격·숫자 높이를 바꾸면 위 `368px`(=문구 90 + 간격 150 + 숫자 128)도 같이 바꿀 것
 - **헤더 배경 띠 숨김**: About의 풀스크린 사진 두 개(히어로 롤링 `about-hero-roll.js`, 키 사진 `about-key-photo-grow.js`)가 화면 전체로 커지는 동안(디졸브 포함, 사진 아래 끝이 헤더 밖으로 나갈 때까지) `<body>`에 `is-fullframe-hero` / `is-fullframe` 클래스를 붙여 `.header-backdrop`을 fade out — 사진이 헤더 뒤까지 꽉 차게 보임. 같은 구간에 헤더 로고(SVG는 `filter: brightness(0) invert(1)`)·선택된 nav 링크(데스크톱만)·아래 화살표(`.down-hint`)가 **흰색**으로 바뀜(모바일 햄버거 막대도 메뉴가 닫혀 있을 때만 흰색). 선택 안 된 nav 링크(`#7b7b7b`)와 Apply 버튼은 그대로라 어두운 사진 위에서 대비가 약함 — 필요하면 그 링크도 흰 계열로
 - **reveal 애니메이션(`translateY(28px)`) 때문에** JS로 재는 요소 위치가 28px 어긋나 보임 — 간격 측정할 때 감안할 것
 - 형제 블록의 margin은 **collapse**됨 (예: 갤러리 `margin-bottom: 600`과 선물 제목 `margin-top: 340`은 합쳐지지 않고 큰 값 600만 적용)
@@ -150,6 +150,7 @@ CTA 필 버튼은 전부 **`#464646`** + 흰 글자: 헤더 Apply(`.header__cta`
 ### About (`#find-the-key`, Figma 233:1182) — 스크롤 연출이 많은 섹션
 순서: 오프닝 헤딩(`--intro`, 38px/600) → **히어로 사진 롤링**(`about-hero-roll.js`: pin된 채 사진 5장이 넘어가고 4번째에 캡션, 5번째가 풀스크린으로 커지며 디졸브) → 롤링 직후 헤딩(`--blur-in`) → **스크랩북**(사진 2열, 오른쪽 열 155px 오프셋) → 배지 앞 헤딩 → SC 배지(GIF) → 인용문 1 → **키 사진 프레임**(중앙 정지 → 문구 1 → 풀스크린 확대 + 문구 2 → 디졸브) → 마지막 인용문 → **트로피(3D)**. 인용문(`.insight`)은 전부 30px/500. 키 사진은 아직 임시 회색 배경 + `key-photo.png`.
 - 키 사진 뒤 여백은 `about-key-photo-grow.js`의 `settleRange()`가 만듦 — 프레임 아래 끝→마지막 인용문 위 **230px**로 고정 (예전 `2*innerHeight`는 히어로 롤링에서 복사한 잘못된 식이라 두 화면 분량이 비었음)
+- **키 사진 블러**: 프레임이 풀스크린으로 커지고 고정된 구간(`GROW_VH 0.55` ~ `HOLD_VH 0.85`)에는 **사진도 문구도 블러 없이 선명**하고, 프레임이 풀려서 페이지와 함께 위로 지나갈 때 **사진의 절반(`BLUR_START 0.5`)이 화면 위로 나간 뒤부터** 블러(최대 20px)와 문구 fade-out이 시작됨. 조절은 `about-key-photo-grow.js` 상단 상수
 - 트로피 위 여백 `margin-top: 32vh` (캔버스 자체에 모델 위로 화면 높이 ~15%의 투명 여백이 있어서 60vh에서 줄임), 아래 340px
 
 ### 트로피 3D 뷰어 (`trophy.js`)
@@ -159,7 +160,7 @@ CTA 필 버튼은 전부 **`#464646`** + 흰 글자: 헤더 Apply(`.header__cta`
 ### Opportunities Unlocked (`#opportunities-unlocked`)
 - 히어로 → **카드 5개**(291×430, `opacity .4`, hover 시 394×520/`opacity 1`로 **위로** 자람). 상단 정렬 유지를 위해 hover 시 `margin-top: -90px`, 잘림 방지로 `.ou-contents { padding-top: 90px }` (1680px 미만에서 `overflow-x:auto`가 overflow-y까지 클립하기 때문). 1618px보다 좁으면 마우스 드래그/트랙패드로 스크롤되는 스트립. hover 크기(430/520)를 바꾸면 margin-top도 그 차이만큼 바꿀 것
 - 카드 클릭 → **팝업**(`ou-modal.js`가 `OpportunitiesUnlocked-0N.html`을 fetch해서 `.detail`+스타일을 주입). 상세 사진은 케이스별 폴더(`assets/Opportunities-Unlocked/01-…~05-…`, `thumb.*` + 상세 이미지). 텍스트 라벨이 있는 사진은 `--contain` 클래스(02번 슬라이드 3). 이전/다음 링크에는 사례 제목이 들어감(05는 다음 없음). 05(취향수집가)는 이미지를 나중에 교체할 수 있음
-- **브랜드 로고 롤링**(`.brand-rolling`, 로고 23개 + 복제 세트, 152×59 박스에 contain) → **서브타이틀 블록 "숫자로 보는 스페셜 크리에이터"**(`.stats-intro`, `.btd-middle` 스타일 재사용) → **통계**(300+ / 674건 / 112명 / 29건 카운트업, 숫자 69px)
+- **브랜드 로고 롤링**(`.brand-rolling`, 로고 23개 + 복제 세트, 152×59 박스에 contain) → **통계 위 문구 블록**(`.stats-intro`, 타이틀 없이 "스페셜 크리에이터의 이야기는 / 다양한 협업과 콘텐츠로 이어지고 있습니다." 두 줄 가운데 정렬 28px) → **통계**(300+ / 674건 / 112명 / 29건 카운트업, 숫자 69px)
 
 ### Beyond the Door (`#beyond-the-door`, Figma 28:476)
 - **여정 리스트**: 4단계(1 오프닝 밋업 / 2 스페셜 크리에이터 활동 / 3 오프라인 클래스 / 4 페어웰 — "브랜드 콜라보"는 삭제됨). 각 단계는 위 구분선 + 텍스트 + **롤링 마키 사진**(244×320, gap 15, 사진 안에 "Photo by. 이름" 크레딧). 단계 사이 화살표는 Figma에서 삭제되어 제거, 단계 간격 120px. 롤링은 원본+복제 세트를 `translateX(0→-50%)`로 돌림(아이템 수를 바꾸면 duration을 비례해서 조정)

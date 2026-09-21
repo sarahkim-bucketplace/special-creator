@@ -47,8 +47,17 @@
     return (window.innerHeight - restingHeight()) / 2;
   }
 
+  // phases, in viewport heights of scroll:
+  //   0 -> GROW_VH      the frame grows to fullscreen (text 1 -> text 2 crossfade along the way)
+  //   GROW_VH -> HOLD_VH  fullscreen and pinned, completely sharp (photo and text 2, no blur)
+  //   after HOLD_VH     the frame is released and scrolls away with the page. It stays sharp until
+  //                     BLUR_START (a fraction of its own height) has scrolled past the top of the
+  //                     screen, then blurs (and text 2 fades) as the rest leaves
+  const GROW_VH = 0.55;
+  const HOLD_VH = 0.85;
+  const BLUR_START = 0.5;
   function growRange() {
-    return window.innerHeight * 1.1;
+    return window.innerHeight * HOLD_VH;
   }
   const MAX_GROW_BLUR = 20; // matches about-hero-roll.js's own dissolve blur
   function settleRange() {
@@ -121,13 +130,11 @@
     } else {
       const d = centerLine() - rect.top;
       if (d < growRange()) {
-        // rawT (0-1) covers the whole grow+hold+dissolve sequence, but the
-        // *size* only grows across its first half (sizeT) — freeing up the
-        // second half as a genuine sharp, still hold before the dissolve
-        // even starts, so text 2 stays clearly readable for longer, and
-        // the blur itself ramps across a wider (slower) stretch than before
-        const rawT = clamp(d / growRange(), 0, 1);
-        const sizeT = easeInOutCubic(clamp(rawT / 0.5, 0, 1));
+        // phases are laid out in absolute scroll distance (see GROW_VH/HOLD_VH):
+        // the size only grows across the first stretch (sizeT), then a sharp still
+        // hold, then the long blur tail
+        const vh = window.innerHeight;
+        const sizeT = easeInOutCubic(clamp(d / (GROW_VH * vh), 0, 1));
         const fromWidth = restingWidth();
         const fromHeight = restingHeight();
         const fromLeft = (window.innerWidth - fromWidth) / 2;
@@ -139,19 +146,14 @@
         stage.style.transform = 'none';
         stage.style.borderRadius = lerp(20, 0, sizeT) + 'px';
         stage.style.zIndex = '';
-        // text 1 is already fully visible at rawT=0 (the paused spot);
+        // text 1 is already fully visible at d=0 (the paused spot);
         // crossfade to text 2 early, well before the size finishes growing
-        const textT = clamp((rawT - 0.2) / 0.2, 0, 1);
-        // sharp hold from rawT 0.4 to 0.75 (fullscreen since sizeT=1 by
-        // 0.5), then blurs out across a wide 0.75-1 stretch, dissolving
-        // into whatever scrolls up next — same idea as
-        // about-hero-roll.js's own fullscreen dissolve, just slower. text 2
-        // fades out together with the blur instead of sitting there
-        // readable-but-blurred
-        const blurT = clamp((rawT - 0.75) / 0.25, 0, 1);
+        const textT = clamp((d - 0.22 * vh) / (0.22 * vh), 0, 1);
+        // sharp hold from GROW_VH to HOLD_VH: fullscreen, text 2 readable, NO blur — the blur
+        // only starts once the released frame is half scrolled away (see the after branch below)
         text1.style.opacity = String(1 - textT);
-        text2.style.opacity = String(textT * (1 - blurT));
-        stage.style.filter = `blur(${blurT * MAX_GROW_BLUR}px)`;
+        text2.style.opacity = String(textT);
+        stage.style.filter = '';
         setFullframe(sizeT >= 0.999);
         lastZone = 'during';
       } else {
@@ -168,14 +170,18 @@
         stage.style.height = window.innerHeight + 'px';
         stage.style.transform = 'none';
         stage.style.borderRadius = '0px';
-        stage.style.filter = `blur(${MAX_GROW_BLUR}px)`;
+        // how much of the released frame has scrolled off the top (0 = none, 1 = all of it):
+        // sharp until BLUR_START, then the blur ramps up to its max as the rest leaves
+        const gone = clamp((d - growRange()) / window.innerHeight, 0, 1);
+        const blurT = clamp((gone - BLUR_START) / (1 - BLUR_START), 0, 1);
+        stage.style.filter = blurT > 0 ? `blur(${blurT * MAX_GROW_BLUR}px)` : '';
         // position:absolute is still a *positioned* element, so on its own
         // it would keep painting above the next (non-positioned) quote
         // even once scrolled past it — a negative z-index drops it behind
         // normal-flow content instead (same fix as about-hero-roll.js)
         stage.style.zIndex = '-1';
         text1.style.opacity = '0';
-        text2.style.opacity = '0';
+        text2.style.opacity = String(1 - blurT);
         setFullframe(stage.getBoundingClientRect().bottom > HEADER_HEIGHT);
         lastZone = 'after';
       }

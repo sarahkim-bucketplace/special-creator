@@ -90,7 +90,7 @@ html {
 .down-hint {
   position: fixed;
   left: 50%;
-  bottom: 40px;
+  bottom: 24px;
   z-index: 15;
   transform: translateX(-50%);
   border: none;
@@ -1030,16 +1030,8 @@ body.is-fullframe-hero .down-hint img {
   margin-right: -50vw;
   margin-top: 340px;
   overflow: hidden;
-  /* resting point for the "logo wall + stats" pair (stats-pause.js) —
-     pinning this instead of .stats itself is what keeps the logos in
-     frame together with the numbers below: .stats has a 340px gap above
-     it, so pinning *it* at a small fixed offset left the logos scrolled
-     off above (same class of issue fixed for the trophy/quote pair) */
-  scroll-snap-align: start;
-  /* pinned closer to the header than before (was 157px) so the 250px gap to
-     the stats title below fits: logos + title + numbers must all land in one
-     screen with the down-hint arrow still clear of the numbers */
-  scroll-margin-top: 105px;
+  /* (no snap point here anymore: the stop moved to the statement + numbers below,
+     see .stats-intro and stats-pause.js) */
 }
 
 .brand-rolling__track {
@@ -1310,6 +1302,8 @@ body.is-fullframe-hero .down-hint img {
 .btd-middle {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  text-align: center;
   gap: 20px;
   margin-top: 340px;
 }
@@ -1330,13 +1324,15 @@ body.is-fullframe-hero .down-hint img {
   color: #2d2828;
 }
 
+/* the middle-text blocks no longer carry a title: the body line IS the subtitle now —
+   centered, 28px (a deliberate off-scale size per direct request) */
 .btd-middle__desc {
-  font-size: 16px;
-  font-weight: 400;
-  letter-spacing: -0.08px;
-  line-height: 1.45;
+  font-size: 28px;
+  font-weight: 500;
+  letter-spacing: -0.14px;
+  line-height: 1.6;
   color: #2d2828;
-  max-width: 560px;
+  max-width: none;
 }
 
 /* title block right above the stats numbers — same .btd-middle look as the
@@ -1344,18 +1340,19 @@ body.is-fullframe-hero .down-hint img {
    stats row below it takes the standard 130px title-to-content gap instead
    of its own 340px section gap */
 .stats-intro {
-  /* exception to the 340px section gap: this block shares one screen with the
-     logo wall above and the numbers below (stats-pause.js pins the logos at
-     105px, see .brand-rolling) — 340px here pushes the numbers off the screen */
   margin-top: 250px;
+  /* resting point for the statement + numbers pair (stats-pause.js): the whole block
+     (statement 90 + gap 150 + numbers 128 = 368px) is centered in the area under the
+     72px header, i.e. its top sits (100vh + 72px - 368px) / 2 from the top */
+  scroll-snap-align: start;
+  scroll-margin-top: calc((100vh + 72px - 368px) / 2);
 }
 
-.stats-intro .btd-middle__desc {
-  max-width: none;
-}
-
+/* statement -> numbers: 150px (the usual subtitle gap is 130px; +20px here per direct
+   request). If this or the block's height changes, update the 368px in .stats-intro's
+   scroll-margin-top above so the resting point stays centered */
 .stats-intro + .stats {
-  margin-top: 130px;
+  margin-top: 150px;
 }
 
 /* ---- coverflow photo story ("직접 만나 나누는 시간") — per direct
@@ -1951,7 +1948,6 @@ body.ou-modal-open {
 
   /* ④ Body 15 */
   .hero__subtitle,
-  .btd-middle__desc,
   .btd-journey__desc,
   .cv-row__body,
   .cv-outro,
@@ -2011,6 +2007,11 @@ body.ou-modal-open {
   }
   .faq {
     gap: 48px;
+  }
+
+  .btd-middle__desc {
+    font-size: 22px;
+    letter-spacing: -0.11px;
   }
 
   /* the journey rows stack in a column here, but the base rule's

@@ -1,31 +1,28 @@
-// guarantees the "stop once, then continue" buffer the user asked for —
-// pinned on .brand-rolling (the logo marquee), not .stats itself, so the
-// logo wall and the stats numbers below it land in frame together. .stats
-// has a 340px gap above it; pinning .stats at a small fixed offset would
-// leave the logos scrolled off above (same class of issue fixed for the
-// trophy/quote pair in trophy-pause.js). .brand-rolling carries
-// scroll-snap-align:start (FindTheKey.css) so it's a valid mandatory-snap
-// resting point, but native snap alone wasn't reliable, and neither was
-// an earlier version of this file that used preventDefault() on
-// wheel/touchmove to hold the scroll position — trackpad momentum
-// scrolling is already "in flight" as its own native animation by the
-// time JS sees the events, and preventDefault on the individual wheel
-// events doesn't reliably stop that already-committed momentum. Setting
-// overflow:hidden instead removes the ability to scroll at the layout
-// level, which isn't subject to that race.
+// guarantees the "stop once, then continue" buffer for the stats pair: the centered
+// statement ("스페셜 크리에이터의 이야기는 …") plus the four count-up numbers right below it.
+// The two are treated as ONE block and centered vertically in the area under the fixed
+// header — the logo wall above has already scrolled off by then (this used to pin the logo
+// wall at the top instead; the stop now happens one beat later, on the statement + numbers).
 //
-// Also rewritten from an IntersectionObserver version (same failure mode
-// eventually hit and fixed in trophy-pause.js / btd-gift-toggle.js: a
-// fast flick can cross the target's geometry between the sparse, batched
-// frames IntersectionObserver actually samples, so the callback never
-// fires) to recompute from live scroll position on every 'scroll' event
-// instead of waiting for an edge-triggered crossing.
+// .stats-intro carries scroll-snap-align:start (FindTheKey.css) with a scroll-margin that
+// puts the block in the same centered spot, so it's a valid mandatory-snap resting point,
+// but native snap alone wasn't reliable — a fast scroll or trackpad flick could carry
+// straight through it — so this also locks the scroll for a moment once, same pattern as
+// insight-after-trophy-pause.js / about-key-photo-pause.js. Setting overflow:hidden (instead
+// of preventDefault on wheel events) removes the ability to scroll at the layout level, which
+// isn't subject to trackpad momentum "already in flight".
+//
+// Recomputes from the live scroll position on every 'scroll' event rather than using an
+// IntersectionObserver: a fast flick can cross the target's geometry between the sparse,
+// batched frames an observer actually samples, so its callback would never fire.
 (function () {
-  const stats = document.querySelector('.brand-rolling');
-  if (!stats) return;
+  const intro = document.querySelector('.stats-intro');
+  const stats = document.querySelector('.stats');
+  if (!intro || !stats) return;
 
+  const HEADER_HEIGHT = 72;
   const LOCK_MS = 600;
-  const REFERENCE_LINE = 300;
+  const TRIGGER_MARGIN = 400; // wide catch window — a fast flick can otherwise skip past a narrow one between scroll events entirely
   let triggered = false;
   let ticking = false;
 
@@ -39,14 +36,22 @@
     document.body.style.overflow = '';
   }
 
+  // where the block's top should sit so the whole statement+numbers block is centered in the
+  // visible area under the header
+  function centeredTop() {
+    const blockHeight = stats.getBoundingClientRect().bottom - intro.getBoundingClientRect().top;
+    return HEADER_HEIGHT + (window.innerHeight - HEADER_HEIGHT - blockHeight) / 2;
+  }
+
   function check() {
     ticking = false;
     if (triggered) return;
-    const top = stats.getBoundingClientRect().top;
-    if (top <= REFERENCE_LINE && top > -window.innerHeight) {
+    const top = intro.getBoundingClientRect().top;
+    const target = centeredTop();
+    if (top <= target + TRIGGER_MARGIN && top > -window.innerHeight) {
       triggered = true;
       document.documentElement.style.scrollSnapType = 'none';
-      stats.scrollIntoView({ block: 'start' });
+      window.scrollTo(0, window.scrollY + (top - target));
       lockScroll();
       window.setTimeout(() => {
         unlockScroll();
