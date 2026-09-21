@@ -129,7 +129,7 @@ CTA 필 버튼은 전부 **`#464646`** + 흰 글자: 헤더 Apply(`.header__cta`
 - `html { scroll-snap-type: y mandatory }` + 섹션 시작마다 snap. 섹션 안에서는 자유 스크롤. **함정**: 마지막 섹션 밖의 여백은 snap 영역 바깥이라 스크롤로 도달 못 함 → 페이지 하단 여백 400px은 `.page`가 아니라 `#creator-voices { padding-bottom: 400px }` 안에 있음 (밖에 두면 지원 버튼이 창 맨 아래에 붙어버렸음)
 - **멈춤(pause) 스크립트 패턴**: `*-pause.js`들은 특정 요소에 도달하면 `overflow:hidden`으로 600ms 락을 걸어 "한 번 멈췄다 가는" 지점을 만듦. `scroll-snap-align: start`도 같이 있지만 native snap만으론 빠른 스크롤에서 놓쳐서 JS로 보강한 것. IntersectionObserver는 빠른 플릭에서 콜백이 누락돼서 **매 scroll 이벤트마다 위치를 재계산하는 방식**으로 재작성됨 — 새 멈춤 지점도 같은 방식으로 만들 것. 멈춤 지점: About 배지 앞 헤딩 / 인용문(키 사진 앞) / 키 사진 프레임(중앙) / 마지막 인용문 / 트로피 / 로고월(+통계) / 선물 제목
 - 통계 멈춤은 `.brand-rolling`에 걸림 — `.stats`가 아님(로고와 숫자를 한 화면에 넣으려고). 그 구간 요소를 늘리면 화면 높이 안에 안 들어가니 항상 높이 계산(로고 top 105 + 59 + 250 + 제목 79 + 130 + 숫자 128 ≈ 751px)을 확인할 것
-- **헤더 배경 띠 숨김**: About의 풀스크린 사진 두 개(히어로 롤링 `about-hero-roll.js`, 키 사진 `about-key-photo-grow.js`)가 화면 전체로 커지는 동안(디졸브 포함, 사진 아래 끝이 헤더 밖으로 나갈 때까지) `<body>`에 `is-fullframe-hero` / `is-fullframe` 클래스를 붙여 `.header-backdrop`을 fade out — 사진이 헤더 뒤까지 꽉 차게 보임. 이 구간엔 헤더 글자가 사진 위에 그대로 올라가므로 어두운 실제 사진으로 바꾸면 글자 색(흰색) 전환이 필요할 수 있음
+- **헤더 배경 띠 숨김**: About의 풀스크린 사진 두 개(히어로 롤링 `about-hero-roll.js`, 키 사진 `about-key-photo-grow.js`)가 화면 전체로 커지는 동안(디졸브 포함, 사진 아래 끝이 헤더 밖으로 나갈 때까지) `<body>`에 `is-fullframe-hero` / `is-fullframe` 클래스를 붙여 `.header-backdrop`을 fade out — 사진이 헤더 뒤까지 꽉 차게 보임. 같은 구간에 헤더 로고(SVG는 `filter: brightness(0) invert(1)`)·선택된 nav 링크(데스크톱만)·아래 화살표(`.down-hint`)가 **흰색**으로 바뀜(모바일 햄버거 막대도 메뉴가 닫혀 있을 때만 흰색). 선택 안 된 nav 링크(`#7b7b7b`)와 Apply 버튼은 그대로라 어두운 사진 위에서 대비가 약함 — 필요하면 그 링크도 흰 계열로
 - **reveal 애니메이션(`translateY(28px)`) 때문에** JS로 재는 요소 위치가 28px 어긋나 보임 — 간격 측정할 때 감안할 것
 - 형제 블록의 margin은 **collapse**됨 (예: 갤러리 `margin-bottom: 600`과 선물 제목 `margin-top: 340`은 합쳐지지 않고 큰 값 600만 적용)
 
@@ -185,7 +185,8 @@ CTA 필 버튼은 전부 **`#464646`** + 흰 글자: 헤더 Apply(`.header__cta`
 ## 알아두면 좋은 것
 
 - Pretendard는 jsdelivr CDN에서 로드(오프라인이면 폰트 깨짐)
-- 저장소는 private, GitHub `sarahkim-bucketplace/special-creator`. 다른 Mac에서 이어가려면 `git clone` → 이후 `git pull`
+- GitHub `sarahkim-bucketplace/special-creator`. **저장소는 public이고 GitHub Pages가 켜져 있음** (예전 메모의 "private"은 틀림 — 코드·이미지·크레딧이 전부 공개됨. 공개하면 안 되는 자료가 있으면 private 전환 필요, 무료 계정에선 private으로 바꾸면 Pages도 꺼짐). 다른 Mac에서 이어가려면 `git clone` → 이후 `git pull`
+- **공유용 링크(Pages)**: 메인 통합 페이지 `https://sarahkim-bucketplace.github.io/special-creator/FindTheKey.html`, 첫 히어로(열쇠구멍) 화면 `https://sarahkim-bucketplace.github.io/special-creator/hero-home.html`, 루트(`/special-creator/`)는 `index.html` 리다이렉트로 `FindTheKey.html`로 감. push 후 반영에 1~2분. 배포본에서 페이지가 쓰는 애셋 URL 전부(FindTheKey 117개, hero-home 8개)가 200으로 열리는 것을 확인함(대소문자·한글 파일명 문제 없음). `assets/`가 약 940MB라 첫 로딩이 느릴 수 있음
 - **push 인증**: 이 컴퓨터엔 `gh` CLI가 없고 git은 macOS 키체인의 Fine-grained PAT를 씀(토큰 이름 `special-creator-clone`, `Contents` **Read and write** 필수 — Read-only면 clone/pull만 되고 push는 403). 인증이 한 번 실패하면 git이 키체인 항목을 지우니 새 토큰으로 터미널에서 `git push`를 직접 실행해 `Username`(GitHub 아이디, 토큰 아님)/`Password`(토큰)를 입력해야 함. **토큰을 채팅/스크린샷에 노출하면 즉시 Regenerate할 것**
 - iCloud Drive 경로에서 `preview_start` dev-server 모드로 `python3 -m http.server`를 띄우면 `PermissionError`가 남 → Bash로 직접 `python3 -m http.server 5173 &` (죽은 서버가 404를 계속 내면 죽이고 프로젝트 폴더에서 다시 띄울 것)
 - **Claude Code 내장 브라우저 패널의 함정**: ① CSS/JS 캐시를 심하게 먹음 — 수정이 안 보이면 `curl`로 서버 응답부터 확인하고 `fetch(url,{cache:'reload'})` 후 새로고침. 실제 Chrome은 `Cmd+Shift+R` ② 스크린샷이 빈 화면으로 나오는 일이 잦음 → 텍스트/DOM/`getBoundingClientRect` 측정으로 검증 ③ 창 폭이 좁으면(≤900/600px) 모바일 CSS가 적용돼 측정값이 달라짐 → 측정 전에 `resize_window`로 폭을 지정(desktop 프리셋으로 되돌리는 것도 잊지 말 것) ④ 마우스 hover는 폭 768px 미만(터치 에뮬레이션)에서 안 먹음
