@@ -166,6 +166,45 @@ body.is-fullframe-hero .header-backdrop {
   opacity: 0;
 }
 
+/* ...and with the photo behind them, the dark header logo, the selected nav
+   link and the down-hint arrow turn white (the SVG icons are black, so they
+   are inverted with a filter). Inactive links stay gray. The selected-link
+   and hamburger rules are scoped so they never turn white on the mobile
+   dropdown's yellow panel. */
+.header__logo-icon,
+.down-hint img {
+  transition: filter 0.3s ease;
+}
+
+.header__link {
+  transition: color 0.3s ease;
+}
+
+body.is-fullframe .header__logo-icon,
+body.is-fullframe-hero .header__logo-icon,
+body.is-fullframe .down-hint img,
+body.is-fullframe-hero .down-hint img {
+  filter: brightness(0) invert(1);
+}
+
+@media (min-width: 901px) {
+  body.is-fullframe .header__link--on,
+  body.is-fullframe-hero .header__link--on {
+    color: #ffffff;
+  }
+}
+
+@media (max-width: 900px) {
+  body.is-fullframe .header:not(.header--menu-open) .header__menu-icon,
+  body.is-fullframe .header:not(.header--menu-open) .header__menu-icon::before,
+  body.is-fullframe .header:not(.header--menu-open) .header__menu-icon::after,
+  body.is-fullframe-hero .header:not(.header--menu-open) .header__menu-icon,
+  body.is-fullframe-hero .header:not(.header--menu-open) .header__menu-icon::before,
+  body.is-fullframe-hero .header:not(.header--menu-open) .header__menu-icon::after {
+    background: #ffffff;
+  }
+}
+
 .header-backdrop::before {
   content: "";
   position: absolute;
