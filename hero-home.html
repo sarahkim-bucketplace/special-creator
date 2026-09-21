@@ -19,6 +19,17 @@
         <img class="hero-pin__logo-special" src="assets/logo-special-creator.svg" alt="SPECIAL CREATOR">
       </div>
 
+      <!-- photos 1-3 seen through the keyhole: they cycle as you scroll, then dissolve
+           away to leave the logo above. TEMPORARY placeholders — swap the three src
+           paths for the real photos (any size, they are cover-cropped to the screen) -->
+      <div class="hero-pin__photos" id="heroPhotos" aria-hidden="true">
+        <div class="hero-pin__photos-inner" id="heroPhotosInner">
+          <img class="hero-pin__photo" src="assets/find-the-key/rolling/rolling-01.jpeg" alt="">
+          <img class="hero-pin__photo" src="assets/find-the-key/rolling/rolling-02.jpg" alt="">
+          <img class="hero-pin__photo" src="assets/find-the-key/rolling/rolling-03.jpg" alt="">
+        </div>
+      </div>
+
       <!-- dark keyhole overlay, scales up + blurs away as you scroll -->
       <div class="hero-pin__overlay" id="heroOverlay">
         <svg class="hero-pin__overlay-img" id="keyholeSvg" viewBox="0 0 1280 1080" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">

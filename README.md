@@ -176,7 +176,16 @@ CTA 필 버튼은 전부 **`#464646`** + 흰 글자: 헤더 Apply(`.header__cta`
 
 ## `hero-home.html` 스크롤 인터랙션 (열쇠구멍 첫 화면)
 
-`.hero-pin`(310vh = 100 + 리빌 150 + 홀드 60): ① 키홀 오버레이가 scale 1→4.4, blur 1.5→61.5px, opacity 1→0으로 커지며 사라지고 뒤의 로고가 scale 0.4→1, blur 10→0으로 선명해짐(`easeInCubic`, 키홀 SVG는 `preserveAspectRatio="xMidYMid slice"` 필수 — `none`이면 찌그러짐, "Scroll/Down" 힌트 위치는 `updateHintPosition`이 리사이즈마다 재계산) ② 리빌이 끝나면 로고가 `is-settling`으로 덜컥 스냅, 하단 다운스크롤 아이콘이 딜레이 후 fade-in+bob, 홀드 60% 지점부터 fade-out ③ 홀드 끝나면 sticky가 풀리며 다음 섹션. 아래 "key image" 섹션(Figma 1:975)은 사진에만 `key-float` 둥실 애니메이션, 그림자는 고정, 크기 `clamp(220px, 61vw, 780px)`, 호버 시 "Click me" 배지가 커서를 따라다니고 클릭하면 `FindTheKey.html`로 이동.
+`.hero-pin`(**380vh** = 100 + 리빌 **220** + 홀드 60 — `hero-home.css`의 높이와 `hero-home.js`의 `REVEAL_VH = 2.2`를 항상 같이 바꿀 것). 스크롤 진행도 `progress`(0~1, 리빌 구간 기준) 순서:
+
+1. **블러 → 사진 1·2·3 → 투명도+블러 → 로고**: 열쇠구멍 뒤(로고 위, 어두운 오버레이 아래)에 `.hero-pin__photos`가 깔려 있고 구멍으로만 보임. 처음엔 사진 1이 **강하게 블러(28px)**된 채 시작 → 0~15%에 초점이 잡힘 → 15~60%에 사진 2, 3이 앞 사진 위로 차례로 fade-in(앞 사진이 안 비치게 위에 덮는 방식) → 60~74% 사진 3 유지 → 74~94%에 사진이 **opacity↓ + 블러 24px**로 사라지며 **로고가 fade-in**(로고도 블러 16px에서 시작해 선명해짐). 튜닝 상수는 `hero-home.js` 상단(`PHOTOS_END`, `DISSOLVE_START/END`, `FOCUS_END`, `START_BLUR`, `END_BLUR`, `OVERLAY_FADE_START`)
+2. **어두운 오버레이**: 키홀 SVG가 `scale 1→4.4`, `blur 1.5→61.5px`로 커짐(`easeInCubic` — 초반 느리고 후반 급가속). 오버레이 투명도는 **진행도 74%(=사진이 사라지기 시작하는 시점)까지 완전 불투명**이다가 100%까지 사라짐 → 사진이 도는 동안 구멍 바깥이 하얘지지 않고 어둡게 유지됨(예전엔 초반부터 투명해져서 흰 배경이 비쳤음)
+3. 사진 위에는 **검정 40% 틴트**(`.hero-pin__photos::after`, 숫자만 바꾸면 세기 조절)를 씌워 구멍 테두리보다 안쪽에 있는 듯한 깊이감을 줌. 사진 층은 opacity와 함께 틴트도 같이 사라짐
+4. 리빌이 끝나면 로고에 `is-settling`으로 덜컥 스냅, 하단 다운스크롤 아이콘이 딜레이 후 fade-in+bob, 홀드 60% 지점부터 fade-out, 홀드가 끝나면 sticky가 풀리며 다음 섹션
+- 키홀 SVG는 `preserveAspectRatio="xMidYMid slice"` 필수(`none`이면 찌그러짐), "Scroll/Down" 힌트 위치는 `updateHintPosition`이 리사이즈마다 재계산, 힌트는 진행도 20%에서 사라짐
+- **현재 사진 3장(`rolling-01/02/03`)은 임시** — `hero-home.html`의 `hero-pin__photos` 안 `src` 세 줄만 바꾸면 됨(화면 비율에 맞춰 cover로 잘림)
+- **하지 말 것**: 사진 층에 키홀 모양 마스크를 씌우지 말 것 — 마스크의 칼 같은 가장자리와 오버레이의 번진 가장자리 사이로 흰 배경이 새어 하얀 테두리/후광이 생겨서 뺐음. 지금은 "오버레이가 불투명한 동안 사진이 구멍 뒤에서만 보이는" 방식
+- 아래 "key image" 섹션(Figma 1:975)은 사진에만 `key-float` 둥실 애니메이션, 그림자는 고정, 크기 `clamp(220px, 61vw, 780px)`, 호버 시 "Click me" 배지가 커서를 따라다니고 클릭하면 `FindTheKey.html`로 이동. 공유용 첫 화면 링크는 이 페이지(`.../special-creator/hero-home.html`)
 
 ## 파일명 변경 이력
 

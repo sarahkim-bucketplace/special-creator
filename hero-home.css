@@ -50,8 +50,9 @@ body {
 
 .hero-pin {
   position: relative;
-  /* 100vh viewport + 150vh reveal + 60vh hold (page stays pinned once the logo is fully revealed) */
-  height: 310vh;
+  /* 100vh viewport + 220vh reveal (photos cycle, then the logo comes in) + 60vh hold (page stays
+     pinned once the logo is fully revealed) — keep in sync with REVEAL_VH in hero-home.js */
+  height: 380vh;
 }
 
 .hero-pin__stage {
@@ -73,6 +74,46 @@ body {
   flex-direction: column;
   align-items: center;
   filter: blur(var(--logo-blur, 10px));
+  opacity: var(--logo-opacity, 0);
+}
+
+/* photos seen through the keyhole (hero-home.js cycles + dissolves them). Sits above the
+   logo and below the dark overlay: the overlay stays opaque around the hole while the
+   photos play, so they only show through the hole — and through its blurred soft edge, which
+   blends into the photo instead of into the white page. (A hard keyhole-shaped mask on this
+   layer was tried and dropped: it left a sharp photo edge inside the overlay's soft glow.) */
+.hero-pin__photos {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: var(--photos-opacity, 1);
+  will-change: opacity;
+}
+
+/* black tint over the photos so they sit "deeper" than the hole's rim — fades out with the
+   layer. Raise/lower the alpha here (0 = none) */
+.hero-pin__photos::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.hero-pin__photos-inner {
+  position: absolute;
+  inset: 0;
+  transform: scale(var(--photos-scale, 1.12));
+  filter: blur(var(--photos-blur, 0px));
+  will-change: transform, filter;
+}
+
+.hero-pin__photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
 }
 
 /* a little jolt/snap right when the reveal finishes and the hold begins */
