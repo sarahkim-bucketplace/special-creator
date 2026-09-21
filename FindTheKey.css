@@ -1075,10 +1075,11 @@ body.is-fullframe-hero .down-hint img {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  /* scales with viewport instead of a flat 70px — 70/1280 (the Figma
-     frame width) ≈ 5.47vw, capped at 70px so it stops growing past the
-     frame's own width instead of ballooning on very wide screens */
-  gap: clamp(24px, 5.47vw, 70px);
+  /* gap between the four items: scales with the viewport and is capped at 110px so it
+     stops growing on very wide screens (was 5.47vw / 70px, the Figma value; widened
+     per direct request — the four items are ~700px wide in total, so even the widest
+     gap leaves the row well inside the 1210px content column) */
+  gap: clamp(24px, 7.6vw, 110px);
   margin-top: 340px;
   margin-bottom: 340px;
 }
@@ -1097,9 +1098,9 @@ body.is-fullframe-hero .down-hint img {
 }
 
 .stats__label {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 500;
-  letter-spacing: -0.11px;
+  letter-spacing: -0.1px;
   color: #2d2828;
   white-space: nowrap;
 }
@@ -1117,21 +1118,21 @@ body.is-fullframe-hero .down-hint img {
 }
 
 .stats__number-value {
-  font-size: 69px;
+  font-size: 54px;
   font-weight: 600;
-  letter-spacing: -0.23px;
+  letter-spacing: -0.18px;
   color: #2d2828;
 }
 
 .stats__number-suffix {
-  font-size: 37px;
+  font-size: 28px;
   font-weight: 600;
-  letter-spacing: -0.23px;
+  letter-spacing: -0.18px;
   color: #2d2828;
 }
 
 .stats__number-suffix--plus {
-  font-size: 37px;
+  font-size: 28px;
 }
 
 @media (max-width: 600px) {
@@ -1345,14 +1346,14 @@ body.is-fullframe-hero .down-hint img {
 .stats-intro {
   margin-top: 250px;
   /* resting point for the statement + numbers pair (stats-pause.js): the whole block
-     (statement 96 + gap 150 + numbers 128 = 374px) is centered in the area under the
-     72px header, i.e. its top sits (100vh + 72px - 374px) / 2 from the top */
+     (statement 96 + gap 150 + numbers 108 = 354px) is centered in the area under the
+     72px header, i.e. its top sits (100vh + 72px - 354px) / 2 from the top */
   scroll-snap-align: start;
-  scroll-margin-top: calc((100vh + 72px - 374px) / 2);
+  scroll-margin-top: calc((100vh + 72px - 354px) / 2);
 }
 
 /* statement -> numbers: 150px (the usual subtitle gap is 130px; +20px here per direct
-   request). If this or the block's height changes, update the 374px in .stats-intro's
+   request). If this or the block's height changes, update the 354px in .stats-intro's
    scroll-margin-top above so the resting point stays centered */
 .stats-intro + .stats {
   margin-top: 150px;
