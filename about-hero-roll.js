@@ -40,6 +40,12 @@
   const credit = wrapper.querySelector('.about-photo__credit');
   if (!stage || !items.length || !caption || !credit) return;
 
+  // one credit per rolling photo, same order as the .about-roll__item
+  // images above — setActive() below keeps this in sync with whichever
+  // photo is currently showing, instead of the single static credit this
+  // used to be (which only ever matched photo 1)
+  const CREDITS = ['jinmilloo예빈', 'dotorisisters', '어반데이', 'sund_home', '루지니하우스'];
+
   // the heading right above .about-roll blurs out (toss.im's phone-section
   // treatment, run in reverse: there it sharpens INTO focus on entry, here
   // it blurs OUT of focus) in lockstep with the same entering-phase
@@ -128,6 +134,7 @@
 
   function setActive(index) {
     items.forEach((item, i) => item.classList.toggle('is-active', i === index));
+    if (CREDITS[index]) credit.textContent = 'Photo by. ' + CREDITS[index];
   }
 
   function setCaptionVisible(visible) {
