@@ -5,12 +5,12 @@
 다른 컴퓨터에서 Claude(또는 사람)가 이어서 작업할 때 필요한 배경 설명을 정리해둔 문서입니다.
 (git으로는 코드만 넘어가고, 대화 맥락은 넘어가지 않아서 남겨둡니다.)
 
-> **먼저 읽을 것**: 사이트의 실제 메인은 **`FindTheKey.html` 한 장짜리 통합 스크롤 페이지**입니다 (About → Opportunities → Programs → Voices). 예전에 섹션별로 따로 만들었던 페이지들(`OpportunitiesUnlocked.html` 등)은 남아있지만 더 이상 메인이 아니고, 새 디자인 수정은 전부 `FindTheKey.html`/`FindTheKey.css`에 들어갑니다. `index.html`은 `FindTheKey.html`로 리다이렉트만 합니다.
+> **먼저 읽을 것**: 사이트의 실제 메인은 **`FindTheKey.html` 한 장짜리 통합 스크롤 페이지**입니다 (About → Opportunities → Programs → Voices). 예전에 섹션별로 따로 만들었던 페이지들(`OpportunitiesUnlocked.html` 등)은 남아있지만 더 이상 메인이 아니고, 새 디자인 수정은 전부 `FindTheKey.html`/`FindTheKey.css`에 들어갑니다. `index.html`은 **`hero-home.html`(열쇠구멍 첫 화면)로 리다이렉트** — 방문자는 거기서 스크롤/클릭으로 `FindTheKey.html`로 넘어감 (예전엔 `index.html`이 바로 `FindTheKey.html`로 갔음, 첫 화면을 hero-home으로 둘지 결정 보류였다가 확정됨).
 
 ## 파일 구조
 
 ```
-index.html                                     FindTheKey.html로 리다이렉트
+index.html                                     hero-home.html로 리다이렉트 (사이트 진입점)
 FindTheKey.html / FindTheKey.css               ★ 메인 통합 페이지 (섹션 4개, CSS 한 파일에 전부)
 hero-home.html / .css / .js                    열쇠구멍 스크롤 첫 화면 (헤더 로고가 여기로 연결)
 trophy.js                                      3D 트로피 뷰어 (Three.js, type=module)
@@ -194,19 +194,20 @@ CTA 필 버튼은 전부 **`#464646`** + 흰 글자 + **웨이트 400(Regular)**
 3. 사진 위에는 **검정 40% 틴트**(`.hero-pin__photos::after`, 숫자만 바꾸면 세기 조절)를 씌워 구멍 테두리보다 안쪽에 있는 듯한 깊이감을 줌. 사진 층은 opacity와 함께 틴트도 같이 사라짐
 4. 리빌이 끝나면 로고에 `is-settling`으로 덜컥 스냅, 하단 다운스크롤 아이콘이 딜레이 후 fade-in+bob, 홀드 60% 지점부터 fade-out, 홀드가 끝나면 sticky가 풀리며 다음 섹션
 - 키홀 SVG는 `preserveAspectRatio="xMidYMid slice"` 필수(`none`이면 찌그러짐), "Scroll/Down" 힌트 위치는 `updateHintPosition`이 리사이즈마다 재계산, 힌트는 진행도 20%에서 사라짐
-- **현재 사진 3장(`rolling-01/02/03`)은 임시** — `hero-home.html`의 `hero-pin__photos` 안 `src` 세 줄만 바꾸면 됨(화면 비율에 맞춰 cover로 잘림)
+- **키홀로 보이는 사진 3장은 About 섹션과 같은 실제 파일을 그대로 씀** — `hero-pin__photos` 안 `src` 3줄은 `assets/01-about/rolling/`의 히어로 롤링 사진 중 앞 3장(현재 jinmilloo예빈/dotorisisters/어반데이). **함정**: About 섹션 사진을 교체할 때 `FindTheKey.html`만 고치고 `hero-home.html`의 이 3줄을 깜빡하면 여기만 404 남음 — 같이 바꿀 것
+- **아래 key-visual 사진(`key-photo`)은 About의 key-photo 프레임과 예전엔 같은 파일을 썼지만 지금은 분리됨** — hero-home 전용 3D 렌더 키 이미지 `assets/00-hero/key-photo.png`(About을 실제 사진으로 교체하면서 갈라짐). About의 키 프레임 사진을 또 바꾸더라도 이 파일은 건드리지 말 것(반대도 마찬가지)
 - **하지 말 것**: 사진 층에 키홀 모양 마스크를 씌우지 말 것 — 마스크의 칼 같은 가장자리와 오버레이의 번진 가장자리 사이로 흰 배경이 새어 하얀 테두리/후광이 생겨서 뺐음. 지금은 "오버레이가 불투명한 동안 사진이 구멍 뒤에서만 보이는" 방식
 - 아래 "key image" 섹션(Figma 1:975)은 사진에만 `key-float` 둥실 애니메이션, 그림자는 고정, 크기 `clamp(220px, 61vw, 780px)`, 호버 시 "Click me" 배지가 커서를 따라다니고 클릭하면 `FindTheKey.html`로 이동. 공유용 첫 화면 링크는 이 페이지(`.../special-creator/hero-home.html`)
 
 ## 파일명 변경 이력
 
-`home.html/css/js` → `hero-home.*`, `index.html/styles.css` → `FindTheKey.html/css`로 리네임(웹서버가 `index.html`을 루트로 서빙하는 관례와 헷갈리지 않게). 지금 `index.html`은 `FindTheKey.html` 리다이렉트용으로 새로 만든 파일. 나중에 도메인을 연결할 때 첫 화면을 `hero-home.html`로 둘지(그러면 그쪽을 `index.html`로) 결정할 것.
+`home.html/css/js` → `hero-home.*`, `index.html/styles.css` → `FindTheKey.html/css`로 리네임(웹서버가 `index.html`을 루트로 서빙하는 관례와 헷갈리지 않게). `index.html`은 리다이렉트 전용 파일 — **첫 화면은 `hero-home.html`로 확정**(예전엔 `FindTheKey.html`로 바로 갔음).
 
 ## 알아두면 좋은 것
 
 - Pretendard는 jsdelivr CDN에서 로드(오프라인이면 폰트 깨짐)
 - GitHub `sarahkim-bucketplace/special-creator`. **저장소는 public이고 GitHub Pages가 켜져 있음** (예전 메모의 "private"은 틀림 — 코드·이미지·크레딧이 전부 공개됨. 공개하면 안 되는 자료가 있으면 private 전환 필요, 무료 계정에선 private으로 바꾸면 Pages도 꺼짐). 다른 Mac에서 이어가려면 `git clone` → 이후 `git pull`
-- **공유용 링크(Pages)**: 메인 통합 페이지 `https://sarahkim-bucketplace.github.io/special-creator/FindTheKey.html`, 첫 히어로(열쇠구멍) 화면 `https://sarahkim-bucketplace.github.io/special-creator/hero-home.html`, 루트(`/special-creator/`)는 `index.html` 리다이렉트로 `FindTheKey.html`로 감. push 후 반영에 1~2분. ⚠️ **이 대소문자·한글 파일명 200 확인은 `assets/`를 00-hero~04-voices로 재구성하기 전 상태 기준** — 폴더를 통째로 옮긴 뒤(로컬 `git mv`로는 확인했지만) 실제 배포본에서 재검증 안 함, push 후 꼭 한 번 훑어볼 것. `assets/`가 약 940MB라 첫 로딩이 느릴 수 있음
+- **공유용 링크(Pages)**: 메인 통합 페이지 `https://sarahkim-bucketplace.github.io/special-creator/FindTheKey.html`, 첫 히어로(열쇠구멍) 화면 `https://sarahkim-bucketplace.github.io/special-creator/hero-home.html`, 루트(`/special-creator/`)는 `index.html` 리다이렉트로 `hero-home.html`로 감. push 후 반영에 1~2분. ⚠️ **이 대소문자·한글 파일명 200 확인은 `assets/`를 00-hero~04-voices로 재구성하기 전 상태 기준** — 폴더를 통째로 옮긴 뒤(로컬 `git mv`로는 확인했지만) 실제 배포본에서 재검증 안 함, push 후 꼭 한 번 훑어볼 것. `assets/`가 약 940MB라 첫 로딩이 느릴 수 있음
 - **push 인증**: 이 컴퓨터엔 `gh` CLI가 없고 git은 macOS 키체인의 Fine-grained PAT를 씀(토큰 이름 `special-creator-clone`, `Contents` **Read and write** 필수 — Read-only면 clone/pull만 되고 push는 403). 인증이 한 번 실패하면 git이 키체인 항목을 지우니 새 토큰으로 터미널에서 `git push`를 직접 실행해 `Username`(GitHub 아이디, 토큰 아님)/`Password`(토큰)를 입력해야 함. **토큰을 채팅/스크린샷에 노출하면 즉시 Regenerate할 것**
 - iCloud Drive 경로에서 `preview_start` dev-server 모드로 `python3 -m http.server`를 띄우면 `PermissionError`가 남 → Bash로 직접 `python3 -m http.server 5173 &` (죽은 서버가 404를 계속 내면 죽이고 프로젝트 폴더에서 다시 띄울 것)
 - **Claude Code 내장 브라우저 패널의 함정**: ① CSS/JS 캐시를 심하게 먹음 — 수정이 안 보이면 `curl`로 서버 응답부터 확인하고 `fetch(url,{cache:'reload'})` 후 새로고침. 실제 Chrome은 `Cmd+Shift+R` ② 스크린샷이 빈 화면으로 나오는 일이 잦음 → 텍스트/DOM/`getBoundingClientRect` 측정으로 검증 ③ 창 폭이 좁으면(≤900/600px) 모바일 CSS가 적용돼 측정값이 달라짐 → 측정 전에 `resize_window`로 폭을 지정(desktop 프리셋으로 되돌리는 것도 잊지 말 것) ④ 마우스 hover는 폭 768px 미만(터치 에뮬레이션)에서 안 먹음
