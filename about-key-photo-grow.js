@@ -42,9 +42,14 @@
     return 568;
   }
   // where the pause script holds the frame centered — growing starts
-  // exactly here, so there's no dead scroll between "paused" and "growing"
+  // exactly here, so there's no dead scroll between "paused" and "growing".
+  // window.effVH() (viewport.js), not the raw window.innerHeight, so this
+  // resting/centering position and the pacing below stay consistent across
+  // screens with very different real heights (MacBook 14"/16", external
+  // monitors) instead of each one scaling directly off its own height —
+  // must still match about-key-photo-pause.js's own copy of this formula
   function centerLine() {
-    return (window.innerHeight - restingHeight()) / 2;
+    return (window.effVH() - restingHeight()) / 2;
   }
 
   // phases, in viewport heights of scroll:
@@ -57,7 +62,7 @@
   const HOLD_VH = 0.85;
   const BLUR_START = 0.5;
   function growRange() {
-    return window.innerHeight * HOLD_VH;
+    return window.effVH() * HOLD_VH;
   }
   const MAX_GROW_BLUR = 20; // matches about-hero-roll.js's own dissolve blur
   function settleRange() {
@@ -132,8 +137,11 @@
       if (d < growRange()) {
         // phases are laid out in absolute scroll distance (see GROW_VH/HOLD_VH):
         // the size only grows across the first stretch (sizeT), then a sharp still
-        // hold, then the long blur tail
-        const vh = window.innerHeight;
+        // hold, then the long blur tail. effVH() (viewport.js), not the raw
+        // innerHeight, so this pacing stays consistent across screens — the
+        // actual fullscreen target size below still uses the real
+        // window.innerWidth/innerHeight so it truly fills the screen
+        const vh = window.effVH();
         const sizeT = easeInOutCubic(clamp(d / (GROW_VH * vh), 0, 1));
         const fromWidth = restingWidth();
         const fromHeight = restingHeight();

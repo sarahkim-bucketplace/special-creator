@@ -29,6 +29,17 @@
   const targets = Array.from(document.querySelectorAll('.about-badge, .trophy-placeholder'));
   if (!targets.length) return;
 
+  // .insight--key is deliberately left OFF the generic scroll-reveal
+  // observer (find-the-key.js) — on a tall enough real viewport it could
+  // cross that observer's reveal threshold and fade in on its own the
+  // instant the badge above it settles, in the very same frame, no matter
+  // how the badge's own pause point was tuned. Revealing it explicitly
+  // here instead, the moment this script actually locks onto .about-badge,
+  // ties it to "the user scrolled once more" rather than to raw document
+  // position, so it's frame-height-independent.
+  const badgeTarget = document.querySelector('.about-badge');
+  const quote1 = document.querySelector('.insight--key');
+
   const handled = new Set();
   let busy = false;
   let ticking = false;
@@ -57,6 +68,7 @@
   function lockOnto(el) {
     busy = true;
     el.scrollIntoView({ block: 'start' });
+    if (el === badgeTarget && quote1) quote1.classList.add('is-visible');
     document.documentElement.style.overflow = 'hidden';
     document.body.style.overflow = 'hidden';
     window.setTimeout(() => {
@@ -64,7 +76,11 @@
       document.body.style.overflow = '';
       busy = false;
       restoreSnapIfDone();
-      // re-check right away in case the next stop is already within range
+      if (window.markPauseUnlock) window.markPauseUnlock();
+      // re-check right away in case the next stop is already within range —
+      // pauseSafeToTrigger() below still holds it off until scrolling has
+      // genuinely gone idle and the user scrolls again, this just means it
+      // doesn't need its own separate listener
       checkTargets();
     }, LOCK_MS);
   }
@@ -72,8 +88,33 @@
   function checkTargets() {
     ticking = false;
     if (busy) return;
+    // another pause script (about-badge-pause.js, or this script's own
+    // previous stop) can have JUST unlocked — its programmatic scroll lands
+    // the next target inside this script's trigger range as a side effect,
+    // and a trackpad flick's inertial scroll can keep emitting deltas well
+    // after the lock releases, regardless of whether the page could
+    // actually scroll during it. Either would chain straight into the next
+    // stop within the same physical scroll gesture, before the user ever
+    // scrolled again on purpose, so the pair below used to appear in the
+    // same breath as the pair above. pauseSafeToTrigger() (viewport.js)
+    // only turns true once scrolling has actually gone idle since the last
+    // unlock, so this only fires on a scroll the user made afterward.
+    if (document.documentElement.style.overflow === 'hidden' || document.body.style.overflow === 'hidden') {
+      return;
+    }
+    if (window.pauseSafeToTrigger && !window.pauseSafeToTrigger()) {
+      return;
+    }
     for (const el of targets) {
       if (handled.has(el)) continue;
+      // the .about-badge stop specifically must not even be considered
+      // until about-badge-pause.js's own heading+badge pause has fully
+      // finished (unlocked) at least once — the overflow/idle guards above
+      // help but, empirically, a scroll event landing in exactly the wrong
+      // rAF frame could still let this run mid-way through that other
+      // script's own lock. Requiring its explicit "done" flag closes that
+      // race entirely instead of relying on timing.
+      if (el === badgeTarget && !window.aboutBadgeHeadingPauseDone) continue;
       const top = el.getBoundingClientRect().top;
       if (top <= REFERENCE_LINE && top > -window.innerHeight) {
         suppressSnap();

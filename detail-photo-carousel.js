@@ -10,8 +10,15 @@ function initPhotoCarousel(root) {
   let index = slides.findIndex((el) => el.classList.contains('is-active'));
   if (index < 0) index = 0;
 
+  // optional, page-specific: #detailLinks holds one .detail__link per photo
+  // slide (same order) — only OpportunitiesUnlocked-05.html has this right
+  // now, so on every other page this is just an empty array and the forEach
+  // below is a no-op
+  const links = Array.from(root.querySelectorAll('#detailLinks > .detail__link'));
+
   function render() {
     slides.forEach((el, i) => el.classList.toggle('is-active', i === index));
+    links.forEach((el, i) => el.classList.toggle('is-active', i === index));
   }
 
   root.querySelectorAll('.detail__arrow-btn--prev').forEach((btn) => {

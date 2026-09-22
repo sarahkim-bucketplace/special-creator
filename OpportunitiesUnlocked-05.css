@@ -310,6 +310,45 @@ body {
   max-width: 576px;
 }
 
+/* per-photo-slide link (Figma node 181:588) — .detail__links holds one
+   .detail__link per photo slide, same order as #photoTrack; only the one
+   matching the active photo is shown (detail-photo-carousel.js toggles
+   is-active on both in lockstep). Same 16px body scale as .detail__body,
+   just with the category line bumped to SemiBold */
+.detail__link {
+  display: none;
+  max-width: 576px;
+}
+
+.detail__link.is-active {
+  display: block;
+}
+
+.detail__link-category {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.08px;
+  line-height: 1.45;
+  color: #2d2828;
+}
+
+.detail__link-line {
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: -0.08px;
+  line-height: 1.45;
+  color: #2d2828;
+}
+
+.detail__link-brand {
+  margin-right: 6px;
+}
+
+.detail__link-cta {
+  color: #2d2828;
+  text-decoration: underline;
+}
+
 .detail__nav {
   display: flex;
   flex-direction: column;

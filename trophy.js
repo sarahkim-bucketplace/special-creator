@@ -45,12 +45,12 @@ if (container) {
   scene.add(rimLight);
 
   // real photographed stone/plaster surface, processed into a seamless tile
-  // (assets/trophy-3d-texture/trophy-texture-seamless.png). The .glb's own
+  // (assets/01-about/trophy-3d-texture/trophy-texture-seamless.png). The .glb's own
   // material has no image baked in (just a flat white plaster color), so this
   // is applied manually — a color map plus a linear-colorspace clone driving
   // bump + roughness so the grain reads as physical relief.
   const textureLoader = new THREE.TextureLoader();
-  const surfaceColorMap = textureLoader.load('assets/trophy-3d-texture/trophy-texture-seamless.png');
+  const surfaceColorMap = textureLoader.load('assets/01-about/trophy-3d-texture/trophy-texture-seamless.png');
   surfaceColorMap.wrapS = THREE.RepeatWrapping;
   surfaceColorMap.wrapT = THREE.RepeatWrapping;
   // this .glb's UVs are normalized (u: 0-1, v: 0.14-1) — unlike the old .obj's
@@ -73,7 +73,7 @@ if (container) {
   // cheap single-channel bump approximation — gives more accurate per-pixel
   // lighting on the grain. Kept alongside bumpMap per request; wrap/repeat
   // mirrored from the color map so the two line up on the surface.
-  const surfaceNormalMap = textureLoader.load('assets/trophy-3d-texture/trophy-texture-normal.png');
+  const surfaceNormalMap = textureLoader.load('assets/01-about/trophy-3d-texture/trophy-texture-normal.png');
   surfaceNormalMap.wrapS = THREE.RepeatWrapping;
   surfaceNormalMap.wrapT = THREE.RepeatWrapping;
   surfaceNormalMap.repeat.copy(surfaceColorMap.repeat);
@@ -169,7 +169,7 @@ if (container) {
   });
 
   const loader = new GLTFLoader();
-  loader.load('assets/trophy.glb', (gltf) => {
+  loader.load('assets/01-about/trophy.glb', (gltf) => {
     const object = gltf.scene;
 
     object.traverse((child) => {
@@ -200,7 +200,7 @@ if (container) {
 
     scene.add(object);
   }, undefined, (err) => {
-    console.error('[trophy] failed to load assets/trophy.glb', err);
+    console.error('[trophy] failed to load assets/01-about/trophy.glb', err);
   });
 
   function animate() {

@@ -62,8 +62,13 @@
 
   const HEADER_HEIGHT = 72;
   const PIN_LIFT = 20; // nudges the frame up from dead-center, which read as slightly bottom-heavy
+  // window.effVH() (viewport.js) instead of the raw window.innerHeight for
+  // every pacing/centering calc below — keeps this whole sequence's timing
+  // and framing consistent across screens with very different real heights
+  // (MacBook 14"/16", external monitors), rather than each one scaling
+  // directly off its own window.innerHeight
   function pinTop() {
-    return HEADER_HEIGHT + (window.innerHeight - HEADER_HEIGHT - baseStageHeight()) / 2 - PIN_LIFT;
+    return HEADER_HEIGHT + (window.effVH() - HEADER_HEIGHT - baseStageHeight()) / 2 - PIN_LIFT;
   }
   function smallBox() {
     const width = Math.min(1006, window.innerWidth - 70);
@@ -71,30 +76,30 @@
   }
 
   function enterRange() {
-    return window.innerHeight * 0.9;
+    return window.effVH() * 0.9;
   }
   function enterOffset() {
-    return window.innerHeight * 0.55;
+    return window.effVH() * 0.55;
   }
   function growRange() {
     // more room than the entering/cycling phases — it now carries four
     // sub-phases (grow, caption in, hold, dissolve) instead of one motion
-    return window.innerHeight * 1.3;
+    return window.effVH() * 1.3;
   }
   function settleRange() {
     // extra dead scroll space reserved after the freeze point, just enough
-    // that the frozen fullscreen photo (itself innerHeight tall, starting
+    // that the frozen fullscreen photo (itself effVH() tall, starting
     // baseStageHeight() above the wrapper's own bottom edge) fully clears
     // the viewport before the next heading starts to enter it (that
     // heading has margin-top:0 — it centers itself in its own min-height
     // box instead), plus a small fixed buffer so the gap still reads as an
     // intentional pause rather than a hard cut — solved directly from the
     // two elements' geometry rather than guessed as a flat multiple of
-    // innerHeight, which either overlapped them or (at a large-enough
-    // multiple to always avoid that) left an oversized gap
+    // the viewport height, which either overlapped them or (at a
+    // large-enough multiple to always avoid that) left an oversized gap
     const HEADING_MARGIN_TOP = 0;
     const BUFFER = 0;
-    return Math.max(0, 2 * window.innerHeight - baseStageHeight() - HEADING_MARGIN_TOP + BUFFER);
+    return Math.max(0, 2 * window.effVH() - baseStageHeight() - HEADING_MARGIN_TOP + BUFFER);
   }
   function wrapperLeftOffset() {
     return wrapper.getBoundingClientRect().left;

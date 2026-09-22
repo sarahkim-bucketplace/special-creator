@@ -43,11 +43,16 @@
     document.body.style.overflow = '';
   }
 
+  // window.effVH() (viewport.js), not the raw innerHeight, so whether this
+  // falls back to the badge-bottom anchor (and by how much) is the same
+  // across screens with very different real heights, instead of each
+  // screen tripping the fallback differently and landing on a different
+  // pair of elements in frame
   function targetScrollY() {
     const headingTopDocY = restPoint.getBoundingClientRect().top + window.scrollY;
     const badgeBottomDocY = badge.getBoundingClientRect().bottom + window.scrollY;
     const headingPin = headingTopDocY - REST_OFFSET;
-    const badgeBottomAnchor = badgeBottomDocY - window.innerHeight + BOTTOM_PADDING;
+    const badgeBottomAnchor = badgeBottomDocY - window.effVH() + BOTTOM_PADDING;
     return Math.max(headingPin, badgeBottomAnchor);
   }
 
@@ -63,6 +68,10 @@
       window.setTimeout(() => {
         unlockScroll();
         document.documentElement.style.scrollSnapType = '';
+        if (window.markPauseUnlock) window.markPauseUnlock();
+        // trophy-pause.js's .about-badge stop waits for this before it will
+        // even consider locking onto the badge — see its own comment
+        window.aboutBadgeHeadingPauseDone = true;
       }, LOCK_MS);
     }
   }

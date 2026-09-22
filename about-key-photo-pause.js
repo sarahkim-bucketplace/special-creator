@@ -24,8 +24,11 @@
     document.body.style.overflow = '';
   }
 
+  // window.effVH() (viewport.js), not the raw innerHeight, so this matches
+  // about-key-photo-grow.js's own copy of the same formula and the pause
+  // point stays consistent across screens with very different real heights
   function centeredTop() {
-    return (window.innerHeight - RESTING_HEIGHT) / 2;
+    return (window.effVH() - RESTING_HEIGHT) / 2;
   }
 
   function check() {
@@ -41,6 +44,7 @@
       window.setTimeout(() => {
         unlockScroll();
         document.documentElement.style.scrollSnapType = '';
+        if (window.markPauseUnlock) window.markPauseUnlock();
       }, LOCK_MS);
     }
   }

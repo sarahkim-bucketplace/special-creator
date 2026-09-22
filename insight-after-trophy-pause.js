@@ -23,8 +23,11 @@
     document.body.style.overflow = '';
   }
 
+  // window.effVH() (viewport.js), not the raw innerHeight, so this quote
+  // centers at the same spot across screens with very different real
+  // heights (MacBook 14"/16", external monitors)
   function centeredTop() {
-    return (window.innerHeight - el.offsetHeight) / 2;
+    return (window.effVH() - el.offsetHeight) / 2;
   }
 
   function check() {
@@ -48,6 +51,7 @@
       window.setTimeout(() => {
         unlockScroll();
         document.documentElement.style.scrollSnapType = '';
+        if (window.markPauseUnlock) window.markPauseUnlock();
       }, LOCK_MS);
     }
   }

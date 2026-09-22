@@ -14,7 +14,8 @@ index.html                                     FindTheKey.html로 리다이렉�
 FindTheKey.html / FindTheKey.css               ★ 메인 통합 페이지 (섹션 4개, CSS 한 파일에 전부)
 hero-home.html / .css / .js                    열쇠구멍 스크롤 첫 화면 (헤더 로고가 여기로 연결)
 trophy.js                                      3D 트로피 뷰어 (Three.js, type=module)
-assets/                                        이미지·SVG·trophy.glb·trophy-3d-texture/ 등
+viewport.js                                    **가장 먼저 로드되는 공용 스크립트** — 화면 높이 clamp(`window.effVH()`)와 스크롤 멈춤 스크립트 간 조율(`markPauseUnlock`/`pauseSafeToTrigger`) 제공, 아래 "화면 높이 clamp" 절 참고
+assets/                                        이미지·SVG·trophy.glb·trophy-3d-texture/ 등. **섹션별 폴더 구조**: `00-hero`(hero-home 전용) / `01-about`(About 섹션: rolling 사진, 트로피, key-photo, 뱃지 gif) / `02-opportunities`(OU 섹션 + 상세 페이지: 케이스별 폴더, brand-logos, 화살표 아이콘) / `03-program`(Beyond the Door: journey, meetup, gift) / `04-voices`(Creator Voices: story). 루트에는 여러 섹션이 공유하는 것만 남김(`nav-icon.svg` 헤더 로고, `hero-icon.svg`, `icon-go.svg`, `icon-close.svg` 모달 닫기)
 
 ── 통합 페이지가 쓰는 JS (FindTheKey.html 하단에 순서대로 로드) ──
 header-menu.js                                 모바일 햄버거 메뉴 (900px 이하)
@@ -133,6 +134,8 @@ CTA 필 버튼은 전부 **`#464646`** + 흰 글자 + **웨이트 400(Regular)**
 - 섹션 4개(`#find-the-key`, `#opportunities-unlocked`, `#beyond-the-door`, `#creator-voices`), 각각 `.page > section[id]`. 헤더 nav는 `#앵커`로 이동하고 `scroll-spy.js`가 현재 섹션의 링크를 `--on`으로 표시
 - `html { scroll-snap-type: y mandatory }` + 섹션 시작마다 snap. 섹션 안에서는 자유 스크롤. **함정**: 마지막 섹션 밖의 여백은 snap 영역 바깥이라 스크롤로 도달 못 함 → 페이지 하단 여백 400px은 `.page`가 아니라 `#creator-voices { padding-bottom: 400px }` 안에 있음 (밖에 두면 지원 버튼이 창 맨 아래에 붙어버렸음)
 - **멈춤(pause) 스크립트 패턴**: `*-pause.js`들은 특정 요소에 도달하면 `overflow:hidden`으로 600ms 락을 걸어 "한 번 멈췄다 가는" 지점을 만듦. `scroll-snap-align: start`도 같이 있지만 native snap만으론 빠른 스크롤에서 놓쳐서 JS로 보강한 것. IntersectionObserver는 빠른 플릭에서 콜백이 누락돼서 **매 scroll 이벤트마다 위치를 재계산하는 방식**으로 재작성됨 — 새 멈춤 지점도 같은 방식으로 만들 것. 멈춤 지점: About 배지 앞 헤딩 / 인용문(키 사진 앞) / 키 사진 프레임(중앙) / 마지막 인용문 / 트로피 / 로고월(+통계) / 선물 제목
+- **화면 높이 clamp(`viewport.js`)**: About 섹션의 여러 스크롤 연출(`about-hero-roll.js`, `about-key-photo-grow.js` 등)이 예전엔 `window.innerHeight`를 직접 써서, 맥북 14"/16"·외부 모니터처럼 실제 화면 높이가 크게 다르면 같은 지점에서 다른 구도가 나왔음(예: 뱃지 멈춤에서 다음 문장이 같이 보이거나 안 보이거나). `viewport.js`가 `window.effVH()`(760~960px로 clamp된 값)를 전역으로 제공하고, 각 스크립트는 **실제 화면을 꽉 채워야 하는 곳(풀스크린 사진 크기)만 진짜 `innerHeight`를 쓰고, 나머지 여백·정지 위치 계산은 전부 `effVH()`로 바꿔서** 화면 높이가 달라도 같은 구도가 나오게 함. CSS 쪽 vh 값도 `--vh-eff` 커스텀 프로퍼티로 통일(`FindTheKey.css` `:root`)
+- **멈춤 스크립트 간 연쇄 방지**: `about-badge-pause.js`가 스스로 스크롤을 옮기면 그 자체가 'scroll' 이벤트를 내서, `trophy-pause.js`가 사용자가 실제로 스크롤하지 않았는데도 바로 다음 멈춤(배지+첫 문장)까지 연달아 실행해버리는 문제가 있었음. `viewport.js`의 `markPauseUnlock()`/`pauseSafeToTrigger()`가 "스크롤이 실제로 완전히 멈췄다가 다시 시작됐는지"를 추적해서, 관성 스크롤이 남아있는 동안은 다음 멈춤이 끼어들지 못하게 막음 + `window.aboutBadgeHeadingPauseDone` 플래그로 `trophy-pause.js`의 배지 정지가 `about-badge-pause.js`보다 먼저 끝나는 경쟁 상태 자체를 차단. 새 멈춤 지점을 이어 붙일 땐 이 패턴을 따를 것
 - **통계 멈춤은 `.stats-intro`(문구)+`.stats`(숫자)를 한 덩어리로 보고 헤더(72px) 아래 영역의 세로 가운데에 맞춤**(`stats-pause.js`가 매 scroll마다 위치를 재계산해 한 번 락 + `.stats-intro { scroll-snap-align: start; scroll-margin-top: calc((100vh + 72px - 354px) / 2) }`로 스냅 지점도 같은 자리). 로고월은 그 시점엔 이미 위로 지나가 있고 로고월 자체엔 멈춤이 없음. 문구 줄 수·문구↔숫자 간격·숫자 높이를 바꾸면 위 `354px`(=문구 86 + 간격 160 + 숫자 108)도 같이 바꿀 것
 - **헤더 배경 띠 숨김**: About의 풀스크린 사진 두 개(히어로 롤링 `about-hero-roll.js`, 키 사진 `about-key-photo-grow.js`)가 화면 전체로 커지는 동안(디졸브 포함, 사진 아래 끝이 헤더 밖으로 나갈 때까지) `<body>`에 `is-fullframe-hero` / `is-fullframe` 클래스를 붙여 `.header-backdrop`을 fade out — 사진이 헤더 뒤까지 꽉 차게 보임. 같은 구간에 헤더 로고(SVG는 `filter: brightness(0) invert(1)`)·선택된 nav 링크(데스크톱만)·아래 화살표(`.down-hint`)가 **흰색**으로 바뀜(모바일 햄버거 막대도 메뉴가 닫혀 있을 때만 흰색). 선택 안 된 nav 링크(`#7b7b7b`)와 Apply 버튼은 그대로라 어두운 사진 위에서 대비가 약함 — 필요하면 그 링크도 흰 계열로
 - **reveal 애니메이션(`translateY(28px)`) 때문에** JS로 재는 요소 위치가 28px 어긋나 보임 — 간격 측정할 때 감안할 것
@@ -154,23 +157,24 @@ CTA 필 버튼은 전부 **`#464646`** + 흰 글자 + **웨이트 400(Regular)**
 - 트로피 위 여백 `margin-top: 32vh` (캔버스 자체에 모델 위로 화면 높이 ~15%의 투명 여백이 있어서 60vh에서 줄임), 아래 340px
 
 ### 트로피 3D 뷰어 (`trophy.js`)
-`assets/trophy.glb` + `assets/trophy-3d-texture/`의 seamless/normal 맵(색·러프니스·범프 공용 + 노멀). **`trophy-texture-org.png`(원본 사진)는 절대 덮어쓰지 말 것** — seamless/normal은 파생본이라 재생성 가능. Three.js는 importmap으로 로드. 조작: 마우스를 올리면 커서 위치에 따라 카메라가 따라가고(`baseTheta=-18°`, `maxThetaSwing=55°`, lerp 0.3), **클릭+드래그로 회전**, 드래그를 놓으면 원래 각도로 복귀.
+`assets/01-about/trophy.glb` + `assets/01-about/trophy-3d-texture/`의 seamless/normal 맵(색·러프니스·범프 공용 + 노멀). **`trophy-texture-org.png`(원본 사진)는 절대 덮어쓰지 말 것** — seamless/normal은 파생본이라 재생성 가능. Three.js는 importmap으로 로드. 조작: 마우스를 올리면 커서 위치에 따라 카메라가 따라가고(`baseTheta=-18°`, `maxThetaSwing=55°`, lerp 0.3), **클릭+드래그로 회전**, 드래그를 놓으면 원래 각도로 복귀.
 ⚠️ 커서 추적/드래그 동작은 이 문서를 쓴 세션에서도 **실제 화면으로 검증하지 못함** (브라우저 캡처 도구가 빈 화면만 반환). 손질할 땐 실제 Chrome에서 확인하거나 사용자에게 좌/중/우 캡처를 받을 것 — 텍스트 피드백만 보고 파라미터를 추측해서 키우지 말 것.
 
 ### Opportunities Unlocked (`#opportunities-unlocked`)
 - 히어로 → **카드 5개**(291×430, `opacity .4`, hover 시 394×520/`opacity 1`로 **위로** 자람). 상단 정렬 유지를 위해 hover 시 `margin-top: -90px`, 잘림 방지로 `.ou-contents { padding-top: 90px }` (1680px 미만에서 `overflow-x:auto`가 overflow-y까지 클립하기 때문). 1618px보다 좁으면 마우스 드래그/트랙패드로 스크롤되는 스트립. hover 크기(430/520)를 바꾸면 margin-top도 그 차이만큼 바꿀 것
-- 카드 클릭 → **팝업**(`ou-modal.js`가 `OpportunitiesUnlocked-0N.html`을 fetch해서 `.detail`+스타일을 주입). 상세 사진은 케이스별 폴더(`assets/Opportunities-Unlocked/01-…~05-…`, `thumb.*` + 상세 이미지). 텍스트 라벨이 있는 사진은 `--contain` 클래스(02번 슬라이드 3). 이전/다음 링크에는 사례 제목이 들어감(05는 다음 없음). 05(취향수집가)는 이미지를 나중에 교체할 수 있음
-- **브랜드 로고 롤링**(`.brand-rolling`, 로고 23개 + 복제 세트, 152×59 박스에 contain) → **통계 위 문구 블록**(`.stats-intro`, 타이틀 없이 "스페셜 크리에이터의 이야기는 / 다양한 협업과 콘텐츠로 이어지고 있습니다." 두 줄 가운데 정렬 28px) → **통계**(300+ / 674건 / 112명 / 29건 카운트업, 네 항목 사이 간격 `clamp(24px, 7.6vw, 110px)`(Figma 70px에서 넓힘), 숫자 54px)
+- 카드 클릭 → **팝업**(`ou-modal.js`가 `OpportunitiesUnlocked-0N.html`을 fetch해서 `.detail`+스타일을 주입). 상세 사진은 케이스별 폴더(`assets/02-opportunities/01-…~05-…`, `thumb.*` + 상세 이미지). 텍스트 라벨이 있는 사진은 `--contain` 클래스(02번 슬라이드 3). 이전/다음 링크에는 사례 제목이 들어감(05는 다음 없음). 닫기 버튼(`.ou-modal__close`, Figma 252:755)은 배경 없는 흰 X, 카드를 감싸는 `.ou-modal__frame`(카드 크기에 맞춰 hug) 바깥쪽에 절대 위치 — 카드 위가 아니라 카드 **옆** 우측 상단
+- **OU-05(취향수집가)만 사진별로 본문 링크가 바뀜**: `.detail__links`가 사진 슬라이드와 같은 순서로 `.detail__link` 5개를 담고 있고, `detail-photo-carousel.js`가 사진의 `is-active`를 토글할 때 같은 인덱스의 링크도 같이 토글(`#detailLinks`가 없는 다른 OU 상세 페이지에선 그냥 빈 배열이라 영향 없음). 지금은 `href="#"` 자리표시자 — 실제 링크 5개(우리집에 놀러와=tovhaus, 전국 내집자랑=88like/원삼집, 왓츠인 마이홈=제니홈무드, 브랜디드 취향수집가=myfavehobby) 받으면 채울 것
+- **브랜드 로고 롤링**(`.brand-rolling`, 로고 21개 + 복제 세트, 152×59 박스에 contain, `assets/02-opportunities/brand-logos/`) → **통계 위 문구 블록**(`.stats-intro`, 타이틀 없이 "스페셜 크리에이터의 이야기는 / 다양한 협업과 콘텐츠로 이어지고 있습니다." 두 줄 가운데 정렬 28px) → **통계**(300+ / 674건 / 112명 / 29건 카운트업, 네 항목 사이 간격 `clamp(24px, 7.6vw, 110px)`(Figma 70px에서 넓힘), 숫자 54px)
 
 ### Beyond the Door (`#beyond-the-door`, Figma 28:476)
 - **여정 리스트**: 4단계(1 오프닝 밋업 / 2 스페셜 크리에이터 활동 / 3 오프라인 클래스 / 4 페어웰 — "브랜드 콜라보"는 삭제됨). 각 단계는 위 구분선 + 텍스트 + **롤링 마키 사진**(244×320, gap 15, 사진 안에 "Photo by. 이름" 크레딧). 단계 사이 화살표는 Figma에서 삭제되어 제거, 단계 간격 120px. 롤링은 원본+복제 세트를 `translateX(0→-50%)`로 돌림(아이템 수를 바꾸면 duration을 비례해서 조정)
-- **"직접 만나 나누는 시간" 갤러리**: 코버플로 — 뷰포트 중앙에 가까운 사진이 가장 크고 진하고, 나머지는 거리에 따라 작아지고 fade. `position:sticky`는 안 씀(성능·깨짐), `btd-gallery-stack.js`가 스크롤 위치에서 매 프레임 계산. 사진 `assets/Beyond-the-Door/meetup/image-1~9.jpg`
+- **"직접 만나 나누는 시간" 갤러리**: 코버플로 — 뷰포트 중앙에 가까운 사진이 가장 크고 진하고, 나머지는 거리에 따라 작아지고 fade. `position:sticky`는 안 씀(성능·깨짐), `btd-gallery-stack.js`가 스크롤 위치에서 매 프레임 계산. 사진 9장은 `assets/03-program/meetup/`에 있고 파일명이 곧 설명(예: `공간_스토리마켓_04.jpg`, `공간_쇼룸_ngray_01.jpg`) — `FindTheKey.html`과 독립 페이지(`BeyondTheDoor.html`) 양쪽에서 같은 9장을 순서대로 씀
 - **Special Gift**: 2열 **카드 그리드**(예전 토글/아코디언 목록에서 재설계됨). 카드 = 위 구분선 + 제목 + "더보기"(→ `BeyondTheDoor-gift1~4.html`, 사진 그리드+크레딧 상세 페이지) + 겹친 썸네일 3장(평소엔 **기울기 없이 똑바로** 앞 사진 뒤에 나란히 겹쳐 있고, **`.btd-gift__stack`에 마우스를 올리면 양옆 사진이 ±118px 밀려나며 ±7° 기울어지며 펼쳐짐**, 0.4s ease — 브랜디자인 clients 페이지 참고. 모바일은 ±88px). 선물 4종: 스페셜 웰컴 굿즈 / 브랜드 콜라보 굿즈 / 프리미엄 가구 협찬 / 페어웰 기프트
 - 이미지 hover 플로팅(원본 미리보기) 효과는 시도했다가 뺌. 다시 필요하면 같은 `<img>` 하나를 옮기지 말고 "배경 썸네일 + 플로팅용 별도 `<img>`" 두 레이어로 만들 것
 - 파일 대소문자·한글 파일명 주의: macOS는 대소문자 무시(로컬에서 안 걸리고 GitHub Pages 등에서 404), 한글 파일명은 NFD/NFC 차이로 URL이 404. 새 애셋은 **ASCII 파일명 + 소문자 폴더**로 (`journey`, `meetup`, `gift`)
 
 ### Creator Voices (`#creator-voices`, Figma 0:519)
-- 인터뷰 행 4개(사진 495×340 + 텍스트, 홀수 행 사진 왼쪽 / 짝수 `--reverse`): MOPO / 랴료하우스 / cooohome / momo_kong(4번째는 교체됨). 사진은 `assets/Creator-Voices/story/`. 행 사이 `margin-bottom: 220px`(반전 행 267px — Figma 값, 건드리지 말 것), reveal 애니메이션은 여정 리스트와 동일
+- 인터뷰 행 4개(사진 495×340 + 텍스트, 홀수 행 사진 왼쪽 / 짝수 `--reverse`): MOPO / 랴료하우스 / cooohome / momo_kong(4번째는 교체됨). 사진은 `assets/04-voices/story/`. 행 사이 `margin-bottom: 220px`(반전 행 267px — Figma 값, 건드리지 말 것), reveal 애니메이션은 여정 리스트와 동일
 - **FAQ**(Figma 206:711): 지원하기 버튼 **아래**에 있고(예전엔 버튼 위), **"자주 묻는 질문" 제목은 뺐음** — 질문 3개 클릭 토글(`faq-toggle.js`)만 남음. 버튼→목록 **260px**(문구→버튼 160px보다 일부러 넓게), 목록 아래는 `#creator-voices`의 400px padding
 - **마무리 문구**("다음 문을 열 Key Creator를 기다립니다. / 집과 일상에서…", `.cv-outro`)는 다른 서브타이틀 문구와 같은 **27px/500 가운데**, → **"스페셜 크리에이터 지원하기" 버튼(`.cv-apply`, `#464646`, 380×72px, 글자 22px/400)** → 1155 링크
 
@@ -201,7 +205,7 @@ CTA 필 버튼은 전부 **`#464646`** + 흰 글자 + **웨이트 400(Regular)**
 
 - Pretendard는 jsdelivr CDN에서 로드(오프라인이면 폰트 깨짐)
 - GitHub `sarahkim-bucketplace/special-creator`. **저장소는 public이고 GitHub Pages가 켜져 있음** (예전 메모의 "private"은 틀림 — 코드·이미지·크레딧이 전부 공개됨. 공개하면 안 되는 자료가 있으면 private 전환 필요, 무료 계정에선 private으로 바꾸면 Pages도 꺼짐). 다른 Mac에서 이어가려면 `git clone` → 이후 `git pull`
-- **공유용 링크(Pages)**: 메인 통합 페이지 `https://sarahkim-bucketplace.github.io/special-creator/FindTheKey.html`, 첫 히어로(열쇠구멍) 화면 `https://sarahkim-bucketplace.github.io/special-creator/hero-home.html`, 루트(`/special-creator/`)는 `index.html` 리다이렉트로 `FindTheKey.html`로 감. push 후 반영에 1~2분. 배포본에서 페이지가 쓰는 애셋 URL 전부(FindTheKey 117개, hero-home 8개)가 200으로 열리는 것을 확인함(대소문자·한글 파일명 문제 없음). `assets/`가 약 940MB라 첫 로딩이 느릴 수 있음
+- **공유용 링크(Pages)**: 메인 통합 페이지 `https://sarahkim-bucketplace.github.io/special-creator/FindTheKey.html`, 첫 히어로(열쇠구멍) 화면 `https://sarahkim-bucketplace.github.io/special-creator/hero-home.html`, 루트(`/special-creator/`)는 `index.html` 리다이렉트로 `FindTheKey.html`로 감. push 후 반영에 1~2분. ⚠️ **이 대소문자·한글 파일명 200 확인은 `assets/`를 00-hero~04-voices로 재구성하기 전 상태 기준** — 폴더를 통째로 옮긴 뒤(로컬 `git mv`로는 확인했지만) 실제 배포본에서 재검증 안 함, push 후 꼭 한 번 훑어볼 것. `assets/`가 약 940MB라 첫 로딩이 느릴 수 있음
 - **push 인증**: 이 컴퓨터엔 `gh` CLI가 없고 git은 macOS 키체인의 Fine-grained PAT를 씀(토큰 이름 `special-creator-clone`, `Contents` **Read and write** 필수 — Read-only면 clone/pull만 되고 push는 403). 인증이 한 번 실패하면 git이 키체인 항목을 지우니 새 토큰으로 터미널에서 `git push`를 직접 실행해 `Username`(GitHub 아이디, 토큰 아님)/`Password`(토큰)를 입력해야 함. **토큰을 채팅/스크린샷에 노출하면 즉시 Regenerate할 것**
 - iCloud Drive 경로에서 `preview_start` dev-server 모드로 `python3 -m http.server`를 띄우면 `PermissionError`가 남 → Bash로 직접 `python3 -m http.server 5173 &` (죽은 서버가 404를 계속 내면 죽이고 프로젝트 폴더에서 다시 띄울 것)
 - **Claude Code 내장 브라우저 패널의 함정**: ① CSS/JS 캐시를 심하게 먹음 — 수정이 안 보이면 `curl`로 서버 응답부터 확인하고 `fetch(url,{cache:'reload'})` 후 새로고침. 실제 Chrome은 `Cmd+Shift+R` ② 스크린샷이 빈 화면으로 나오는 일이 잦음 → 텍스트/DOM/`getBoundingClientRect` 측정으로 검증 ③ 창 폭이 좁으면(≤900/600px) 모바일 CSS가 적용돼 측정값이 달라짐 → 측정 전에 `resize_window`로 폭을 지정(desktop 프리셋으로 되돌리는 것도 잊지 말 것) ④ 마우스 hover는 폭 768px 미만(터치 에뮬레이션)에서 안 먹음
@@ -212,9 +216,8 @@ CTA 필 버튼은 전부 **`#464646`** + 흰 글자 + **웨이트 400(Regular)**
 - **모바일 디테일**: 폰트·간격은 5단계 규칙으로 정리했지만(위 "모바일" 참고), 스크롤 연출(scroll-snap/멈춤 스크립트/키 사진 확대)이 폰에서 어떻게 보이는지는 미확인. 독립 페이지들과 OU 상세 팝업의 모바일 값은 아직 손대지 않음
 - **햄버거 아이콘** 에셋 교체 (사용자가 전달 예정)
 - 키 사진 프레임은 임시 배경 — 실제 사진으로 교체 가능성
-- OU 05(취향수집가) 이미지 교체 가능성
+- **OU 05(취향수집가) 링크 5개**: 사진·카테고리·크리에이터명 구조는 끝남(위 "Opportunities Unlocked" 절 참고), 실제 URL만 `href="#"` 자리표시자로 남아있음 — 링크 받으면 `OpportunitiesUnlocked-05.html`의 `.detail__link-cta` 5개 채울 것
 - 독립 페이지(`OpportunitiesUnlocked.html`/`CreatorVoices.html`/`BeyondTheDoor.html`) 유지 여부 결정 (OU 상세 `-01~05`와 선물 상세 `gift1~4`는 메인이 쓰므로 유지)
-- 커밋 안 된 애셋 폴더 정리: `assets/01. About/`, `02. oppotunities/`(오타), `03. program /`(끝 공백), `04. gift /`, `05. Creator Voices/` — 원본 보관용이면 `.gitignore`, 사이트에서 쓸 거면 ASCII 이름으로 정리 후 참조
-- 커밋 안 된 트로피 잔여 파일: `assets/Untitled.mtl`, `trophy.mtl`, `trophy.obj`, `trophy_texture.png`, `trophy-3d-texture/trophy-texture.png`, `trophy-texture-org.png`(★원본, 삭제·덮어쓰기 금지), `source/`
+- **안 쓰는 이미지**(일부러 남겨둠, 지울지 결정 필요): `assets/01-about/rolling/rolling-06.jpg`·`rolling-07.jpg`·`about-01.jpg`
 - 트로피 커서 추적/드래그 동작의 실제 화면 검증
 - About 파트 내부 간격·폰트 정리는 스크롤 연출과 얽혀 있어 아직 손대지 않음

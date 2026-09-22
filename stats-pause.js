@@ -37,10 +37,11 @@
   }
 
   // where the block's top should sit so the whole statement+numbers block is centered in the
-  // visible area under the header
+  // visible area under the header. window.effVH() (viewport.js), not the raw innerHeight, so
+  // this lands at the same spot across screens with very different real heights
   function centeredTop() {
     const blockHeight = stats.getBoundingClientRect().bottom - intro.getBoundingClientRect().top;
-    return HEADER_HEIGHT + (window.innerHeight - HEADER_HEIGHT - blockHeight) / 2;
+    return HEADER_HEIGHT + (window.effVH() - HEADER_HEIGHT - blockHeight) / 2;
   }
 
   function check() {
@@ -56,6 +57,7 @@
       window.setTimeout(() => {
         unlockScroll();
         document.documentElement.style.scrollSnapType = '';
+        if (window.markPauseUnlock) window.markPauseUnlock();
       }, LOCK_MS);
     }
   }
