@@ -201,6 +201,16 @@ body {
   object-fit: cover;
 }
 
+/* 전국 내집자랑 (slides 2-3): a 16:9 video thumbnail in this taller-than-wide
+   box — cover would crop deep into both sides, so this shows the whole
+   16:9 frame uncropped instead, letterboxed top/bottom on black rather
+   than cropping (same technique as -01.css's --contain, black instead of
+   that poster's own background color) */
+.detail__photo-img--contain {
+  object-fit: contain;
+  background-color: #000;
+}
+
 /* placeholder slide deck — drop a real <img> (object-fit: cover, same as
    .detail__photo-img above) into each .detail__photo-slide once photos
    for this case exist, no other markup needs to change */

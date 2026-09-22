@@ -163,7 +163,7 @@ CTA 필 버튼은 전부 **`#464646`** + 흰 글자 + **웨이트 400(Regular)**
 ### Opportunities Unlocked (`#opportunities-unlocked`)
 - 히어로 → **카드 5개**(291×430, `opacity .4`, hover 시 394×520/`opacity 1`로 **위로** 자람). 상단 정렬 유지를 위해 hover 시 `margin-top: -90px`, 잘림 방지로 `.ou-contents { padding-top: 90px }` (1680px 미만에서 `overflow-x:auto`가 overflow-y까지 클립하기 때문). 1618px보다 좁으면 마우스 드래그/트랙패드로 스크롤되는 스트립. hover 크기(430/520)를 바꾸면 margin-top도 그 차이만큼 바꿀 것
 - 카드 클릭 → **팝업**(`ou-modal.js`가 `OpportunitiesUnlocked-0N.html`을 fetch해서 `.detail`+스타일을 주입). 상세 사진은 케이스별 폴더(`assets/02-opportunities/01-…~05-…`, `thumb.*` + 상세 이미지). 텍스트 라벨이 있는 사진은 `--contain` 클래스(02번 슬라이드 3). 이전/다음 링크에는 사례 제목이 들어감(05는 다음 없음). 닫기 버튼(`.ou-modal__close`, Figma 252:755)은 배경 없는 흰 X, 카드를 감싸는 `.ou-modal__frame`(카드 크기에 맞춰 hug) 바깥쪽에 절대 위치 — 카드 위가 아니라 카드 **옆** 우측 상단
-- **OU-05(취향수집가)만 사진별로 본문 링크가 바뀜**: `.detail__links`가 사진 슬라이드와 같은 순서로 `.detail__link` 5개를 담고 있고, `detail-photo-carousel.js`가 사진의 `is-active`를 토글할 때 같은 인덱스의 링크도 같이 토글(`#detailLinks`가 없는 다른 OU 상세 페이지에선 그냥 빈 배열이라 영향 없음). 지금은 `href="#"` 자리표시자 — 실제 링크 5개(우리집에 놀러와=tovhaus, 전국 내집자랑=88like/원삼집, 왓츠인 마이홈=제니홈무드, 브랜디드 취향수집가=myfavehobby) 받으면 채울 것
+- **OU-05(취향수집가)만 사진별로 본문 링크가 바뀜**: `.detail__links`가 사진 슬라이드와 같은 순서로 `.detail__link` 5개를 담고 있고, `detail-photo-carousel.js`가 사진의 `is-active`를 토글할 때 같은 인덱스의 링크도 같이 토글(`#detailLinks`가 없는 다른 OU 상세 페이지에선 그냥 빈 배열이라 영향 없음). 실제 링크 5개(브랜디드 취향수집가=myfavehobby, 전국 내집자랑=88like/원삼집, 우리집에 놀러와=tovhaus, 왓츠인 마이홈=제니홈무드) 다 채워짐. **전국 내집자랑(슬라이드 2-3)은 16:9 유튜브 썸네일이라 세로가 긴 사진 박스에 그냥 cover하면 좌우가 심하게 잘림** — `.detail__photo-img--contain`(01번 페이지의 세로 포스터용 클래스와 같은 패턴, 배경만 검정)으로 원본 비율 그대로 위아래 레터박스
 - **브랜드 로고 롤링**(`.brand-rolling`, 로고 21개 + 복제 세트, 152×59 박스에 contain, `assets/02-opportunities/brand-logos/`) → **통계 위 문구 블록**(`.stats-intro`, 타이틀 없이 "스페셜 크리에이터의 이야기는 / 다양한 협업과 콘텐츠로 이어지고 있습니다." 두 줄 가운데 정렬 28px) → **통계**(300+ / 674건 / 112명 / 29건 카운트업, 네 항목 사이 간격 `clamp(24px, 7.6vw, 110px)`(Figma 70px에서 넓힘), 숫자 54px)
 
 ### Beyond the Door (`#beyond-the-door`, Figma 28:476)
@@ -216,7 +216,6 @@ CTA 필 버튼은 전부 **`#464646`** + 흰 글자 + **웨이트 400(Regular)**
 - **모바일 디테일**: 폰트·간격은 5단계 규칙으로 정리했지만(위 "모바일" 참고), 스크롤 연출(scroll-snap/멈춤 스크립트/키 사진 확대)이 폰에서 어떻게 보이는지는 미확인. 독립 페이지들과 OU 상세 팝업의 모바일 값은 아직 손대지 않음
 - **햄버거 아이콘** 에셋 교체 (사용자가 전달 예정)
 - 키 사진 프레임은 임시 배경 — 실제 사진으로 교체 가능성
-- **OU 05(취향수집가) 링크 5개**: 사진·카테고리·크리에이터명 구조는 끝남(위 "Opportunities Unlocked" 절 참고), 실제 URL만 `href="#"` 자리표시자로 남아있음 — 링크 받으면 `OpportunitiesUnlocked-05.html`의 `.detail__link-cta` 5개 채울 것
 - 독립 페이지(`OpportunitiesUnlocked.html`/`CreatorVoices.html`/`BeyondTheDoor.html`) 유지 여부 결정 (OU 상세 `-01~05`와 선물 상세 `gift1~4`는 메인이 쓰므로 유지)
 - **안 쓰는 이미지**(일부러 남겨둠, 지울지 결정 필요): `assets/01-about/rolling/rolling-06.jpg`·`rolling-07.jpg`·`about-01.jpg`
 - 트로피 커서 추적/드래그 동작의 실제 화면 검증
