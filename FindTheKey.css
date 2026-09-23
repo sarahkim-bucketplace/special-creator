@@ -1130,21 +1130,40 @@ body.is-fullframe-hero .down-hint img {
     scroll-snap-type: x mandatory;
   }
   .ou-carousel .ou-card {
+    position: relative;
     flex: 0 0 100%;
     scroll-snap-align: center;
   }
-  /* no featured/dimmed state on a one-at-a-time carousel — every card reads
-     the same as the desktop :hover ("featured") state, minus the size grow
-     (each card is already full width) */
-  .ou-carousel .ou-card:hover {
-    flex: 0 0 100%;
+  /* shown permanently at the desktop :hover ("featured") size — no grow
+     motion at all on mobile, since there's no hover to grow from */
+  .ou-carousel .ou-card__photo {
+    height: 520px;
+    transition: none;
   }
-  .ou-carousel .ou-card:hover .ou-card__photo {
-    height: 430px;
-    margin-top: 0;
-  }
+  /* title+tag moved into the photo itself (newmixcoffee.com/ko reference,
+     per direct request) instead of sitting below it — a bottom-up gradient
+     stands in for the photo's own varying brightness so white text stays
+     legible over any image */
   .ou-carousel .ou-card__text {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    padding: 48px 16px 16px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0));
     opacity: 1;
+  }
+  .ou-carousel .ou-card__title span {
+    color: #ffffff;
+  }
+  .ou-carousel .ou-card__sub {
+    color: rgba(255, 255, 255, 0.75);
+  }
+  /* icon-go.svg is a black-stroke asset — same recolor trick as the header
+     logo elsewhere on this page (brightness(0) invert(1)) to turn it white */
+  .ou-carousel .ou-card__go {
+    filter: brightness(0) invert(1);
   }
 
   .ou-carousel__arrow {
@@ -1152,14 +1171,13 @@ body.is-fullframe-hero .down-hint img {
     align-items: center;
     justify-content: center;
     position: absolute;
-    top: 235px;
+    top: 242px;
     z-index: 2;
     width: 36px;
     height: 36px;
+    padding: 0;
     border: none;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.85);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    background: none;
     cursor: pointer;
   }
   .ou-carousel__arrow--prev {
@@ -1169,8 +1187,11 @@ body.is-fullframe-hero .down-hint img {
     right: 16px;
   }
   .ou-carousel__arrow img {
-    width: 14px;
-    height: 14px;
+    width: 18px;
+    height: 18px;
+    /* white + a soft shadow instead of the removed circle backing, so the
+       arrow still reads against whatever the photo underneath looks like */
+    filter: brightness(0) invert(1) drop-shadow(0 1px 3px rgba(0, 0, 0, 0.5));
   }
   .ou-carousel__arrow--prev img {
     transform: rotate(90deg);
