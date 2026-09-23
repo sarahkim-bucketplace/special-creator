@@ -876,6 +876,22 @@ body.is-fullframe-hero .down-hint img {
   /* second resting point of the pair (see trophy-pause.js) */
   scroll-snap-align: start;
   scroll-margin-top: 65px;
+}
+
+/* "마우스로 돌려보세요" hint right under the trophy — body-text size/weight,
+   gray (the site's secondary-text color). Carries the site-wide 340px
+   section gap that used to live on .trophy-placeholder itself, plus a small
+   gap of its own above it, so the hint reads as attached to the trophy
+   rather than floating in the middle of that empty stretch. */
+.trophy-hint {
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: -0.08px;
+  color: #7b7b7b;
+  text-align: center;
+  /* was 20px, tightened per direct request so the hint reads as closer to
+     the trophy */
+  margin-top: 0;
   /* the site-wide 340px section gap. The trophy's own top is pinned 65px from
      the viewport top at its resting stop and it is only ~83vh tall, so the
      next section's hero is still well below the fold there on any window
@@ -2024,6 +2040,7 @@ body.ou-modal-open {
   }
 
   /* ④ Body 15 */
+  .trophy-hint,
   .btd-journey__desc,
   .cv-row__body,
   .cv-apply,
@@ -2053,7 +2070,7 @@ body.ou-modal-open {
   .cv-apply {
     margin-top: 48px;
   }
-  .trophy-placeholder {
+  .trophy-hint {
     margin-bottom: 120px;
   }
   .brand-rolling,

@@ -5,7 +5,7 @@
 다른 컴퓨터에서 Claude(또는 사람)가 이어서 작업할 때 필요한 배경 설명을 정리해둔 문서입니다.
 (git으로는 코드만 넘어가고, 대화 맥락은 넘어가지 않아서 남겨둡니다.)
 
-> **먼저 읽을 것**: 사이트의 실제 메인은 **`FindTheKey.html` 한 장짜리 통합 스크롤 페이지**입니다 (About → Opportunities → Programs → Voices). 예전에 섹션별로 따로 만들었던 페이지들(`OpportunitiesUnlocked.html` 등)은 남아있지만 더 이상 메인이 아니고, 새 디자인 수정은 전부 `FindTheKey.html`/`FindTheKey.css`에 들어갑니다. `index.html`은 **`hero-home.html`(열쇠구멍 첫 화면)로 리다이렉트** — 방문자는 거기서 스크롤/클릭으로 `FindTheKey.html`로 넘어감 (예전엔 `index.html`이 바로 `FindTheKey.html`로 갔음, 첫 화면을 hero-home으로 둘지 결정 보류였다가 확정됨).
+> **먼저 읽을 것**: 사이트의 실제 메인은 **`FindTheKey.html` 한 장짜리 통합 스크롤 페이지**입니다 (About → Opportunities → Programs → Voices). 새 디자인 수정은 전부 `FindTheKey.html`/`FindTheKey.css`에 들어갑니다. `index.html`은 **`hero-home.html`(열쇠구멍 첫 화면)로 리다이렉트** — 방문자는 거기서 스크롤/클릭으로 `FindTheKey.html`로 넘어감 (예전엔 `index.html`이 바로 `FindTheKey.html`로 갔음, 첫 화면을 hero-home으로 둘지 결정 보류였다가 확정됨). 예전에 섹션별로 따로 만들었던 목록 페이지들(`OpportunitiesUnlocked.html`/`BeyondTheDoor.html`/`CreatorVoices.html`)은 아무 데서도 링크가 안 걸려 방문자가 볼 방법이 없어서 **삭제함** — 아래 "파일 구조" 참고.
 
 ## 파일 구조
 
@@ -35,15 +35,14 @@ detail-photo-carousel.js                       OU 상세(팝업 안) 사진 슬�
 ou-modal.js                                    OU 카드 클릭 → 상세 페이지를 팝업으로 띄움
 scroll-spy.js                                  스크롤 위치에 따라 헤더 nav on/off + 아래 화살표(down-hint)
 
-── 아직 남아있는 독립 페이지 (메인에선 안 쓰임) ──
-OpportunitiesUnlocked.html / .css / .js        OU 목록 (Figma 0:236)
-OpportunitiesUnlocked-01~05.html / .css        OU 사례 상세 — ★ ou-modal.js가 이 파일을 fetch해서 팝업에 넣기 때문에 삭제하면 안 됨
-CreatorVoices.html / .css                      Creator Voices 독립판 (Figma 0:519)
-BeyondTheDoor.html / .css / .js                Beyond the Door 독립판 (Figma 28:476)
-BeyondTheDoor-gift1~4.html / BeyondTheDoor-gift.css / gift-detail-reveal.js   선물 4종 상세 페이지 (메인의 "더보기"가 연결) — 실제로 쓰이는 페이지
+── 실제로 쓰이는 상세 페이지 (메인이 링크/fetch함, 삭제 금지) ──
+OpportunitiesUnlocked-01~05.html / .css        OU 카드 클릭 시 상세 — ★ ou-modal.js가 이 파일을 fetch해서 팝업에 넣음
+BeyondTheDoor-gift1~4.html / BeyondTheDoor-gift.css / gift-detail-reveal.js   선물 4종 상세 페이지 (메인의 "더보기"가 연결) — 실제 페이지 전환
 ```
 
-독립 페이지들(`OpportunitiesUnlocked.html`, `CreatorVoices.html`, `BeyondTheDoor.html`)은 통합 페이지와 **간격/레이아웃이 다를 수 있음** — 폰트 크기·색은 같이 맞춰뒀지만 간격 정리 등은 통합 페이지에만 적용됨. 사용 여부를 정해서 지우거나 유지할 것 (남은 할 일 참고).
+`OpportunitiesUnlocked.js`/`BeyondTheDoor.js`라는 이름과 달리 이 둘은 **통합 페이지 전용 스크립트**(위 목록 참고)로, 예전 독립 목록 페이지들과는 이제 무관함.
+
+**삭제된 파일**: `OpportunitiesUnlocked.html`/`.css`, `BeyondTheDoor.html`/`.css`, `CreatorVoices.html`/`.css` — 통합 페이지가 생기면서 어디서도 링크가 안 걸린 채 방치돼 있던 예전 독립 목록 페이지 3종. 사진·문구·간격 변경도 전혀 반영되지 않고 있었음(예: CV 인터뷰 사진 4장이 계속 회색 박스). 삭제하면서, 위 9개 상세 페이지의 헤더 nav(Opportunities/Programs/Voices)가 이 삭제된 파일들을 가리키고 있던 것도 `FindTheKey.html#opportunities-unlocked` 등 앵커 링크로 고침 — 안 고쳤으면 그 9개 페이지에서 헤더 메뉴 클릭 시 404가 났을 것. git 기록에는 남아있어 필요하면 복구 가능.
 
 ## 로컬에서 실행하기
 
@@ -119,7 +118,7 @@ CTA 필 버튼은 전부 **`#464646`** + 흰 글자 + **웨이트 400(Regular)**
 - **섹션 사이 340px**: 트로피→OU, 통계→BTD, 여정→"직접 만나 나누는 시간", 선물→CV (OU 카드→로고월은 **200px** — 같은 섹션 안이라 요청으로 줄임)
 - **메인 타이틀(히어로) → 콘텐츠 150px**: OU 카드(박스 60 + hover 성장 여유 padding 90), BTD 여정 리스트, CV 첫 행. 히어로 안쪽 간격: 아이콘→타이틀 **44px**, 타이틀→소개 문구 **40px**
 - **서브타이틀(문구) → 콘텐츠 160px**: 통계 위 문구→숫자, 갤러리 위 문구→첫 사진, 선물 위 문구→카드 위 선(카드 안쪽 padding 48px이라 `.btd-gift { margin-top: 112px }` = 160 - 48), 마무리 문구→CTA 버튼(`.cv-apply { margin: 160px auto 0 }`) 전부 **160px**로 통일(예전 130/150/110). **`.btd-middle`의 타이틀은 지웠고 본문 한 줄이 서브타이틀** — 네 블록(통계 위·갤러리 위·선물 위·마무리) 모두 **가운데 정렬 27px/500 2줄**. 마무리 문구 위(마지막 인터뷰 행 아래)는 **340px**
-- **의도적 예외**: 로고월→통계 문구 **250px**(문구+숫자 블록을 세로 가운데에서 멈추게 하는 위치와 화면 안 배치를 위해 넓힌 값), 갤러리→선물 문구 **600px**(마지막 사진이 완전히 fade된 뒤에 나와야 해서). 아래 화살표(`.down-hint`)는 `bottom: 24px`(원래 40px — 통계 블록이 화살표에 안 가려지게 낮춤)
+- **의도적 예외**: 로고월→통계 문구 **250px**(문구+숫자 블록을 세로 가운데에서 멈추게 하는 위치와 화면 안 배치를 위해 넓힌 값), 갤러리→선물 문구 **600px**(마지막 사진이 완전히 fade된 뒤에 나와야 해서). 아래 화살표(`.down-hint`)는 `bottom: 24px`(원래 40px — 통계 블록이 화살표에 안 가려지게 낮춤) — **순수 장식용으로 클릭 불가**(`pointer-events: none`, `<div>`, 클릭 시 다음 섹션으로 넘기던 핸들러는 `scroll-spy.js`에서 제거). 마지막 섹션에서 숨기는 동작(`scroll-spy.js`)만 남아있음
 - About 파트 내부 간격(120/150/230/135/140/30vh/230/32vh 등)은 스크롤 연출·멈춤 위치와 얽혀 있어서 통일하지 않음 — 건드릴 땐 pause 스크립트 동작을 같이 확인
 
 ### 모바일 (≤900px 하나로 통일, `FindTheKey.css` 맨 끝의 마지막 `@media` 블록)
@@ -146,7 +145,7 @@ CTA 필 버튼은 전부 **`#464646`** + 흰 글자 + **웨이트 400(Regular)**
 - 로고(→ `hero-home.html`) + nav 4개 + CTA. **현재 라벨: About / Opportunities / Programs / Voices / Apply** (예전 "Find the Key/…/Open Your Door"에서 바뀜). Apply는 `https://ohou.se/competitions/1155` (새 탭), CV 하단 "스페셜 크리에이터 지원하기"와 같은 링크
 - **`position: fixed`** (sticky 금지 — body/html의 `overflow-x: hidden`이 sticky를 깨뜨림). 높이 72px, `body { padding-top: 72px }`. 통합 페이지는 `.header-backdrop`(배경 그라데이션+그레인을 fixed로 똑같이 그린 띠)로 스크롤 내용을 가림. 현재 페이지 링크만 `--on`(600 + 밑줄), 나머지 `--off`(`#7b7b7b`)
 - 모바일(≤900px): 햄버거(`.header__menu-btn`) + 드롭다운(`.header--menu-open`), 배경 `#fbfde4`(노란 블롭이 흰 배경에 겹친 색 — 블롭 색이 바뀌면 같이 맞출 것). `header-menu.js`가 관리. 햄버거 아이콘은 지금 CSS 3줄 막대 — 사용자가 실제 아이콘 에셋을 나중에 전달 예정
-- 독립/상세 페이지의 헤더는 `#앵커`가 아니라 `FindTheKey.html`·`OpportunitiesUnlocked.html` 같은 파일 링크를 씀
+- 상세 페이지(OU 상세 5개, 선물 상세 4개)의 헤더 nav도 통합 페이지와 똑같이 `FindTheKey.html#opportunities-unlocked` 같은 **앵커 링크**를 씀(About만 앵커 없이 `FindTheKey.html`) — 예전엔 삭제된 독립 목록 페이지(`OpportunitiesUnlocked.html` 등)를 직접 가리켰다가, 그 페이지들을 지우면서 같이 고침. 새 상세 페이지를 만들 때도 이 패턴을 따를 것
 
 ## 섹션별 메모
 
@@ -158,7 +157,7 @@ CTA 필 버튼은 전부 **`#464646`** + 흰 글자 + **웨이트 400(Regular)**
 - 트로피 위 여백 `margin-top: 32vh` (캔버스 자체에 모델 위로 화면 높이 ~15%의 투명 여백이 있어서 60vh에서 줄임), 아래 340px
 
 ### 트로피 3D 뷰어 (`trophy.js`)
-`assets/01-about/trophy.glb` + `assets/01-about/trophy-3d-texture/`의 seamless/normal 맵(색·러프니스·범프 공용 + 노멀). **`trophy-texture-org.png`(원본 사진)는 절대 덮어쓰지 말 것** — seamless/normal은 파생본이라 재생성 가능. Three.js는 importmap으로 로드. 조작: 마우스를 올리면 커서 위치에 따라 카메라가 따라가고(`baseTheta=-18°`, `maxThetaSwing=55°`, lerp 0.3), **클릭+드래그로 회전**, 드래그를 놓으면 원래 각도로 복귀.
+`assets/01-about/trophy.glb` + `assets/01-about/trophy-3d-texture/`의 seamless/normal 맵(색·러프니스·범프 공용 + 노멀). **`trophy-texture-org.png`(원본 사진)는 절대 덮어쓰지 말 것** — seamless/normal은 파생본이라 재생성 가능. Three.js는 importmap으로 로드. 조작: 마우스를 올리면 커서 위치에 따라 카메라가 따라가고(`baseTheta=-18°`, `maxThetaSwing=55°`, lerp 0.3), **클릭+드래그로 회전**, 드래그를 놓으면 원래 각도로 복귀. 트로피 바로 아래에 안내 문구 `.trophy-hint`("*마우스로 돌려보세요", 본문 크기 16px/400, 보조 회색 `#7b7b7b`, 트로피와 간격 0)가 있고 — **사이트 표준 340px 섹션 간격은 이 문구로 옮겨감**(`.trophy-placeholder` 자체엔 더 이상 `margin-bottom` 없음, 모바일은 120px).
 ⚠️ 커서 추적/드래그 동작은 이 문서를 쓴 세션에서도 **실제 화면으로 검증하지 못함** (브라우저 캡처 도구가 빈 화면만 반환). 손질할 땐 실제 Chrome에서 확인하거나 사용자에게 좌/중/우 캡처를 받을 것 — 텍스트 피드백만 보고 파라미터를 추측해서 키우지 말 것.
 
 ### Opportunities Unlocked (`#opportunities-unlocked`)
@@ -169,13 +168,13 @@ CTA 필 버튼은 전부 **`#464646`** + 흰 글자 + **웨이트 400(Regular)**
 
 ### Beyond the Door (`#beyond-the-door`, Figma 28:476)
 - **여정 리스트**: 4단계(1 오프닝 밋업 / 2 스페셜 크리에이터 활동 / 3 오프라인 클래스 / 4 페어웰 — "브랜드 콜라보"는 삭제됨). 각 단계는 위 구분선 + 텍스트 + **롤링 마키 사진**(244×320, gap 15, 사진 안에 "Photo by. 이름" 크레딧). 단계 사이 화살표는 Figma에서 삭제되어 제거, 단계 간격 120px. 롤링은 원본+복제 세트를 `translateX(0→-50%)`로 돌림(아이템 수를 바꾸면 duration을 비례해서 조정)
-- **"직접 만나 나누는 시간" 갤러리**: 코버플로 — 뷰포트 중앙에 가까운 사진이 가장 크고 진하고, 나머지는 거리에 따라 작아지고 fade. `position:sticky`는 안 씀(성능·깨짐), `btd-gallery-stack.js`가 스크롤 위치에서 매 프레임 계산. 사진 9장은 `assets/03-program/meetup/`에 있고 파일명이 곧 설명(예: `공간_스토리마켓_04.jpg`, `공간_쇼룸_ngray_01.jpg`) — `FindTheKey.html`과 독립 페이지(`BeyondTheDoor.html`) 양쪽에서 같은 9장을 순서대로 씀
+- **"직접 만나 나누는 시간" 갤러리**: 코버플로 — 뷰포트 중앙에 가까운 사진이 가장 크고 진하고, 나머지는 거리에 따라 작아지고 fade. `position:sticky`는 안 씀(성능·깨짐), `btd-gallery-stack.js`가 스크롤 위치에서 매 프레임 계산. 사진 9장은 `assets/03-program/meetup/`에 있고 파일명이 곧 설명(예: `공간_스토리마켓_04.jpg`, `공간_쇼룸_ngray_01.jpg`)
 - **Special Gift**: 2열 **카드 그리드**(예전 토글/아코디언 목록에서 재설계됨). 카드 = 위 구분선 + 제목 + "더보기"(→ `BeyondTheDoor-gift1~4.html`, 사진 그리드+크레딧 상세 페이지) + 겹친 썸네일 3장(평소엔 **기울기 없이 똑바로** 앞 사진 뒤에 나란히 겹쳐 있고, **`.btd-gift__stack`에 마우스를 올리면 양옆 사진이 ±118px 밀려나며 ±7° 기울어지며 펼쳐짐**, 0.4s ease — 브랜디자인 clients 페이지 참고. 모바일은 ±88px). 선물 4종: 스페셜 웰컴 굿즈 / 브랜드 콜라보 굿즈 / 프리미엄 가구 협찬 / 페어웰 기프트
 - 이미지 hover 플로팅(원본 미리보기) 효과는 시도했다가 뺌. 다시 필요하면 같은 `<img>` 하나를 옮기지 말고 "배경 썸네일 + 플로팅용 별도 `<img>`" 두 레이어로 만들 것
 - 파일 대소문자·한글 파일명 주의: macOS는 대소문자 무시(로컬에서 안 걸리고 GitHub Pages 등에서 404), 한글 파일명은 NFD/NFC 차이로 URL이 404. 새 애셋은 **ASCII 파일명 + 소문자 폴더**로 (`journey`, `meetup`, `gift`)
 
 ### Creator Voices (`#creator-voices`, Figma 0:519)
-- 인터뷰 행 4개(사진 495×340 + 텍스트, 홀수 행 사진 왼쪽 / 짝수 `--reverse`): MOPO / 랴료하우스 / cooohome / momo_kong(4번째는 교체됨). 사진은 `assets/04-voices/story/`. 행 사이 `margin-bottom: 220px`(반전 행 267px — Figma 값, 건드리지 말 것), reveal 애니메이션은 여정 리스트와 동일
+- 인터뷰 행 4개(사진 495×340 + 텍스트, 홀수 행 사진 왼쪽 / 짝수 `--reverse`): MOPO / 랴료하우스 / cooohome / momo_kong(4번째는 스토리로 교체됨). 사진은 `assets/04-voices/story/`, 4개 다 채워짐 — momo_kong 사진은 원본이 10MB대 PNG(2560×3413)라 900px 폭 JPG로 줄여서 넣음(약 280KB), 다른 사진들과 같은 명명 규칙(`cv-이름.jpg`). 행 사이 `margin-bottom: 220px`(반전 행 267px — Figma 값, 건드리지 말 것), reveal 애니메이션은 여정 리스트와 동일
 - **FAQ**(Figma 206:711): 지원하기 버튼 **아래**에 있고(예전엔 버튼 위), **"자주 묻는 질문" 제목은 뺐음** — 질문 3개 클릭 토글(`faq-toggle.js`)만 남음. 버튼→목록 **260px**(문구→버튼 160px보다 일부러 넓게), 목록 아래는 `#creator-voices`의 400px padding
 - **마무리 문구**("다음 문을 열 Key Creator를 기다립니다. / 집과 일상에서…", `.cv-outro`)는 다른 서브타이틀 문구와 같은 **27px/500 가운데**, → **"스페셜 크리에이터 지원하기" 버튼(`.cv-apply`, `#464646`, 380×72px, 글자 22px/400)** → 1155 링크
 
@@ -215,9 +214,9 @@ CTA 필 버튼은 전부 **`#464646`** + 흰 글자 + **웨이트 400(Regular)**
 
 ## 남은 할 일 / 미검증
 
-- **모바일 디테일**: 폰트·간격은 5단계 규칙으로 정리했지만(위 "모바일" 참고), 스크롤 연출(scroll-snap/멈춤 스크립트/키 사진 확대)이 폰에서 어떻게 보이는지는 미확인. 독립 페이지들과 OU 상세 팝업의 모바일 값은 아직 손대지 않음
+- **모바일 디테일**: 폰트·간격은 5단계 규칙으로 정리했지만(위 "모바일" 참고), 스크롤 연출(scroll-snap/멈춤 스크립트/키 사진 확대)이 폰에서 어떻게 보이는지는 미확인. OU 상세 팝업의 모바일 값은 아직 손대지 않음
 - **햄버거 아이콘** 에셋 교체 (사용자가 전달 예정)
-- 독립 페이지(`OpportunitiesUnlocked.html`/`CreatorVoices.html`/`BeyondTheDoor.html`) 유지 여부 결정 (OU 상세 `-01~05`와 선물 상세 `gift1~4`는 메인이 쓰므로 유지)
 - **안 쓰는 이미지**(일부러 남겨둠, 지울지 결정 필요): `assets/01-about/rolling/rolling-06.jpg`·`rolling-07.jpg`·`about-01.jpg`
+- 브랜드 로고 롤링(`.brand-rolling__item`, 152×59 박스, `contain`)을 사용자가 통일된 로고 세트로 새로 교체 예정 — 박스를 꽉 채우는 이미지로 만들려면 **152×59 비율(2배 해상도면 304×118)**로 준비할 것
 - 트로피 커서 추적/드래그 동작의 실제 화면 검증
 - About 파트 내부 간격·폰트 정리는 스크롤 연출과 얽혀 있어 아직 손대지 않음
