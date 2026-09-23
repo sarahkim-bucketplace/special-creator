@@ -2048,17 +2048,24 @@ body.ou-modal-open {
    ========================================================================== */
 @media (max-width: 900px) {
   /* ① Display 26 */
-  .hero__title,
+  .hero__title {
+    font-size: 26px;
+    letter-spacing: -0.13px;
+  }
+
+  /* every About text element, mobile only — 20px per direct request (not
+     tied to the 5-step scale below). Was briefly unified at 26px (matching
+     .about-heading--intro) to fix the same-content-different-size
+     inconsistency; that read as too large, so this drops the whole group to
+     20px instead, still all one size, just smaller */
   .about-heading--intro,
   .about-heading.about-heading--blur-in,
   .about-photo__caption,
-  /* matched to .about-heading--intro's size per direct request — these three
-     were grouped under Title/22 below (same 30->38px change made on desktop) */
   .about-heading,
   .insight,
   .about-key-photo {
-    font-size: 26px;
-    letter-spacing: -0.13px;
+    font-size: 20px;
+    letter-spacing: -0.1px;
   }
 
   /* section hero: tighter title -> intro gap on phones (40px on desktop); intro is 18 (its
