@@ -367,6 +367,11 @@ body.is-fullframe-hero .down-hint img {
 }
 
 @media (max-width: 900px) {
+  /* header side inset matches .page's own 24px mobile gutter below, so the
+     logo/hamburger and dropdown links line up with the page content's edge */
+  .header {
+    padding: 0 24px;
+  }
   .header__menu-btn {
     display: block;
   }
@@ -381,14 +386,14 @@ body.is-fullframe-hero .down-hint img {
     max-height: 0;
     overflow: hidden;
     background: #fbfde4;
-    padding: 0 36px;
+    padding: 0 24px;
     opacity: 0;
     transition: max-height 0.3s ease, opacity 0.25s ease;
   }
   .header--menu-open .header__links {
     max-height: 400px;
     opacity: 1;
-    padding: 8px 36px 24px;
+    padding: 8px 24px 24px;
   }
   .header__link {
     width: 100%;
@@ -786,6 +791,20 @@ body.is-fullframe-hero .down-hint img {
   padding: 40px;
   opacity: 0;
   transition: opacity 0.5s ease;
+}
+
+/* the <p> itself must stay display:flex just to center its one <span> child as a
+   block — the actual text lives inside that span. Putting display:flex directly on
+   an element that contains mixed text-and-<strong> content turns each text run and
+   the <strong> into SEPARATE flex items (CSS boxes bare text runs between element
+   children into anonymous flex items), which silently fit on one line on wide
+   screens but visibly shredded into 2-3 independently-wrapping columns on narrow
+   ones — the .about-key-photo__text--2 sentence (has a <strong>) was actually
+   broken this way until this fix; --1 (no <strong>) never showed it because it was
+   never split to begin with. text-align here (not on the flex container) is what
+   centers the span's own wrapped lines. */
+.about-key-photo__text span {
+  text-align: center;
 }
 
 .about-key-photo strong {
@@ -2124,5 +2143,15 @@ body.ou-modal-open {
   .btd-journey__rolling {
     width: 100%;
     min-width: 0;
+  }
+
+  /* page-wide side gutter: 35px -> 24px on phones/tablets (matches hero-home.html's
+     .next-section, already 24px, and the newmixcoffee.com/ko mobile reference the
+     side-margin decision was checked against). Full-bleed rows (.rolling,
+     .brand-rolling, the OU card strip, etc.) already escape .page via their own
+     left:50%/-50vw breakout and are untouched by this. */
+  .page {
+    padding-left: 24px;
+    padding-right: 24px;
   }
 }
