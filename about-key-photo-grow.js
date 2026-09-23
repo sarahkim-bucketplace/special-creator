@@ -125,7 +125,7 @@
       stage.style.transform = 'translateX(-50%)';
       stage.style.width = restingWidth() + 'px';
       stage.style.height = restingHeight() + 'px';
-      stage.style.borderRadius = '20px';
+      stage.style.borderRadius = '5px';
       stage.style.filter = '';
       stage.style.zIndex = '';
       text1.style.opacity = '0';
@@ -152,7 +152,7 @@
         stage.style.width = lerp(fromWidth, window.innerWidth, sizeT) + 'px';
         stage.style.height = lerp(fromHeight, window.innerHeight, sizeT) + 'px';
         stage.style.transform = 'none';
-        stage.style.borderRadius = lerp(20, 0, sizeT) + 'px';
+        stage.style.borderRadius = lerp(5, 0, sizeT) + 'px';
         stage.style.zIndex = '';
         // text 1 is already fully visible at d=0 (the paused spot);
         // crossfade to text 2 early, well before the size finishes growing

@@ -244,7 +244,7 @@
         stage.style.left = lerp(from.left, 0, sizeT) + 'px';
         stage.style.width = lerp(from.width, window.innerWidth, sizeT) + 'px';
         stage.style.height = lerp(from.height, window.innerHeight, sizeT) + 'px';
-        stage.style.borderRadius = lerp(20, 0, sizeT) + 'px';
+        stage.style.borderRadius = lerp(5, 0, sizeT) + 'px';
         stage.style.filter = `blur(${blurT * MAX_GROW_BLUR}px)`;
         stage.style.transform = 'none';
         stage.style.zIndex = '';

@@ -553,7 +553,10 @@ body.is-fullframe-hero .down-hint img {
 
 .about-photo {
   position: relative;
-  border-radius: 20px;
+  /* was 20px (원래 Figma 디자인) — matched to the site-wide 5px photo-box
+     radius used everywhere below About (OU cards, journey/gallery/gift
+     photos, CV rows) per direct request */
+  border-radius: 5px;
   overflow: hidden;
 }
 
@@ -764,7 +767,8 @@ body.is-fullframe-hero .down-hint img {
   transform: translateX(-50%);
   width: min(963px, calc(100% - 70px));
   height: 568px;
-  border-radius: 20px;
+  /* was 20px — see .about-photo above for why */
+  border-radius: 5px;
   overflow: hidden;
   background: #d9d9d9;
   color: #ffffff;
