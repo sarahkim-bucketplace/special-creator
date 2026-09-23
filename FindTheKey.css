@@ -2053,11 +2053,19 @@ body.ou-modal-open {
    Gaps: section 120 / main-title->content 80 / subtitle->content 48
    ========================================================================== */
 @media (max-width: 900px) {
-  /* section-hero title, mobile only — 20px per direct request (was 26px,
-     the Display tier) */
+  /* section-hero icon, mobile only — smaller + tighter gap to the title
+     per direct request (was 39.2px / 44px gap) */
+  .hero__icon {
+    width: 28px;
+    height: 28px;
+    margin-bottom: 20px;
+  }
+
+  /* section-hero title, mobile only — 22px per direct request (briefly
+     20px, that read as too small; was 26px, the Display tier, originally) */
   .hero__title {
-    font-size: 20px;
-    letter-spacing: -0.1px;
+    font-size: 22px;
+    letter-spacing: -0.11px;
   }
   .hero__title br.mobile-break {
     display: inline;
@@ -2090,11 +2098,11 @@ body.ou-modal-open {
   .hero__title {
     margin-bottom: 24px;
   }
-  /* section-hero subtitle (본문), mobile only — 13px per direct request
-     (was 18px) */
+  /* section-hero subtitle (본문), mobile only — 14px per direct request
+     (briefly 13px, that read as too small; was 18px originally) */
   .hero__subtitle {
-    font-size: 13px;
-    letter-spacing: -0.065px;
+    font-size: 14px;
+    letter-spacing: -0.07px;
   }
 
   /* ② Title 22 */
