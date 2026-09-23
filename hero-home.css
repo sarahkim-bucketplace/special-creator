@@ -249,6 +249,11 @@ body {
   letter-spacing: -0.19px;
 }
 
+/* line break after the comma — mobile only (see @media (max-width: 900px) below) */
+.next-section h2 br.mobile-break {
+  display: none;
+}
+
 .next-section p {
   font-size: 16px;
   line-height: 1.45;
@@ -373,6 +378,9 @@ body {
     /* 26px = site's mobile "Display" tier (see README 디자인 규칙 표) — this
        heading is the same tier as the section-hero titles that use it there */
     font-size: 26px;
+  }
+  .next-section h2 br.mobile-break {
+    display: inline;
   }
   .next-section p {
     font-size: 15px;
