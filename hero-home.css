@@ -51,14 +51,22 @@ body {
 .hero-pin {
   position: relative;
   /* 100vh viewport + 220vh reveal (photos cycle, then the logo comes in) + 60vh hold (page stays
-     pinned once the logo is fully revealed) — keep in sync with REVEAL_VH in hero-home.js */
+     pinned once the logo is fully revealed) — keep in sync with REVEAL_VH in hero-home.js.
+     dvh (not just vh) matters here: hero-home.js reads this section's real offsetHeight and
+     compares it against window.innerHeight-based scroll math, so on mobile browsers whose
+     address bar hides/shows (static vh use the LARGEST possible viewport, innerHeight tracks
+     the CURRENT one) a vh-only height drifts out of sync with the JS progress calc — dvh tracks
+     the same current viewport innerHeight does, keeping the two in step. Static vh stays as a
+     fallback for browsers without dvh support. */
   height: 380vh;
+  height: 380dvh;
 }
 
 .hero-pin__stage {
   position: sticky;
   top: 0;
   height: 100vh;
+  height: 100dvh;
   overflow: hidden;
   /* background removed — the fixed .bg-gradient-anim/.bg-grain layers show through instead */
 }
@@ -213,6 +221,7 @@ body {
 
 .next-section {
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -336,7 +345,12 @@ body {
   opacity: 1;
 }
 
-@media (max-width: 600px) {
+/* 900px, not the 600px this used to be — matches the one mobile breakpoint used
+   everywhere else on the site (FindTheKey.css etc., see README). At 600px, a
+   700-900px-wide viewport (tablet portrait, a narrow desktop window) got this
+   page's desktop sizing while every other page on the site had already switched
+   to its mobile layout at the same width. */
+@media (max-width: 900px) {
   .hero-pin__logo {
     width: 220px;
   }
@@ -344,7 +358,9 @@ body {
     font-size: 16px;
   }
   .next-section h2 {
-    font-size: 24px;
+    /* 26px = site's mobile "Display" tier (see README 디자인 규칙 표) — this
+       heading is the same tier as the section-hero titles that use it there */
+    font-size: 26px;
   }
   .next-section p {
     font-size: 15px;
