@@ -2058,7 +2058,6 @@ body.ou-modal-open {
      .about-heading--intro) to fix the same-content-different-size
      inconsistency; that read as too large, so this drops the whole group to
      20px instead, still all one size, just smaller */
-  .about-heading--intro,
   .about-heading.about-heading--blur-in,
   .about-photo__caption,
   .about-heading,
@@ -2066,6 +2065,14 @@ body.ou-modal-open {
   .about-key-photo {
     font-size: 20px;
     letter-spacing: -0.1px;
+  }
+
+  /* "스페셜 크리에이터는 집과 일상을" only, mobile only — bumped up from the
+     20px group above per direct request. Same specificity as .about-heading
+     above (single class), so this must stay declared after it to win */
+  .about-heading--intro {
+    font-size: 22px;
+    letter-spacing: -0.11px;
   }
 
   /* section hero: tighter title -> intro gap on phones (40px on desktop); intro is 18 (its
