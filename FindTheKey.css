@@ -447,6 +447,12 @@ body.is-fullframe-hero .down-hint img {
   margin-bottom: 40px;
 }
 
+/* line break after "...에게"/"...가" — mobile only (see @media (max-width:
+   900px) below), desktop keeps these two hero titles on one line */
+.hero__title br.mobile-break {
+  display: none;
+}
+
 .hero__subtitle {
   font-size: 21px;
   font-weight: 400;
@@ -2047,10 +2053,14 @@ body.ou-modal-open {
    Gaps: section 120 / main-title->content 80 / subtitle->content 48
    ========================================================================== */
 @media (max-width: 900px) {
-  /* ① Display 26 */
+  /* section-hero title, mobile only — 20px per direct request (was 26px,
+     the Display tier) */
   .hero__title {
-    font-size: 26px;
-    letter-spacing: -0.13px;
+    font-size: 20px;
+    letter-spacing: -0.1px;
+  }
+  .hero__title br.mobile-break {
+    display: inline;
   }
 
   /* every About text element, mobile only — 20px per direct request (not
@@ -2080,9 +2090,11 @@ body.ou-modal-open {
   .hero__title {
     margin-bottom: 24px;
   }
+  /* section-hero subtitle (본문), mobile only — 13px per direct request
+     (was 18px) */
   .hero__subtitle {
-    font-size: 18px;
-    letter-spacing: -0.09px;
+    font-size: 13px;
+    letter-spacing: -0.065px;
   }
 
   /* ② Title 22 */
