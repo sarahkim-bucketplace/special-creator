@@ -98,20 +98,24 @@ body {
   position: relative;
 }
 
+/* thin hairline bars (Figma node 256:749) — was a thicker 22×2px bar before
+   the user supplied this icon; color kept at the site's standard #2d2828
+   rather than the export's own near-black #181415, to match the header's
+   nav-link text color */
 .header__menu-icon,
 .header__menu-icon::before,
 .header__menu-icon::after {
   position: absolute;
   left: 50%;
-  width: 22px;
-  height: 2px;
+  width: 23px;
+  height: 1px;
   background: #2d2828;
   transform: translateX(-50%);
   transition: transform 0.25s ease, opacity 0.2s ease, top 0.25s ease;
 }
 
 .header__menu-icon {
-  top: 15px;
+  top: 16px;
 }
 
 .header__menu-icon::before {
@@ -121,7 +125,7 @@ body {
 
 .header__menu-icon::after {
   content: "";
-  top: 22px;
+  top: 24px;
 }
 
 .header--menu-open .header__menu-icon {
@@ -129,12 +133,12 @@ body {
 }
 
 .header--menu-open .header__menu-icon::before {
-  top: 15px;
+  top: 16px;
   transform: translateX(-50%) rotate(45deg);
 }
 
 .header--menu-open .header__menu-icon::after {
-  top: 15px;
+  top: 16px;
   transform: translateX(-50%) rotate(-45deg);
 }
 
