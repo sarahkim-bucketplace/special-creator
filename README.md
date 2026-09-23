@@ -145,7 +145,7 @@ CTA 필 버튼은 전부 **`#464646`** + 흰 글자 + **웨이트 400(Regular)**
 
 - 로고(→ `hero-home.html`) + nav 4개 + CTA. **현재 라벨: About / Opportunities / Programs / Voices / Apply** (예전 "Find the Key/…/Open Your Door"에서 바뀜). Apply는 `https://ohou.se/competitions/1155` (새 탭), CV 하단 "스페셜 크리에이터 지원하기"와 같은 링크
 - **`position: fixed`** (sticky 금지 — body/html의 `overflow-x: hidden`이 sticky를 깨뜨림). 높이 72px, `body { padding-top: 72px }`. 통합 페이지는 `.header-backdrop`(배경 그라데이션+그레인을 fixed로 똑같이 그린 띠)로 스크롤 내용을 가림. 현재 페이지 링크만 `--on`(600 + 밑줄), 나머지 `--off`(`#7b7b7b`)
-- 모바일(≤900px): 햄버거(`.header__menu-btn`) + 드롭다운(`.header--menu-open`), 배경 `#fbfde4`(노란 블롭이 흰 배경에 겹친 색 — 블롭 색이 바뀌면 같이 맞출 것). `header-menu.js`가 관리. 햄버거 아이콘은 지금 CSS 3줄 막대 — 사용자가 실제 아이콘 에셋을 나중에 전달 예정
+- 모바일(≤900px): 햄버거(`.header__menu-btn`) + 드롭다운(`.header--menu-open`), 배경 `#fbfde4`(노란 블롭이 흰 배경에 겹친 색 — 블롭 색이 바뀌면 같이 맞출 것). `header-menu.js`가 관리. 햄버거 아이콘은 CSS로 그린 3줄 막대(이미지 아님) — Figma 노드 `256:749`(사용자가 전달) 기준으로 두께 2px→1px, 너비 22px→23px, 줄 간격 7px→8px로 조정, 열림(X) 애니메이션의 회전 축(`top`)도 새 가운데 줄 위치(16px)에 맞춰 같이 옮김. 색은 에셋 원본의 `#181415`(거의 검정) 대신 헤더 링크와 같은 사이트 표준 `#2d2828` 유지. FindTheKey.css와 이 컴포넌트를 그대로 복사해 쓰는 6개 상세 페이지 스타일시트(OU 5개 + gift 1개) 전부 동일하게 반영
 - 상세 페이지(OU 상세 5개, 선물 상세 4개)의 헤더 nav도 통합 페이지와 똑같이 `FindTheKey.html#opportunities-unlocked` 같은 **앵커 링크**를 씀(About만 앵커 없이 `FindTheKey.html`) — 예전엔 삭제된 독립 목록 페이지(`OpportunitiesUnlocked.html` 등)를 직접 가리켰다가, 그 페이지들을 지우면서 같이 고침. 새 상세 페이지를 만들 때도 이 패턴을 따를 것
 
 ## 섹션별 메모
@@ -229,7 +229,6 @@ CTA 필 버튼은 전부 **`#464646`** + 흰 글자 + **웨이트 400(Regular)**
 ## 남은 할 일 / 미검증
 
 - **모바일 디테일**: 폰트·간격은 5단계 규칙으로 정리했지만(위 "모바일" 참고), 스크롤 연출(scroll-snap/멈춤 스크립트/키 사진 확대)이 폰에서 어떻게 보이는지는 미확인. OU 상세 팝업의 모바일 값은 아직 손대지 않음
-- **햄버거 아이콘** 에셋 교체 (사용자가 전달 예정)
 - **안 쓰는 이미지**(일부러 남겨둠, 지울지 결정 필요): `assets/01-about/rolling/rolling-06.jpg`·`rolling-07.jpg`·`about-01.jpg`
 - 브랜드 로고 롤링(`.brand-rolling__item`, 152×59 박스, `contain`)을 사용자가 통일된 로고 세트로 새로 교체 예정 — 박스를 꽉 채우는 이미지로 만들려면 **152×59 비율(2배 해상도면 304×118)**로 준비할 것
 - 트로피 커서 추적/드래그 동작의 실제 화면 검증
