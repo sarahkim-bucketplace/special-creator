@@ -229,6 +229,18 @@ body {
   text-align: center;
   gap: 20px;
   padding: 80px 24px;
+  /* one-shot fade + slide-up as the hold lets go (hero-home.js's update() toggles
+     .is-visible off holdProgress — see its comment there for why), referencing
+     newmixcoffee.com/ko's hero-exit motion: a snappy threshold-triggered swap rather
+     than this page's own scroll-scrubbed keyhole zoom */
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 0.3s cubic-bezier(0.33, 1, 0.68, 1), transform 0.3s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+.next-section.is-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .next-section h2 {

@@ -8,6 +8,7 @@
   const photos = document.getElementById('heroPhotos');
   const photosInner = document.getElementById('heroPhotosInner');
   const photoEls = photos ? Array.from(photos.querySelectorAll('.hero-pin__photo')) : [];
+  const nextSection = document.querySelector('.next-section');
 
   // hero-outer-graphic's source viewBox (Figma node 0:660), used to reproduce
   // the same "xMidYMid slice" cover-scale math the SVG itself uses, so the
@@ -16,6 +17,11 @@
   const DESIGN_H = 1080;
   const HINT_OFFSET_LEFT = 210; // "Scroll" center, px from keyhole center at 1:1 scale
   const HINT_OFFSET_RIGHT = 193; // "Down" center, px from keyhole center at 1:1 scale
+  // on a narrow/tall phone screen, the cover-scale below is driven by height (not width),
+  // which leaves "Scroll"/"Down" sitting much farther from the keyhole than they read on
+  // desktop — tighten the gap on mobile only (matches the site's one mobile breakpoint)
+  const MOBILE_HINT_BREAKPOINT = 900;
+  const MOBILE_HINT_SCALE = 0.6;
 
   const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
 
@@ -56,8 +62,9 @@
   function updateHintPosition() {
     const rect = stage.getBoundingClientRect();
     const scale = Math.max(rect.width / DESIGN_W, rect.height / DESIGN_H);
-    hint.style.setProperty('--hint-offset-left', `${HINT_OFFSET_LEFT * scale}px`);
-    hint.style.setProperty('--hint-offset-right', `${HINT_OFFSET_RIGHT * scale}px`);
+    const mobileAdjust = window.innerWidth <= MOBILE_HINT_BREAKPOINT ? MOBILE_HINT_SCALE : 1;
+    hint.style.setProperty('--hint-offset-left', `${HINT_OFFSET_LEFT * scale * mobileAdjust}px`);
+    hint.style.setProperty('--hint-offset-right', `${HINT_OFFSET_RIGHT * scale * mobileAdjust}px`);
   }
 
   function update() {
@@ -126,6 +133,17 @@
         ? 1
         : 1 - (holdProgress - downHintFadeOutStart) / (1 - downHintFadeOutStart);
     downHint.style.setProperty('--down-hint-opacity', clamp(downHintOpacity, 0, 1));
+
+    // next-section fades + slides up as a single block right as the hold lets go —
+    // referencing newmixcoffee.com/ko's hero-exit motion (a snappy threshold-triggered
+    // swap, not a scroll-scrubbed one like the keyhole zoom above). Driven off holdProgress
+    // rather than a plain IntersectionObserver: .next-section sits in normal document flow
+    // right after .hero-pin, so geometrically it's already "in view" the whole time the
+    // sticky stage is pinned over it — an observer would fire while it's still hidden
+    // behind the stage, well before the pin actually releases
+    if (nextSection) {
+      nextSection.classList.toggle('is-visible', isComplete && holdProgress >= 0.9);
+    }
 
     stage.style.pointerEvents = progress >= 1 ? 'none' : 'auto';
     ticking = false;
