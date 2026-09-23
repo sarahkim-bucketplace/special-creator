@@ -2051,7 +2051,12 @@ body.ou-modal-open {
   .hero__title,
   .about-heading--intro,
   .about-heading.about-heading--blur-in,
-  .about-photo__caption {
+  .about-photo__caption,
+  /* matched to .about-heading--intro's size per direct request — these three
+     were grouped under Title/22 below (same 30->38px change made on desktop) */
+  .about-heading,
+  .insight,
+  .about-key-photo {
     font-size: 26px;
     letter-spacing: -0.13px;
   }
@@ -2068,9 +2073,6 @@ body.ou-modal-open {
 
   /* ② Title 22 */
   .cv-outro,
-  .about-heading,
-  .insight,
-  .about-key-photo,
   .btd-middle__title,
   .faq__title {
     font-size: 22px;
