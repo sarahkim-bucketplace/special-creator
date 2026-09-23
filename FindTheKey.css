@@ -517,9 +517,13 @@ body.is-fullframe-hero .down-hint img {
 }
 
 .about-heading {
-  font-size: 30px;
+  /* matched to .about-heading--intro's size ("스페셜 크리에이터는...") per
+     direct request — was 30px/-0.15px (the site's "Title" tier); weight
+     stays 500 here since only size was asked for (--intro/--blur-in below
+     still override to 600, so this only affects --before-badge) */
+  font-size: 38px;
   font-weight: 500;
-  letter-spacing: -0.15px;
+  letter-spacing: -0.19px;
   line-height: 1.6;
   color: #2d2828;
   text-align: center;
@@ -772,9 +776,11 @@ body.is-fullframe-hero .down-hint img {
   overflow: hidden;
   background: #d9d9d9;
   color: #ffffff;
-  font-size: 30px;
+  /* matched to .about-heading--intro's size per direct request — was
+     30px/-0.15px (the site's "Title" tier); weight stays 500 */
+  font-size: 38px;
   font-weight: 500;
-  letter-spacing: -0.15px;
+  letter-spacing: -0.19px;
   line-height: 1.6;
   text-align: center;
   opacity: 0;
@@ -847,9 +853,11 @@ body.is-fullframe-hero .down-hint img {
    called from find-the-key.js). Sized to match the hero-title treatment
    per the redesign (Figma 233:1182), up from the old 24px ---- */
 .insight {
-  font-size: 30px;
+  /* matched to .about-heading--intro's size per direct request — was
+     30px/-0.15px (the site's "Title" tier); weight stays 500 */
+  font-size: 38px;
   font-weight: 500;
-  letter-spacing: -0.15px;
+  letter-spacing: -0.19px;
   line-height: 1.6;
   text-align: center;
   margin-top: 230px;
