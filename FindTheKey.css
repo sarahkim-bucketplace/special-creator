@@ -2085,29 +2085,25 @@ body.ou-modal-open {
     letter-spacing: -0.09px;
   }
 
-  /* ② Title 22 — mobile only, bold per direct request (explicit exception
-     to the site's "no 700" rule, same as .next-section h2 on hero-home) */
+  /* ② Title 22 */
   .cv-outro,
   .btd-middle__title,
   .faq__title {
     font-size: 22px;
-    font-weight: 700;
     letter-spacing: -0.11px;
   }
 
-  /* ③ Subtitle 20 — mobile only, bold per direct request */
+  /* ③ Subtitle 18 */
   .stats__label,
   .btd-gift__title,
   .cv-row__title-main,
-  .btd-journey__num,
-  .btd-middle__desc {
-    font-size: 20px;
-    font-weight: 700;
-    letter-spacing: -0.1px;
+  .btd-journey__num {
+    font-size: 18px;
+    letter-spacing: -0.09px;
   }
 
-  /* ④ Body 14 — mobile only, weight unchanged (bold was only asked for
-     title/subtitle) */
+  /* ④ Body 15 */
+  .trophy-hint,
   .btd-journey__desc,
   .cv-row__body,
   .cv-apply,
@@ -2117,13 +2113,6 @@ body.ou-modal-open {
   .btd-gift__more,
   .header__link,
   .header__cta {
-    font-size: 14px;
-    letter-spacing: -0.07px;
-  }
-
-  /* .trophy-hint is About's, not "below About" content, so it's unaffected
-     by the title/subtitle/body resize above */
-  .trophy-hint {
     font-size: 15px;
     letter-spacing: -0.075px;
   }
@@ -2180,6 +2169,11 @@ body.ou-modal-open {
   .faq {
     gap: 40px;
     margin-top: 120px;
+  }
+
+  .btd-middle__desc {
+    font-size: 22px;
+    letter-spacing: -0.11px;
   }
 
   /* the journey rows stack in a column here, but the base rule's
