@@ -123,7 +123,8 @@ CTA 필 버튼은 전부 **`#464646`** + 흰 글자 + **웨이트 400(Regular)**
 
 ### 모바일 (≤900px 하나로 통일, `FindTheKey.css` 맨 끝의 마지막 `@media` 블록)
 
-- **폰트 5단계 26 / 22 / 18 / 15 / 13**: ① 26 = 섹션 히어로 타이틀(`.hero__title`, OU/BTD/CV 공용) ② 22 = 서브타이틀·FAQ 타이틀(`.cv-outro`/`.btd-middle__title`/`.faq__title`) ③ 18 = 통계 라벨·여정 번호·선물 제목·CV 행 제목 ④ 15 = 본문·헤더 메뉴/Apply·버튼·FAQ ⑤ 13 = 크레딧·카드 부제·저자명. 예외: 통계 숫자 34/36px, 모달 닫기 ×, 히어로 소개 문구 18px(데스크톱 21px에 대응). 웨이트·색은 데스크톱과 동일
+- **폰트 5단계 26 / 22 / 18 / 15 / 13**: ① 26 = (해당 없음 — `.hero__title`은 아래 참고로 이 표에서 분리됨) ② 22 = 서브타이틀·FAQ 타이틀(`.cv-outro`/`.btd-middle__title`/`.faq__title`) ③ 18 = 통계 라벨·여정 번호·선물 제목·CV 행 제목 ④ 15 = 본문·헤더 메뉴/Apply·버튼·FAQ ⑤ 13 = 크레딧·카드 부제·저자명. 예외: 통계 숫자 34/36px, 모달 닫기 ×. 웨이트·색은 데스크톱과 동일
+  - **섹션 히어로 타이틀/서브타이틀(`.hero__title`/`.hero__subtitle`, OU·BTD·CV 공용), 모바일만 별도 값**: 타이틀 20px(예전 26px, 위 5단계 밖), 서브타이틀 13px(예전 18px, 데스크톱은 21px) — 둘 다 직접 요청으로 재조정. 타이틀 2곳("스페셜 크리에이터에게 열리는 새로운 기회" / "스페셜 크리에이터가 들려주는 이야기")은 모바일에서만 `<br class="mobile-break">`로 줄바꿈(데스크톱은 한 줄) — 패턴은 hero-home.html의 "Key Creator" 제목과 동일
   - **About 섹션 텍스트는 이 5단계와 별도로 모바일 전용 20px 하나로 통일**: `.about-heading--blur-in`, `.about-photo__caption`, `.about-heading`(배지 앞 헤딩), `.insight`(인용문 2개), `.about-key-photo`(키 사진 문구 2개) 전부 20px — 처음엔 오프닝 헤딩과 맞추려고 26px으로 통일했다가 "커 보인다"는 피드백으로 20px로 낮춤. **데스크톱은 안 건드림**(오프닝 헤딩과 맞춘 38px 그대로). **`.about-heading--intro`("스페셜 크리에이터는 집과 일상을")만 다시 22px로 예외**(직접 요청) — 나머지 About 텍스트는 20px 그대로
 - **간격**: 섹션 사이 120 / 메인 타이틀→콘텐츠 80 / 서브타이틀→콘텐츠 48 (선물 카드는 카드 자체 padding 48px로 맞춤) / 로고월→통계 문구 80
 - **사이드 거터(좌우 여백) 24px로 통일**: `.page`(`FindTheKey.css`), `.header`, OU 상세의 `.detail__content`, 선물 상세의 `.gift-detail` — 전부 예전 35~36px에서 24px로 줄임(FindTheKey.css/OpportunitiesUnlocked-01~05.css/BeyondTheDoor-gift.css 동시 수정). newmixcoffee.com/ko 모바일 버전의 거터 값(24px)을 참고해 맞춘 값. 풀블리드 행(`.rolling`/`.brand-rolling`/OU 카드 스트립 등, `left:50%; margin-left:-50vw` 방식)은 `.page` 패딩과 무관하니 영향 없음
