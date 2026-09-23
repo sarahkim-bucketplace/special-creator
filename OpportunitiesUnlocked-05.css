@@ -118,27 +118,38 @@ body {
   top: 16px;
 }
 
+/* ::before/::after are positioned relative to .header__menu-icon's OWN box
+   (it's their nearest positioned ancestor), not the button — so these `top`
+   values stack on top of the icon's top:16px above, they aren't independent
+   positions on the same 0-32px scale it's on. -8px here really means
+   16 + (-8) = 8px from the button's top edge (matching the icon's own 8px
+   spacing on the other side); +8px below means 16 + 8 = 24px. Get this
+   wrong (as a previous version of this rule did, using flat 8px/24px here)
+   and the three bars land unevenly spaced — 8px/16px gaps instead of 8px/8px */
 .header__menu-icon::before {
   content: "";
-  top: 8px;
+  top: -8px;
 }
 
 .header__menu-icon::after {
   content: "";
-  top: 24px;
+  top: 8px;
 }
 
 .header--menu-open .header__menu-icon {
   background: transparent;
 }
 
+/* same stacking applies here: top:0 (not 16px) is what lands both diagonals
+   exactly on the icon's own 16px position, so they pivot around one shared
+   center and form a symmetric X */
 .header--menu-open .header__menu-icon::before {
-  top: 16px;
+  top: 0;
   transform: translateX(-50%) rotate(45deg);
 }
 
 .header--menu-open .header__menu-icon::after {
-  top: 16px;
+  top: 0;
   transform: translateX(-50%) rotate(-45deg);
 }
 
