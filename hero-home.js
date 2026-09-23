@@ -9,6 +9,8 @@
   const photosInner = document.getElementById('heroPhotosInner');
   const photoEls = photos ? Array.from(photos.querySelectorAll('.hero-pin__photo')) : [];
   const nextSection = document.querySelector('.next-section');
+  const keyLink = document.getElementById('keyLink');
+  const cursorBadge = document.getElementById('cursorBadge');
 
   // hero-outer-graphic's source viewBox (Figma node 0:660), used to reproduce
   // the same "xMidYMid slice" cover-scale math the SVG itself uses, so the
@@ -48,6 +50,19 @@
 
   let ticking = false;
   let wasComplete = false;
+  let wasNextVisible = false;
+  let autoBadgeTimer = null;
+
+  // "Click me" normally only shows on mousemove/mouseenter, which never fire on a
+  // touch device — so on mobile, nothing ever hints that the key is tappable. Once
+  // next-section has settled in, park the badge at the key's own center and show it
+  // without waiting for a hover that will never come.
+  function showAutoClickBadge() {
+    if (!keyLink || !cursorBadge) return;
+    const rect = keyLink.getBoundingClientRect();
+    cursorBadge.style.transform = `translate(${rect.left + rect.width / 2}px, ${rect.top + rect.height / 2}px) translate(-50%, -50%)`;
+    cursorBadge.classList.add('is-visible');
+  }
 
   function triggerLogoJolt() {
     logo.classList.remove('is-settling');
@@ -142,7 +157,19 @@
     // sticky stage is pinned over it — an observer would fire while it's still hidden
     // behind the stage, well before the pin actually releases
     if (nextSection) {
-      nextSection.classList.toggle('is-visible', isComplete && holdProgress >= 0.9);
+      const showNext = isComplete && holdProgress >= 0.9;
+      nextSection.classList.toggle('is-visible', showNext);
+      // mobile only (matches MOBILE_HINT_BREAKPOINT) — on desktop the badge already
+      // works fine via hover, an auto-popup there would just be redundant/distracting
+      if (showNext !== wasNextVisible) {
+        clearTimeout(autoBadgeTimer);
+        if (showNext && window.innerWidth <= MOBILE_HINT_BREAKPOINT) {
+          autoBadgeTimer = setTimeout(showAutoClickBadge, 1000);
+        } else if (!showNext && cursorBadge) {
+          cursorBadge.classList.remove('is-visible');
+        }
+        wasNextVisible = showNext;
+      }
     }
 
     stage.style.pointerEvents = progress >= 1 ? 'none' : 'auto';
@@ -167,9 +194,6 @@
   update();
 
   // custom "Click me" cursor that follows the pointer while hovering the key
-  const keyLink = document.getElementById('keyLink');
-  const cursorBadge = document.getElementById('cursorBadge');
-
   if (keyLink && cursorBadge) {
     keyLink.addEventListener('mousemove', (e) => {
       cursorBadge.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;

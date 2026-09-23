@@ -384,5 +384,16 @@ body {
   }
   .next-section p {
     font-size: 15px;
+    /* extra room below the paragraph — .next-section centers its content
+       vertically as one block, so growing the gap here (rather than moving
+       the text itself) is what shifts the text up and the key visual down
+       within that centered block */
+    margin-bottom: 70px;
+  }
+  .key-link {
+    /* bigger than the 61vw used above 900px — on a phone that formula puts
+       the key close to its 220px floor, reading small next to the enlarged
+       heading/paragraph above it */
+    width: clamp(260px, 85vw, 780px);
   }
 }
