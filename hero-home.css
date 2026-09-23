@@ -378,6 +378,11 @@ body {
     /* 26px = site's mobile "Display" tier (see README 디자인 규칙 표) — this
        heading is the same tier as the section-hero titles that use it there */
     font-size: 26px;
+    /* explicit exception to the site's "no 700" rule (디자인 규칙 > 웨이트) —
+       600 reads visibly thinner at this size than it does at the 38px desktop
+       size, confirmed by request rather than a bug (font-weight was already
+       computing correctly at 600) */
+    font-weight: 700;
   }
   .next-section h2 br.mobile-break {
     display: inline;
