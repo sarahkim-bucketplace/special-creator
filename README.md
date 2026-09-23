@@ -96,8 +96,8 @@ python3 -m http.server 5173
 
 ### 이미지 박스 모서리 (border-radius)
 
-- 사진 박스는 **5px** 하나로 통일: 여정 롤링 사진(`.btd-journey__rolling-photo`), 갤러리(`.btd-gallery__stack-photo`/`-inner`), 선물 카드 썸네일(`.btd-gift__stack-photo`), CV 인터뷰 사진(`.cv-row__photo`), OU 카드 썸네일(`.ou-card__photo`), 선물 상세 그리드(`.gift-detail__item`). 독립 페이지의 같은 박스에도 동일 적용
-- 예외: About 사진·키 사진은 **20px**(원래 디자인), 로고·아이콘·브랜드 로고월은 사진 박스가 아니라 0, OU 상세 팝업의 왼쪽 사진(`.detail__photo`)은 팝업 가장자리에 붙는 패널이라 0. 새 사진 박스를 만들 땐 5px을 넣을 것
+- 사진 박스는 **5px** 하나로 통일: 여정 롤링 사진(`.btd-journey__rolling-photo`), 갤러리(`.btd-gallery__stack-photo`/`-inner`), 선물 카드 썸네일(`.btd-gift__stack-photo`), CV 인터뷰 사진(`.cv-row__photo`), OU 카드 썸네일(`.ou-card__photo`), 선물 상세 그리드(`.gift-detail__item`), **About 히어로 사진(`.about-photo`)·키 사진(`.about-key-photo`)**(예전엔 원래 Figma 디자인대로 20px 예외였다가, 다른 섹션과 안 맞아 보인다는 요청으로 5px로 통일함 — 이 두 프레임은 `about-hero-roll.js`/`about-key-photo-grow.js`가 풀스크린으로 커질 때 `stage.style.borderRadius`를 JS로 직접 애니메이션시키므로, 반경을 또 바꿀 땐 CSS뿐 아니라 이 두 JS 파일에 하드코딩된 시작 반경 값도 같이 바꿔야 함). 독립 페이지의 같은 박스에도 동일 적용
+- 예외: 로고·아이콘·브랜드 로고월은 사진 박스가 아니라 0, OU 상세 팝업의 왼쪽 사진(`.detail__photo`)은 팝업 가장자리에 붙는 패널이라 0. 새 사진 박스를 만들 땐 5px을 넣을 것
 
 ### 웨이트 3가지
 
