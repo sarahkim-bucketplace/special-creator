@@ -1135,10 +1135,22 @@ body.is-fullframe-hero .down-hint img {
     scroll-snap-align: center;
   }
   /* shown permanently at the desktop :hover ("featured") size — no grow
-     motion at all on mobile, since there's no hover to grow from */
-  .ou-carousel .ou-card__photo {
+     motion at all on mobile, since there's no hover to grow from. Needs
+     explicit :hover overrides too (not just the plain rule below): iOS
+     Safari can leave a tapped <a> stuck in :hover, and the OLDER hover-grow
+     rules elsewhere in this file (desktop's own, plus a legacy <=600px
+     variant) both have HIGHER specificity than a plain .ou-carousel
+     .ou-card__photo rule (two classes) — without matching that specificity
+     here, a stuck :hover silently overrides this with their smaller
+     height + a negative margin-top, which reads as the photo "shrinking" */
+  .ou-carousel .ou-card__photo,
+  .ou-carousel .ou-card:hover .ou-card__photo {
     height: 520px;
+    margin-top: 0;
     transition: none;
+  }
+  .ou-carousel .ou-card:hover {
+    flex: 0 0 100%;
   }
   /* title+tag moved into the photo itself (newmixcoffee.com/ko reference,
      per direct request) instead of sitting below it — a bottom-up gradient
@@ -1171,24 +1183,24 @@ body.is-fullframe-hero .down-hint img {
     align-items: center;
     justify-content: center;
     position: absolute;
-    top: 242px;
+    top: 234px;
     z-index: 2;
-    width: 36px;
-    height: 36px;
+    width: 52px;
+    height: 52px;
     padding: 0;
     border: none;
     background: none;
     cursor: pointer;
   }
   .ou-carousel__arrow--prev {
-    left: 16px;
+    left: 12px;
   }
   .ou-carousel__arrow--next {
-    right: 16px;
+    right: 12px;
   }
   .ou-carousel__arrow img {
-    width: 18px;
-    height: 18px;
+    width: 28px;
+    height: 28px;
     /* white + a soft shadow instead of the removed circle backing, so the
        arrow still reads against whatever the photo underneath looks like */
     filter: brightness(0) invert(1) drop-shadow(0 1px 3px rgba(0, 0, 0, 0.5));
