@@ -1,7 +1,7 @@
 // highlights the header nav link for whichever section is currently under a
 // thin band just below the fixed header, as the combined page scrolls.
-// also drives the down-scroll nudge button: click jumps to the next section,
-// and it hides once the last section becomes active.
+// also drives the down-scroll nudge: purely decorative (not clickable — see
+// FindTheKey.html/.css), it just hides once the last section becomes active.
 (function () {
   const sections = Array.from(document.querySelectorAll('.page > section[id]'));
   const links = Array.from(document.querySelectorAll('.header__link[href^="#"]'));
@@ -39,12 +39,4 @@
   );
 
   sections.forEach((section) => observer.observe(section));
-
-  if (downHint) {
-    downHint.addEventListener('click', () => {
-      const idx = sections.findIndex((section) => section.id === activeId);
-      const next = sections[idx + 1];
-      if (next) next.scrollIntoView({ block: 'start' });
-    });
-  }
 })();

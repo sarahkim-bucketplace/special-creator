@@ -594,9 +594,11 @@
     </section>
   </div>
 
-  <button type="button" class="down-hint" id="downHint" aria-label="다음 섹션으로 스크롤">
+  <!-- purely decorative scroll hint now — not a button, not clickable (scroll-spy.js only
+       toggles its visibility, no click handler) -->
+  <div class="down-hint" id="downHint" aria-hidden="true">
     <img src="assets/01-about/downscroll-icon.svg" alt="">
-  </button>
+  </div>
 
   <div class="ou-modal" id="ouModal" aria-hidden="true">
     <div class="ou-modal__frame">

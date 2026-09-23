@@ -95,8 +95,9 @@ html {
   scroll-snap-align: start;
 }
 
-/* down-scroll nudge (mirrors hero-home.html's .hero-pin__down-hint): jumps
-   to the next section on click, hidden once the last section is active */
+/* down-scroll nudge (mirrors hero-home.html's .hero-pin__down-hint): purely
+   decorative and not clickable (pointer-events:none), hidden once the last
+   section is active */
 .down-hint {
   position: fixed;
   left: 50%;
@@ -106,7 +107,7 @@ html {
   border: none;
   background: none;
   padding: 0;
-  cursor: pointer;
+  pointer-events: none;
   opacity: 1;
   transition: opacity 0.3s ease;
   animation: down-hint-bob 1.6s ease-in-out infinite;
