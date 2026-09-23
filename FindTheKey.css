@@ -1240,9 +1240,6 @@ body.is-fullframe-hero .down-hint img {
   }
   #opportunities-unlocked .hero__subtitle {
   }
-  #opportunities-unlocked .hero__subtitle br {
-    display: none;
-  }
   .ou-contents {
     padding: 0 20px 8px;
   }
@@ -1909,9 +1906,6 @@ body.is-fullframe-hero .down-hint img {
   #creator-voices .hero__title {
   }
   #creator-voices .hero__subtitle {
-  }
-  #creator-voices .hero__subtitle br {
-    display: none;
   }
   .cv-outro {
   }
