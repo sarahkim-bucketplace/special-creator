@@ -110,6 +110,7 @@
         </div>
       </section>
 
+      <div class="ou-carousel" id="ouCarousel">
       <section class="ou-contents" data-name="OU-contents-box-off">
         <a href="OpportunitiesUnlocked-01.html" class="ou-card" data-name="Frame-01">
           <div class="ou-card__photo"><img src="assets/02-opportunities/01-93%20CUPS%2C%2093%20STORIES/thumb-yido.jpg" alt=""></div>
@@ -166,6 +167,18 @@
           </div>
         </a>
       </section>
+
+      <!-- mobile-only one-card-at-a-time carousel controls (see ou-mobile-carousel.js) —
+           newmix-style prev/next arrows + dots, hidden on desktop where the existing
+           multi-card hover-grow strip above stays as-is -->
+      <button type="button" class="ou-carousel__arrow ou-carousel__arrow--prev" aria-label="이전 사례">
+        <img src="assets/icon-go.svg" alt="">
+      </button>
+      <button type="button" class="ou-carousel__arrow ou-carousel__arrow--next" aria-label="다음 사례">
+        <img src="assets/icon-go.svg" alt="">
+      </button>
+      <div class="ou-carousel__dots" id="ouCarouselDots"></div>
+      </div>
 
       <section class="brand-rolling" aria-hidden="true" data-name="Brand-Logo-Rolling">
         <div class="brand-rolling__track">
@@ -623,6 +636,7 @@
 <script src="about-key-photo-grow.js"></script>
 <script src="about-key-photo-pause.js"></script>
 <script src="OpportunitiesUnlocked.js"></script>
+<script src="ou-mobile-carousel.js"></script>
 <script src="stats.js"></script>
 <script src="stats-pause.js"></script>
 <script src="insight-after-trophy-pause.js"></script>

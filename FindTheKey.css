@@ -1098,6 +1098,108 @@ body.is-fullframe-hero .down-hint img {
   color: #7b7b7b;
 }
 
+/* ---- OU mobile carousel (ou-mobile-carousel.js): one card at a time with
+   snap + prev/next arrows + dots + autoplay, referencing newmixcoffee.com/ko's
+   product carousel. Desktop keeps the existing multi-card hover-grow strip
+   above untouched — .ou-carousel-arrow/__dots only exist visually on mobile,
+   and the JS itself no-ops above 900px (matchMedia-gated) ---- */
+.ou-carousel {
+  position: relative;
+}
+
+.ou-carousel__arrow,
+.ou-carousel__dots {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  /* the wrapper takes over the full-bleed breakout that .ou-contents used on
+     its own above — arrows/dots need to share its coordinate space, and a
+     position:absolute child can't do that against a full-bleed GRANDchild */
+  .ou-carousel {
+    left: 50%;
+    width: 100vw;
+    margin-left: -50vw;
+  }
+  .ou-carousel .ou-contents {
+    position: static;
+    left: auto;
+    width: 100%;
+    margin-left: 0;
+    padding: 24px 24px 8px;
+    scroll-snap-type: x mandatory;
+  }
+  .ou-carousel .ou-card {
+    flex: 0 0 100%;
+    scroll-snap-align: center;
+  }
+  /* no featured/dimmed state on a one-at-a-time carousel — every card reads
+     the same as the desktop :hover ("featured") state, minus the size grow
+     (each card is already full width) */
+  .ou-carousel .ou-card:hover {
+    flex: 0 0 100%;
+  }
+  .ou-carousel .ou-card:hover .ou-card__photo {
+    height: 430px;
+    margin-top: 0;
+  }
+  .ou-carousel .ou-card__text {
+    opacity: 1;
+  }
+
+  .ou-carousel__arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 235px;
+    z-index: 2;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+  }
+  .ou-carousel__arrow--prev {
+    left: 16px;
+  }
+  .ou-carousel__arrow--next {
+    right: 16px;
+  }
+  .ou-carousel__arrow img {
+    width: 14px;
+    height: 14px;
+  }
+  .ou-carousel__arrow--prev img {
+    transform: rotate(90deg);
+  }
+  .ou-carousel__arrow--next img {
+    transform: rotate(-90deg);
+  }
+
+  .ou-carousel__dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .ou-carousel__dots button {
+    width: 6px;
+    height: 6px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: #d9d9d9;
+    cursor: pointer;
+  }
+  .ou-carousel__dots button.is-active {
+    background: #2d2828;
+  }
+}
+
 /* ---- Brand-Logo-Rolling (Figma node 174:568): continuously auto-scrolling
    row of partner brand logos, full-bleed like the earlier photo marquee.
    Each logo has its own native size/aspect ratio, so .brand-rolling__item
