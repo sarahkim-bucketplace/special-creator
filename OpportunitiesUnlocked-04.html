@@ -24,6 +24,13 @@
   </header>
 
   <div class="detail">
+    <!-- mobile-only: replaces the desktop popup's X-close / card framing for
+         this "뒤로가기 -> 텍스트 -> 세로로 이어지는 사진" mobile layout (see
+         detail-photo-carousel.js for the click handling: closes the modal if
+         we're inside one, otherwise browser-back on the standalone page) -->
+    <button type="button" class="detail__back-btn" aria-label="뒤로 가기">
+      <img src="assets/icon-back.svg" alt="">
+    </button>
     <div class="detail__photo" data-name="Photo-box">
       <div class="detail__photo-track" id="photoTrack">
         <div class="detail__photo-slide is-active"><img class="detail__photo-img" src="assets/02-opportunities/04-space-atelier/atelier-01.jpg" alt=""></div>

@@ -387,20 +387,51 @@ body {
   transform: rotate(-90deg);
 }
 
+/* mobile-only (see @media (max-width: 900px) below) */
+.detail__back-btn {
+  display: none;
+}
+
 @media (max-width: 900px) {
   .detail {
     flex-direction: column;
   }
-  .detail__photo {
-    flex: 0 0 40vh;
-    min-height: 40vh;
+  /* 뒤로가기 화살표 -> 텍스트 -> 세로로 쭉 이어지는 사진, 직접 요청
+     (newmixcoffee.com/ko 프로젝트 페이지 참고) — 데스크톱의 "한 프레임 안에서
+     좌우로 넘겨 보는" 카드형 팝업과는 완전히 다른 방식. .detail은 이미
+     flex-direction:column이라 order로 세 블록(뒤로가기/본문/사진)만 새로
+     배치하면 됨 */
+  .detail {
+    /* 독립 페이지에서 고정 헤더(105px) 아래로 내려줌 — 모달 안에서는 헤더가
+       없으므로 FindTheKey.css가 .ou-modal__content .detail에서 0으로 취소함 */
+    padding-top: 105px;
+  }
+  .detail__back-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    order: 0;
+    width: 44px;
+    height: 44px;
+    margin: 16px 0 0 8px;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+  }
+  .detail__back-btn img {
+    width: 22px;
+    height: 15px;
   }
   .detail__content {
+    order: 1;
     min-height: auto;
-    padding: 140px 24px 0;
+    padding: 8px 24px 0;
   }
   .detail__text {
     padding-top: 16px;
+    /* 선(구분선) 제거 — 직접 요청 */
+    border-top: none;
   }
   .detail__title {
     font-size: 20px;
@@ -412,5 +443,42 @@ body {
   .detail__nav-row {
     gap: 24px;
     justify-content: space-between;
+  }
+  .detail__nav-line {
+    /* 선(구분선) 제거 — 직접 요청 */
+    display: none;
+  }
+
+  /* 사진: 한 프레임에서 좌우로 넘기는 캐러셀 대신 전부 세로로 쌓아서 보여줌 */
+  .detail__photo {
+    order: 2;
+    flex: none;
+    min-height: auto;
+    height: auto;
+    overflow: visible;
+    background: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 32px;
+  }
+  .detail__photo-track {
+    /* 자기 박스를 없애고 자식(.detail__photo-slide)이 .detail__photo의
+       flex column에 바로 참여하게 함 — gap이 슬라이드 사이에도 그대로 적용됨 */
+    display: contents;
+  }
+  .detail__photo-slide {
+    position: static;
+    opacity: 1;
+    display: block;
+  }
+  .detail__photo-img {
+    position: static;
+    width: 100%;
+    height: auto;
+    object-fit: unset;
+  }
+  .detail__arrows {
+    display: none;
   }
 }

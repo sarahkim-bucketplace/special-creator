@@ -2161,14 +2161,15 @@ body.ou-modal-open {
     height: 100vh;
     overflow-y: auto;
   }
+  /* replaced by the injected .detail's own .detail__back-btn (뒤로가기),
+     per direct request — no more X close on mobile */
   .ou-modal__close {
-    /* .ou-modal__scroll scrolls its own content here (overflow-y:auto
-       above) — fixed instead of absolute keeps the button pinned to the
-       viewport corner as the user scrolls, instead of scrolling away with
-       the card's content the way an absolutely-positioned child would */
-    position: fixed;
-    top: 12px;
-    right: 12px;
+    display: none;
+  }
+  /* .detail__back-btn's clearance is for the standalone page's own fixed
+     105px header, which doesn't exist inside the modal */
+  .ou-modal__content .detail {
+    padding-top: 0;
   }
 }
 

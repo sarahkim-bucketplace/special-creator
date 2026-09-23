@@ -3,6 +3,24 @@
 // injects a different case study): clicking the overlay arrows cycles
 // through the photo slides (loops both directions)
 function initPhotoCarousel(root) {
+  // mobile-only "뒤로가기" button (see .detail__back-btn in the OU stylesheets)
+  // — same .detail markup is used standalone and injected into the modal, so
+  // this can't just be a plain link: inside the modal (root is the injected
+  // content, not `document`) it closes the modal; on the standalone page it's
+  // real browser back
+  const backBtn = root.querySelector('.detail__back-btn');
+  if (backBtn) {
+    backBtn.addEventListener('click', () => {
+      if (root !== document) {
+        document.getElementById('ouModalClose')?.click();
+      } else if (history.length > 1) {
+        history.back();
+      } else {
+        location.href = 'FindTheKey.html#opportunities-unlocked';
+      }
+    });
+  }
+
   const track = root.querySelector('#photoTrack');
   if (!track) return;
 
